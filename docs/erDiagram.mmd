@@ -1,0 +1,113 @@
+erDiagram
+    CROPS ||--o{ CALENDARS : "包含多本" 
+    USERS ||--o{ CALENDARS : "建立" 
+    CALENDARS ||--o| CALENDARS : "複製自"
+    CALENDARS ||--o{ CALENDAR_DISTRICTS : "包含多個行政區"
+    CALENDARS ||--o{ STAGES : "包含多個生長期" 
+    
+    STAGES ||--o{ STAGE_THRESHOLDS : "定義監測門檻" 
+    STAGES ||--o{ STAGE_ALBUMS : "生長相簿" 
+    
+    INDICATORS ||--o{ STAGE_THRESHOLDS : "被引用" 
+    INDICATOR_CATEGORIES ||--o{ INDICATORS : "分類" 
+    
+    CITIES ||--o{ CALENDAR_DISTRICTS : "指定縣市"
+    DISTRICTS ||--o{ CALENDAR_DISTRICTS : "指定鄉鎮"
+    CITIES ||--o{ DISTRICTS : "隸屬"
+    
+    CROPS {
+        string id PK "UUID"
+        string name
+    }
+    
+    USERS {
+        string id PK "UUID"
+        string name
+        string role
+    }
+    
+    CALENDARS {
+        string id PK "UUID"
+        string crop_id FK
+        string creator_id FK
+        string source_calendar_id FK
+        string title
+        string zone_name
+        boolean is_shared
+        boolean is_published
+        string type
+        boolean allow_center_use
+        datetime published_at
+        datetime created_at
+        datetime last_edited_at
+    }
+    
+    CALENDAR_DISTRICTS {
+        string calendar_id PK, FK
+        int city_id PK, FK
+        int district_id PK, FK
+    }
+    
+    STAGES {
+        string id PK "UUID"
+        string calendar_id FK
+        string name
+        string description
+        int start_month
+        string start_period
+        int end_month
+        string end_period
+        string color
+        string status
+        string cover_url
+        string cover_name
+        string cover_thumbnail
+        string cover_source
+    }
+    
+    STAGE_THRESHOLDS {
+        string id PK "UUID"
+        string stage_id FK
+        string indicator_id FK
+        string operator
+        float value
+        string unit
+        int duration_days
+    }
+    
+    STAGE_ALBUMS {
+        string id PK "UUID"
+        string stage_id FK
+        string creator_id FK "冗餘欄位：資料量大且需獨立查詢"
+        string url
+        string name
+        string thumbnail
+        string source
+        int sort_order
+        datetime created_at
+    }
+    
+    CITIES {
+        int id PK
+        string name
+    }
+    
+    DISTRICTS {
+        int id PK
+        int city_id FK
+        string name
+    }
+    
+    INDICATOR_CATEGORIES {
+        int id PK
+        string name
+        string description
+    }
+    
+    INDICATORS {
+        int id PK
+        int category_id FK
+        string name
+        string source
+        string unit
+    }

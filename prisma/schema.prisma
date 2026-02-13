@@ -1,0 +1,268 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CalendarFileType {
+  ORIGINAL
+  COPY
+}
+
+enum StageStatus {
+  DRAFT
+  COMPLETE
+}
+
+enum ThresholdOperator {
+  GT
+  LT
+  GTE
+  LTE
+}
+
+enum TenDay {
+  FIRST
+  MIDDLE
+  LAST
+}
+
+enum StageImageType {
+  COVER
+  ALBUM
+}
+
+model Crop {
+  id          String   @id @default(uuid())
+  name        String   @db.VarChar(100)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  calendars   Calendar[]
+
+  @@index([name])
+}
+
+model IndicatorCategory {
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(50)
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  indicators  Indicator[]
+
+  @@index([order])
+}
+
+model Indicator {
+  id          String   @id @default(uuid())
+  categoryId  String
+  name        String   @db.VarChar(100)
+  unit        String   @db.VarChar(20)
+  description String?
+  source      String   @default("")
+  defaultMin  Float?
+  defaultMax  Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category    IndicatorCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  thresholds  StageThreshold[]
+  calendarIndicators CalendarIndicator[]
+
+  @@index([categoryId, name])
+}
+
+model Zone {
+  id         String   @id @default(uuid())
+  zoneName   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  zoneDistricts ZoneDistrict[]
+  calendarZones CalendarZone[]
+}
+
+model City {
+  id        Int      @id
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  districts District[]
+}
+
+model District {
+  id        Int      @id
+  name      String
+  cityId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  city          City         @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  zoneDistricts ZoneDistrict[]
+  calendarZoneDistricts CalendarZoneDistrict[]
+}
+
+model ZoneDistrict {
+  zoneId     String
+  districtId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  zone     Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  district District @relation(fields: [districtId], references: [id], onDelete: Cascade)
+
+  @@id([zoneId, districtId])
+}
+
+model Calendar {
+  id             String           @id @default(uuid())
+  cropId         String
+  title          String           @db.VarChar(200)
+
+  creatorId      String
+  creatorName    String
+
+  isShared       Boolean          @default(false)
+  isPublished    Boolean          @default(false)
+  fileType       CalendarFileType @default(ORIGINAL)
+  allowCenterUse Boolean          @default(false)
+
+  publishedAt    DateTime?
+  lastEditedAt   DateTime         @default(now())
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  crop           Crop       @relation(fields: [cropId], references: [id], onDelete: Cascade)
+  stages         Stage[]
+  calendarZones  CalendarZone[]
+  calendarIndicators CalendarIndicator[]
+
+  @@index([cropId, isShared])
+  @@index([isPublished, createdAt(sort: Desc)])
+  @@index([creatorId])
+}
+
+model CalendarZone {
+  id            String   @id @default(uuid())
+  calendarId    String
+  zoneId        String
+
+  zoneName      String
+  cityCount     Int      @default(0)
+  districtCount Int      @default(0)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  calendar      Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  zone          Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  districts     CalendarZoneDistrict[]
+
+  @@index([calendarId])
+  @@index([zoneId])
+}
+
+model CalendarZoneDistrict {
+  calendarZoneId String
+  districtId     Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  calendarZone CalendarZone @relation(fields: [calendarZoneId], references: [id], onDelete: Cascade)
+  district     District     @relation(fields: [districtId], references: [id], onDelete: Cascade)
+
+  @@id([calendarZoneId, districtId])
+}
+
+model CalendarIndicator {
+  id            String   @id @default(uuid())
+  calendarId    String
+  indicatorId   String
+
+  nameSnapshot  String
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  calendar      Calendar  @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  indicator     Indicator @relation(fields: [indicatorId], references: [id], onDelete: Cascade)
+
+  @@index([calendarId])
+  @@index([indicatorId])
+}
+
+model Stage {
+  id            String      @id @default(uuid())
+  calendarId    String
+  order         Int         @default(0)
+  name          String
+  description   String?
+  status        StageStatus @default(DRAFT)
+  color         String      @default("")
+
+  startTenDay   TenDay?
+  startMonth    Int?
+  endTenDay     TenDay?
+  endMonth      Int?
+
+  analysis      Json?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  calendar      Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  images        StageImage[]
+  thresholds    StageThreshold[]
+
+  @@index([calendarId, order])
+}
+
+model StageImage {
+  id        String         @id @default(uuid())
+  stageId   String
+  type      StageImageType
+  url       String
+  thumbnail String?
+  name      String?
+  source    String?        @default("")
+  sortOrder Int            @default(0)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  stage     Stage @relation(fields: [stageId], references: [id], onDelete: Cascade)
+
+  @@index([stageId, type])
+}
+
+model StageThreshold {
+  id           String            @id @default(uuid())
+  stageId      String
+  indicatorId  String
+  operator     ThresholdOperator
+  value        Float
+  unit         String?
+  durationDays Int               @default(1)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  stage        Stage     @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  indicator    Indicator @relation(fields: [indicatorId], references: [id], onDelete: Cascade)
+
+  @@index([stageId])
+}
+
+model Gwl {
+  id        Int      @id
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

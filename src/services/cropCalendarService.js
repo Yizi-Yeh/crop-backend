@@ -1,0 +1,711 @@
+const prisma = require("../db/prisma");
+const {
+  tenDayLabelToEnum,
+  tenDayEnumToLabel,
+  fileTypeToEnum,
+  fileTypeToString,
+  stageStatusToEnum,
+  stageStatusToString,
+  operatorToEnum,
+  operatorToString,
+} = require("./mappers");
+const { generateId } = require("./id");
+
+const buildZoneView = (calendarZone) => {
+  const zone = calendarZone.zone;
+  const zoneName = calendarZone.zoneName || zone.zoneName;
+  const districts = calendarZone.districts?.map((d) => d.district) || [];
+  const cityMap = new Map();
+
+  districts.forEach((district) => {
+    const city = district.city;
+    if (!cityMap.has(city.id)) {
+      cityMap.set(city.id, { id: city.id, name: city.name, districts: [] });
+    }
+    cityMap.get(city.id).districts.push({ id: district.id, name: district.name });
+  });
+
+  return {
+    id: zone.id,
+    calendar_id: calendarZone.calendarId,
+    zone_name: zoneName,
+    cities: Array.from(cityMap.values()),
+  };
+};
+
+const buildStageSummary = (stage) => ({
+  id: stage.id,
+  name: stage.name,
+  description: stage.description || "",
+  cover_image: (() => {
+    const cover = (stage.images || []).find((img) => img.type === "COVER");
+    return cover
+      ? {
+          id: cover.id,
+          url: cover.url,
+          thumbnail: cover.thumbnail,
+          name: cover.name,
+          source: cover.source || "",
+        }
+      : null;
+  })(),
+  start_date_range: stage.startMonth
+    ? {
+        id: `start_${stage.id}`,
+        name: tenDayEnumToLabel(stage.startTenDay),
+        month: String(stage.startMonth),
+      }
+    : null,
+  end_date_range: stage.endMonth
+    ? {
+        id: `end_${stage.id}`,
+        name: tenDayEnumToLabel(stage.endTenDay),
+        month: String(stage.endMonth),
+      }
+    : null,
+  status: stageStatusToString(stage.status),
+  color: stage.color || "",
+  album: (stage.images || [])
+    .filter((img) => img.type === "ALBUM")
+    .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+    .map((img) => ({
+      id: img.id,
+      url: img.url,
+      thumbnail: img.thumbnail,
+      name: img.name,
+      source: img.source || "",
+      sort_order: img.sortOrder || 0,
+    })),
+});
+
+const buildStageDetail = (stage) => {
+  const cover = stage.images.find((img) => img.type === "COVER");
+  const album = stage.images
+    .filter((img) => img.type === "ALBUM")
+    .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+
+  return {
+    id: stage.id,
+    name: stage.name,
+    description: stage.description || "",
+    start_date_range: stage.startMonth
+      ? {
+          id: `start_${stage.id}`,
+          name: tenDayEnumToLabel(stage.startTenDay),
+          month: String(stage.startMonth),
+        }
+      : null,
+    end_date_range: stage.endMonth
+      ? {
+          id: `end_${stage.id}`,
+          name: tenDayEnumToLabel(stage.endTenDay),
+          month: String(stage.endMonth),
+        }
+      : null,
+    status: stageStatusToString(stage.status),
+    color: stage.color || "",
+    cover_image: cover
+      ? {
+          id: cover.id,
+          url: cover.url,
+          thumbnail: cover.thumbnail,
+          name: cover.name,
+          source: cover.source || "",
+        }
+      : null,
+    album: album.map((img) => ({
+      id: img.id,
+      url: img.url,
+      thumbnail: img.thumbnail,
+      name: img.name,
+      source: img.source || "",
+      sort_order: img.sortOrder || 0,
+    })),
+    thresholds: stage.thresholds.map((t) => ({
+      indicator_id: t.indicatorId,
+      operator: operatorToString(t.operator),
+      value: t.value,
+      unit: t.unit || undefined,
+      duration_days: t.durationDays,
+    })),
+    analysis: stage.analysis || undefined,
+  };
+};
+
+const defaultPermissions = () => ({
+  canCopy: true,
+  canEdit: false,
+  canDelete: false,
+});
+
+const getCrops = async () => prisma.crop.findMany({ select: { id: true, name: true } });
+
+const getGwls = async () => prisma.gwl.findMany({ select: { id: true, name: true } });
+
+const getCities = async () =>
+  prisma.city.findMany({
+    select: {
+      id: true,
+      name: true,
+      districts: { select: { id: true, name: true } },
+    },
+    orderBy: { id: "asc" },
+  });
+
+const getZonesByCrop = async (cropId) => {
+  const calendarZones = await prisma.calendarZone.findMany({
+    where: { calendar: { cropId } },
+    include: {
+      zone: true,
+      districts: { include: { district: { include: { city: true } } } },
+    },
+  });
+
+  const zoneMap = new Map();
+  calendarZones.forEach((cz) => {
+    if (!zoneMap.has(cz.zoneId)) {
+      zoneMap.set(cz.zoneId, buildZoneView(cz));
+    }
+  });
+
+  return Array.from(zoneMap.values());
+};
+
+const getCalendarsByCrop = async (cropId) => {
+  const calendars = await prisma.calendar.findMany({
+    where: { cropId },
+    include: {
+      calendarZones: {
+        include: {
+          zone: true,
+          districts: { include: { district: { include: { city: true } } } },
+        },
+      },
+      calendarIndicators: { include: { indicator: true } },
+      stages: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return calendars.map((cal) => {
+    const zones = cal.calendarZones.map((cz) => buildZoneView(cz));
+    const zone = zones[0] || null;
+    return {
+      id: cal.id,
+      title: cal.title,
+      creator: { id: cal.creatorId, name: cal.creatorName },
+      permissions: defaultPermissions(),
+      is_shared: cal.isShared,
+      is_published: cal.isPublished,
+      file_type: fileTypeToString(cal.fileType),
+      allow_center_use: cal.allowCenterUse,
+      published_at: cal.publishedAt ? cal.publishedAt.toISOString() : null,
+      last_edited_at: cal.lastEditedAt.toISOString(),
+      zone,
+      stages: cal.stages.map(buildStageSummary),
+      indicators: cal.calendarIndicators.map((ci) => ({
+        id: ci.indicatorId,
+        name: ci.indicator?.name || ci.nameSnapshot,
+      })),
+    };
+  });
+};
+
+const getCalendarDetail = async (calendarId) => {
+  const calendar = await prisma.calendar.findUnique({
+    where: { id: calendarId },
+    include: {
+      crop: true,
+      calendarZones: {
+        include: {
+          zone: true,
+          districts: { include: { district: { include: { city: true } } } },
+        },
+      },
+      stages: {
+        include: {
+          images: true,
+          thresholds: true,
+        },
+        orderBy: { order: "asc" },
+      },
+      calendarIndicators: { include: { indicator: true } },
+    },
+  });
+
+  if (!calendar) return null;
+
+  const zones = calendar.calendarZones.map((cz) => buildZoneView(cz));
+  const zone = zones[0] || null;
+
+  return {
+    id: calendar.id,
+    title: calendar.title,
+    permissions: defaultPermissions(),
+    crop_name: calendar.crop?.name || "",
+    last_edited_at: calendar.lastEditedAt.toISOString(),
+    is_published: calendar.isPublished,
+    is_shared: calendar.isShared,
+    zone,
+    stages: calendar.stages.map(buildStageSummary),
+    indicators: calendar.calendarIndicators.map((ci) => ({
+      id: ci.indicatorId,
+      name: ci.indicator?.name || ci.nameSnapshot,
+    })),
+    analysis: calendar.stages[0]?.analysis || undefined,
+  };
+};
+
+const createCalendar = async ({
+  cropId,
+  title,
+  creatorId,
+  creatorName,
+  zoneName,
+  districtIds = [],
+  zoneIds = [],
+}) => {
+  const zones = [];
+
+  if (zoneIds.length > 0) {
+    const existingZones = await prisma.zone.findMany({
+      where: { id: { in: zoneIds.map((id) => String(id)) } },
+    });
+    existingZones.forEach((zone) => zones.push({ zoneId: zone.id, zoneName: zone.zoneName }));
+  } else if (zoneName) {
+    const zone = await prisma.zone.create({
+      data: {
+        zoneName,
+        zoneDistricts: {
+          create: districtIds.map((districtId) => ({ districtId })),
+        },
+      },
+    });
+    zones.push({ zoneId: zone.id, zoneName });
+  }
+
+  const calendar = await prisma.calendar.create({
+    data: {
+      cropId,
+      title,
+      creatorId,
+      creatorName,
+      lastEditedAt: new Date(),
+      calendarZones: {
+        create: zones.map((z) => ({
+          zoneId: z.zoneId,
+          zoneName: z.zoneName,
+          cityCount: 0,
+          districtCount: districtIds.length,
+          districts: {
+            create: districtIds.map((districtId) => ({ districtId })),
+          },
+        })),
+      },
+    },
+  });
+
+  return calendar;
+};
+
+const updateCalendar = async (calendarId, payload) => {
+  const { title, zoneName, districtIds } = payload;
+  const updateData = {
+    lastEditedAt: new Date(),
+  };
+  if (title !== undefined) updateData.title = title;
+
+  const calendar = await prisma.calendar.update({
+    where: { id: calendarId },
+    data: updateData,
+  });
+
+  if (zoneName !== undefined || districtIds !== undefined) {
+    const calendarZone = await prisma.calendarZone.findFirst({
+      where: { calendarId },
+      orderBy: { createdAt: "asc" },
+    });
+
+    if (calendarZone) {
+      if (zoneName !== undefined) {
+        await prisma.zone.update({
+          where: { id: calendarZone.zoneId },
+          data: { zoneName },
+        });
+        await prisma.calendarZone.update({
+          where: { id: calendarZone.id },
+          data: { zoneName },
+        });
+      }
+
+      if (Array.isArray(districtIds)) {
+        await prisma.calendarZoneDistrict.deleteMany({
+          where: { calendarZoneId: calendarZone.id },
+        });
+        await prisma.calendarZoneDistrict.createMany({
+          data: districtIds.map((districtId) => ({
+            calendarZoneId: calendarZone.id,
+            districtId,
+          })),
+        });
+      }
+    }
+  }
+
+  return calendar;
+};
+
+const deleteCalendar = async (calendarId) => {
+  await prisma.calendar.delete({ where: { id: calendarId } });
+};
+
+const shareCalendar = async (calendarId, isShared) => {
+  return prisma.calendar.update({
+    where: { id: calendarId },
+    data: { isShared, lastEditedAt: new Date() },
+  });
+};
+
+const publishCalendar = async (calendarId, isPublished) => {
+  return prisma.calendar.update({
+    where: { id: calendarId },
+    data: {
+      isPublished,
+      publishedAt: isPublished ? new Date() : null,
+      lastEditedAt: new Date(),
+    },
+  });
+};
+
+const copyCalendar = async (calendarId, creatorId, creatorName) => {
+  const calendar = await prisma.calendar.findUnique({
+    where: { id: calendarId },
+    include: {
+      calendarZones: {
+        include: { districts: true },
+      },
+      calendarIndicators: true,
+      stages: {
+        include: { images: true, thresholds: true },
+        orderBy: { order: "asc" },
+      },
+    },
+  });
+
+  if (!calendar) return null;
+
+  return prisma.$transaction(async (tx) => {
+    const newCalendar = await tx.calendar.create({
+      data: {
+        cropId: calendar.cropId,
+        title: `${calendar.title}（副本）`,
+        creatorId,
+        creatorName,
+        isShared: false,
+        isPublished: false,
+        fileType: "COPY",
+        allowCenterUse: calendar.allowCenterUse,
+        publishedAt: null,
+        lastEditedAt: new Date(),
+      },
+    });
+
+    if (calendar.calendarZones.length > 0) {
+      for (const cz of calendar.calendarZones) {
+        const newCz = await tx.calendarZone.create({
+          data: {
+            calendarId: newCalendar.id,
+            zoneId: cz.zoneId,
+            zoneName: cz.zoneName,
+            cityCount: cz.cityCount,
+            districtCount: cz.districtCount,
+          },
+        });
+        if (cz.districts.length > 0) {
+          await tx.calendarZoneDistrict.createMany({
+            data: cz.districts.map((d) => ({
+              calendarZoneId: newCz.id,
+              districtId: d.districtId,
+            })),
+          });
+        }
+      }
+    }
+
+    if (calendar.calendarIndicators.length > 0) {
+      await tx.calendarIndicator.createMany({
+        data: calendar.calendarIndicators.map((ci) => ({
+          calendarId: newCalendar.id,
+          indicatorId: ci.indicatorId,
+          nameSnapshot: ci.nameSnapshot,
+        })),
+      });
+    }
+
+    if (calendar.stages.length > 0) {
+      for (const stage of calendar.stages) {
+        const newStage = await tx.stage.create({
+          data: {
+            calendarId: newCalendar.id,
+            order: stage.order,
+            name: stage.name,
+            description: stage.description,
+            status: stage.status,
+            color: stage.color,
+            startTenDay: stage.startTenDay,
+            startMonth: stage.startMonth,
+            endTenDay: stage.endTenDay,
+            endMonth: stage.endMonth,
+            analysis: stage.analysis,
+          },
+        });
+
+        if (stage.images.length > 0) {
+          await tx.stageImage.createMany({
+            data: stage.images.map((img) => ({
+              stageId: newStage.id,
+              type: img.type,
+              url: img.url,
+              thumbnail: img.thumbnail,
+              name: img.name,
+              source: img.source,
+              sortOrder: img.sortOrder,
+            })),
+          });
+        }
+
+        if (stage.thresholds.length > 0) {
+          await tx.stageThreshold.createMany({
+            data: stage.thresholds.map((t) => ({
+              stageId: newStage.id,
+              indicatorId: t.indicatorId,
+              operator: t.operator,
+              value: t.value,
+              unit: t.unit,
+              durationDays: t.durationDays,
+            })),
+          });
+        }
+      }
+    }
+
+    return newCalendar;
+  });
+};
+
+const getStageList = async (calendarId) => {
+  const stages = await prisma.stage.findMany({
+    where: { calendarId },
+    select: { id: true, name: true },
+    orderBy: { order: "asc" },
+  });
+  return stages;
+};
+
+const getStageDetail = async (stageId) => {
+  const stage = await prisma.stage.findUnique({
+    where: { id: stageId },
+    include: { images: true, thresholds: true },
+  });
+  if (!stage) return null;
+  return buildStageDetail(stage);
+};
+
+const createStage = async ({ calendarId, payload }) => {
+  const { name, description, start_date_range, end_date_range, color, status, thresholds = [] } = payload;
+
+  const stage = await prisma.stage.create({
+    data: {
+      calendarId,
+      name,
+      description: description || "",
+      startTenDay: tenDayLabelToEnum(start_date_range?.name),
+      startMonth: start_date_range?.month || null,
+      endTenDay: tenDayLabelToEnum(end_date_range?.name),
+      endMonth: end_date_range?.month || null,
+      status: stageStatusToEnum(status),
+      color: color || "",
+      thresholds: {
+        create: thresholds.map((t) => ({
+          indicatorId: t.indicator_id,
+          operator: operatorToEnum(t.operator),
+          value: t.value,
+          unit: t.unit,
+          durationDays: t.duration_days || 1,
+        })),
+      },
+    },
+  });
+
+  return stage;
+};
+
+const updateStage = async ({ stageId, payload }) => {
+  const { name, description, start_date_range, end_date_range, color, status, thresholds } = payload;
+
+  const updateData = {};
+  if (name !== undefined) updateData.name = name;
+  if (description !== undefined) updateData.description = description;
+  if (color !== undefined) updateData.color = color;
+  if (status !== undefined) updateData.status = stageStatusToEnum(status);
+  if (start_date_range !== undefined) {
+    updateData.startTenDay = tenDayLabelToEnum(start_date_range?.name);
+    updateData.startMonth = start_date_range?.month || null;
+  }
+  if (end_date_range !== undefined) {
+    updateData.endTenDay = tenDayLabelToEnum(end_date_range?.name);
+    updateData.endMonth = end_date_range?.month || null;
+  }
+
+  const stage = await prisma.stage.update({
+    where: { id: stageId },
+    data: updateData,
+  });
+
+  if (thresholds !== undefined) {
+    await prisma.stageThreshold.deleteMany({ where: { stageId } });
+    if (thresholds.length > 0) {
+      await prisma.stageThreshold.createMany({
+        data: thresholds.map((t) => ({
+          stageId,
+          indicatorId: t.indicator_id,
+          operator: operatorToEnum(t.operator),
+          value: t.value,
+          unit: t.unit,
+          durationDays: t.duration_days || 1,
+        })),
+      });
+    }
+  }
+
+  return stage;
+};
+
+const deleteStage = async (stageId) => {
+  await prisma.stage.delete({ where: { id: stageId } });
+};
+
+const addStageCover = async ({ stageId, source, file }) => {
+  const coverId = generateId("img");
+  const created = await prisma.stageImage.create({
+    data: {
+      id: coverId,
+      stageId,
+      type: "COVER",
+      url: `https://placeholder.com/cover_${coverId}.jpg`,
+      thumbnail: `https://placeholder.com/cover_${coverId}_thumb.jpg`,
+      name: file ? file.originalname : "",
+      source: source || "",
+      sortOrder: 0,
+    },
+  });
+  return created;
+};
+
+const updateStageCover = async ({ stageId, source, name, file }) => {
+  const existing = await prisma.stageImage.findFirst({
+    where: { stageId, type: "COVER" },
+  });
+
+  if (!existing && !file) return null;
+
+  if (file) {
+    if (existing) {
+      await prisma.stageImage.delete({ where: { id: existing.id } });
+    }
+    return addStageCover({ stageId, source, file });
+  }
+
+  return prisma.stageImage.update({
+    where: { id: existing.id },
+    data: {
+      name: name !== undefined ? name : existing.name,
+      source: source !== undefined ? source : existing.source,
+    },
+  });
+};
+
+const addStageAlbum = async ({ stageId, source, files, names = [] }) => {
+  const existing = await prisma.stageImage.findMany({
+    where: { stageId, type: "ALBUM" },
+    orderBy: { sortOrder: "asc" },
+  });
+  const maxOrder = existing.reduce((max, img) => Math.max(max, img.sortOrder || 0), -1);
+
+  const created = await prisma.$transaction(
+    files.map((file, index) => {
+      const photoId = generateId("img");
+      return prisma.stageImage.create({
+        data: {
+          id: photoId,
+          stageId,
+          type: "ALBUM",
+          url: `https://placeholder.com/album_${photoId}.jpg`,
+          thumbnail: `https://placeholder.com/album_${photoId}_thumb.jpg`,
+          name: names[index] || file.originalname,
+          source: source || "",
+          sortOrder: maxOrder + 1 + index,
+        },
+      });
+    })
+  );
+
+  return created;
+};
+
+const updateStageAlbum = async ({ stageId, source, deleteIds = [], files = [], names = [] }) => {
+  if (source !== undefined) {
+    await prisma.stageImage.updateMany({
+      where: { stageId, type: "ALBUM" },
+      data: { source },
+    });
+  }
+
+  if (deleteIds.length > 0) {
+    await prisma.stageImage.deleteMany({ where: { id: { in: deleteIds } } });
+  }
+
+  let created = [];
+  if (files.length > 0) {
+    created = await addStageAlbum({ stageId, source, files, names });
+  }
+
+  return { createdIds: created.map((item) => item.id) };
+};
+
+const getIndicatorCategories = async () =>
+  prisma.indicatorCategory.findMany({ select: { id: true, name: true } });
+
+const getIndicators = async (categoryId) => {
+  const where = categoryId ? { categoryId } : undefined;
+  return prisma.indicator.findMany({
+    where,
+    select: { id: true, name: true, unit: true },
+  });
+};
+
+module.exports = {
+  getCrops,
+  getGwls,
+  getCities,
+  getZonesByCrop,
+  getCalendarsByCrop,
+  getCalendarDetail,
+  createCalendar,
+  updateCalendar,
+  deleteCalendar,
+  shareCalendar,
+  publishCalendar,
+  copyCalendar,
+  getStageList,
+  getStageDetail,
+  createStage,
+  updateStage,
+  deleteStage,
+  addStageCover,
+  updateStageCover,
+  addStageAlbum,
+  updateStageAlbum,
+  getIndicatorCategories,
+  getIndicators,
+};

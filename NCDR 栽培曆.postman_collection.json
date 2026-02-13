@@ -1,0 +1,3343 @@
+{
+  "info": {
+    "_postman_id": "eed04b67-43c0-42b5-8f30-2a14e14157b2",
+    "name": "NCDR 栽培曆",
+    "description": "作物栽培曆管理系統 API\n\n## 欄位定義\n\n### CALENDARS.is_shared（專家共享狀態）\n- `true` = 同意作為範本分享給其他專家（POST /share）\n- `false` = 未分享，僅自己可見（預設，或 POST /unshare）\n\n### CALENDARS.is_published（民眾公開狀態）\n- `true` = 後台審核通過，公開給一般民眾（POST /publish）\n- `false` = 未公開，民眾不可見（預設，或 POST /unpublish）\n\n### CALENDARS.file_type（類型）\n- `original` = 原始版本（自建）\n- `copy` = 透過 /copy 複製的副本\n\n### STAGES.status（內部編輯狀態）\n- `draft` = 草稿\n- `complete` = 編輯完成",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "13664909",
+    "_collection_link": "https://go.postman.co/collection/13664909-eed04b67-43c0-42b5-8f30-2a14e14157b2?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "作物管理",
+      "item": [
+        {
+          "name": "取得作物清單",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crops",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops"
+              ]
+            },
+            "description": "取得所有作物清單"
+          },
+          "response": [
+            {
+              "name": "取得作物清單",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/crops",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "217"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"d9-eteskTrsDsc+sPA0pFPSAic36aI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:48:34 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": [\n        {\n            \"id\": \"crop_001\",\n            \"name\": \"芭樂\"\n        },\n        {\n            \"id\": \"crop_002\",\n            \"name\": \"番茄\"\n        },\n        {\n            \"id\": \"crop_003\",\n            \"name\": \"高麗菜\"\n        },\n        {\n            \"id\": \"crop_004\",\n            \"name\": \"甜椒\"\n        },\n        {\n            \"id\": \"crop_005\",\n            \"name\": \"玉米\"\n        }\n    ]\n}"
+            },
+            {
+              "name": "空資料",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"success\",\n  \"data\": []\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "縣市鄉鎮",
+      "item": [
+        {
+          "name": "取得縣市鄉鎮",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cities",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cities"
+              ]
+            },
+            "description": "取得所有作物清單"
+          },
+          "response": [
+            {
+              "name": "取得縣市鄉鎮",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/cities",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "cities"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1566"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"61e-wKUZO0SRRbLac0Us7VusVUJxAkU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 09 Feb 2026 03:21:40 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": [\n        {\n            \"id\": \"1\",\n            \"name\": \"臺北市\",\n            \"districts\": [\n                {\n                    \"id\": \"101\",\n                    \"name\": \"中正區\"\n                },\n                {\n                    \"id\": \"102\",\n                    \"name\": \"大同區\"\n                },\n                {\n                    \"id\": \"103\",\n                    \"name\": \"中山區\"\n                },\n                {\n                    \"id\": \"104\",\n                    \"name\": \"松山區\"\n                },\n                {\n                    \"id\": \"105\",\n                    \"name\": \"大安區\"\n                }\n            ]\n        },\n        {\n            \"id\": \"2\",\n            \"name\": \"新北市\",\n            \"districts\": [\n                {\n                    \"id\": \"201\",\n                    \"name\": \"板橋區\"\n                },\n                {\n                    \"id\": \"202\",\n                    \"name\": \"三重區\"\n                },\n                {\n                    \"id\": \"203\",\n                    \"name\": \"中和區\"\n                },\n                {\n                    \"id\": \"204\",\n                    \"name\": \"永和區\"\n                },\n                {\n                    \"id\": \"205\",\n                    \"name\": \"新莊區\"\n                }\n            ]\n        },\n        {\n            \"id\": \"3\",\n            \"name\": \"桃園市\",\n            \"districts\": [\n                {\n                    \"id\": \"301\",\n                    \"name\": \"桃園區\"\n                },\n                {\n                    \"id\": \"302\",\n                    \"name\": \"中壢區\"\n                },\n                {\n                    \"id\": \"303\",\n                    \"name\": \"大溪區\"\n                },\n                {\n                    \"id\": \"304\",\n                    \"name\": \"楊梅區\"\n                }\n            ]\n        },\n        {\n            \"id\": \"4\",\n            \"name\": \"臺中市\",\n            \"districts\": [\n                {\n                    \"id\": \"401\",\n                    \"name\": \"中區\"\n                },\n                {\n                    \"id\": \"402\",\n                    \"name\": \"東區\"\n                },\n                {\n                    \"id\": \"403\",\n                    \"name\": \"西區\"\n                },\n                {\n                    \"id\": \"404\",\n                    \"name\": \"南區\"\n                },\n                {\n                    \"id\": \"405\",\n                    \"name\": \"北區\"\n                }\n            ]\n        },\n        {\n            \"id\": \"5\",\n            \"name\": \"臺南市\",\n            \"districts\": [\n                {\n                    \"id\": \"501\",\n                    \"name\": \"中西區\"\n                },\n                {\n                    \"id\": \"502\",\n                    \"name\": \"東區\"\n                },\n                {\n                    \"id\": \"503\",\n                    \"name\": \"南區\"\n                },\n                {\n                    \"id\": \"504\",\n                    \"name\": \"北區\"\n                },\n                {\n                    \"id\": \"505\",\n                    \"name\": \"安平區\"\n                }\n            ]\n        },\n        {\n            \"id\": \"6\",\n            \"name\": \"高雄市\",\n            \"districts\": [\n                {\n                    \"id\": \"601\",\n                    \"name\": \"楠梓區\"\n                },\n                {\n                    \"id\": \"602\",\n                    \"name\": \"左營區\"\n                },\n                {\n                    \"id\": \"603\",\n                    \"name\": \"鼓山區\"\n                },\n                {\n                    \"id\": \"604\",\n                    \"name\": \"三民區\"\n                },\n                {\n                    \"id\": \"605\",\n                    \"name\": \"前金區\"\n                }\n            ]\n        },\n        {\n            \"id\": \"22\",\n            \"name\": \"臺東縣\",\n            \"districts\": [\n                {\n                    \"id\": \"1076\",\n                    \"name\": \"蘭嶼鄉\"\n                },\n                {\n                    \"id\": \"1119\",\n                    \"name\": \"綠島鄉\"\n                },\n                {\n                    \"id\": \"1123\",\n                    \"name\": \"卑南鄉\"\n                },\n                {\n                    \"id\": \"1124\",\n                    \"name\": \"臺東市\"\n                }\n            ]\n        },\n        {\n            \"id\": \"23\",\n            \"name\": \"花蓮縣\",\n            \"districts\": [\n                {\n                    \"id\": \"1082\",\n                    \"name\": \"秀林鄉\"\n                },\n                {\n                    \"id\": \"1083\",\n                    \"name\": \"吉安鄉\"\n                },\n                {\n                    \"id\": \"1084\",\n                    \"name\": \"花蓮市\"\n                },\n                {\n                    \"id\": \"1085\",\n                    \"name\": \"壽豐鄉\"\n                }\n            ]\n        }\n    ]\n}"
+            },
+            {
+              "name": "空資料",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"success\",\n  \"data\": []\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "區域管理",
+      "item": [
+        {
+          "name": "取得作物栽培曆區域清單",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crops/{{cropId}}/zones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops",
+                "{{cropId}}",
+                "zones"
+              ]
+            },
+            "description": "取得該作物的栽培曆區域清單（含城市與鄉鎮區）"
+          },
+          "response": [
+            {
+              "name": "取得作物栽培曆區域清單",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/crops/{{cropId}}/zones",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops",
+                    "{{cropId}}",
+                    "zones"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "353"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"161-eaAAOVfr8xW95PaG7muaamhgTGo\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 09 Feb 2026 13:57:06 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": [\n        {\n            \"id\": \"201\",\n            \"zone_name\": \"紅色芭樂區\",\n            \"cities\": [\n                {\n                    \"id\": \"22\",\n                    \"name\": \"臺東縣\",\n                    \"districts\": [\n                        {\n                            \"id\": \"1076\",\n                            \"name\": \"蘭嶼鄉\"\n                        },\n                        {\n                            \"id\": \"1119\",\n                            \"name\": \"綠島鄉\"\n                        },\n                        {\n                            \"id\": \"1123\",\n                            \"name\": \"卑南鄉\"\n                        }\n                    ]\n                },\n                {\n                    \"id\": \"23\",\n                    \"name\": \"花蓮縣\",\n                    \"districts\": [\n                        {\n                            \"id\": \"1082\",\n                            \"name\": \"秀林鄉\"\n                        },\n                        {\n                            \"id\": \"1083\",\n                            \"name\": \"吉安鄉\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}"
+            },
+            {
+              "name": "空資料",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"success\",\n  \"data\": []\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GWL管理",
+      "item": [
+        {
+          "name": "取得GWL清單",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/gwls",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "gwls"
+              ]
+            },
+            "description": "取得該作物的栽培曆區域清單（含城市與鄉鎮區）"
+          },
+          "response": [
+            {
+              "name": "取得GWL清單",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/gwls",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "gwls"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "132"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"84-CGAeOptIzrqlE93590TN5SM880I\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 09 Feb 2026 03:22:05 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": [\n        {\n            \"id\": \"1\",\n            \"name\": \"GWL1.5(2020-2024)\"\n        },\n        {\n            \"id\": \"2\",\n            \"name\": \"GWL2\"\n        },\n        {\n            \"id\": \"3\",\n            \"name\": \"GWL4\"\n        }\n    ]\n}"
+            },
+            {
+              "name": "空資料",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"success\",\n  \"data\": []\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "栽培曆管理",
+      "item": [
+        {
+          "name": "取得栽培曆清單",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crops/{{cropId}}/calendars?is_shared=true&is_published=true&district_ids=[2,3,4,5,8]",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops",
+                "{{cropId}}",
+                "calendars"
+              ],
+              "query": [
+                {
+                  "key": "is_shared",
+                  "value": "true",
+                  "description": "true | false | 不帶（回傳所有）。true=專家共享, false=僅自己可見（需 Token）"
+                },
+                {
+                  "key": "is_published",
+                  "value": "true",
+                  "description": "true | false | 不帶（回傳所有）。true=後台公開, false=未公開（需 Token）"
+                },
+                {
+                  "key": "district_ids",
+                  "value": "[2,3,4,5,8]",
+                  "description": "可透過鄉鎮區域篩選"
+                }
+              ]
+            },
+            "description": "取得該作物的栽培曆清單。未帶 Token 僅回傳已發布（is_published=true）的栽培曆；帶 Bearer Token 可取得所有栽培曆並支援 is_shared / is_published 篩選"
+          },
+          "response": [
+            {
+              "name": "取得栽培曆清單",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/crops/{{cropId}}/calendars?is_shared=true&is_published=true&district_ids=[2,3,4,5,8]",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops",
+                    "{{cropId}}",
+                    "calendars"
+                  ],
+                  "query": [
+                    {
+                      "key": "is_shared",
+                      "value": "true",
+                      "description": "true | false | 不帶（回傳所有）。true=專家共享, false=僅自己可見（需 Token）"
+                    },
+                    {
+                      "key": "is_published",
+                      "value": "true",
+                      "description": "true | false | 不帶（回傳所有）。true=後台公開, false=未公開（需 Token）"
+                    },
+                    {
+                      "key": "district_ids",
+                      "value": "[2,3,4,5,8]",
+                      "description": "可透過鄉鎮區域篩選"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1140"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"474-p+5hugdjNN/KgdvQ7xSsFHdV5Gw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 09 Feb 2026 03:22:39 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": [\n        {\n            \"id\": \"cal_001\",\n            \"title\": \"一期紅色芭樂培曆\",\n            \"creator\": {\n                \"id\": \"user_001\",\n                \"name\": \"專家A\"\n            },\n            \"permissions\": {\n                \"canCopy\": true,\n                \"canEdit\": false,\n                \"canDelete\": false\n            },\n            \"is_shared\": false,\n            \"is_published\": false,\n            \"file_type\": \"original\",\n            \"allow_center_use\": true,\n            \"published_at\": \"2025-06-11 12:00\",\n            \"last_edited_at\": \"2025-08-11 12:00\",\n            \"zone\": {\n                \"id\": \"201\",\n                \"zone_name\": \"紅色芭樂區\",\n                \"cities\": [\n                    {\n                        \"id\": \"22\",\n                        \"name\": \"臺東縣\",\n                        \"districts\": [\n                            {\n                                \"id\": \"1076\",\n                                \"name\": \"蘭嶼鄉\"\n                            },\n                            {\n                                \"id\": \"1119\",\n                                \"name\": \"綠島鄉\"\n                            },\n                            {\n                                \"id\": \"1123\",\n                                \"name\": \"卑南鄉\"\n                            }\n                        ]\n                    },\n                    {\n                        \"id\": \"23\",\n                        \"name\": \"花蓮縣\",\n                        \"districts\": [\n                            {\n                                \"id\": \"1082\",\n                                \"name\": \"秀林鄉\"\n                            },\n                            {\n                                \"id\": \"1083\",\n                                \"name\": \"吉安鄉\"\n                            }\n                        ]\n                    }\n                ]\n            },\n            \"stages\": [\n                {\n                    \"id\": \"stage_001\",\n                    \"name\": \"育苗期\",\n                    \"start_date_range\": {\n                        \"id\": \"start_001\",\n                        \"name\": \"上旬\",\n                        \"month\": 1\n                    },\n                    \"end_date_range\": {\n                        \"id\": \"end_001\",\n                        \"name\": \"中旬\",\n                        \"month\": 1\n                    },\n                    \"status\": \"complete\"\n                },\n                {\n                    \"id\": \"stage_002\",\n                    \"name\": \"成熟期\",\n                    \"start_date_range\": {\n                        \"id\": \"start_001\",\n                        \"name\": \"上旬\",\n                        \"month\": 2\n                    },\n                    \"end_date_range\": {\n                        \"id\": \"end_001\",\n                        \"name\": \"中旬\",\n                        \"month\": 2\n                    },\n                    \"status\": \"complete\"\n                }\n            ],\n            \"indicators\": [\n                {\n                    \"id\": \"ind_001\",\n                    \"name\": \"日均溫\"\n                },\n                {\n                    \"id\": \"ind_002\",\n                    \"name\": \"降雨量\"\n                }\n            ]\n        }\n    ]\n}"
+            },
+            {
+              "name": "空資料",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"success\",\n  \"data\": []\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "取得栽培曆詳細",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops",
+                "{{cropId}}",
+                "calendars",
+                "{{calendarId}}"
+              ],
+              "query": [
+                {
+                  "key": "district_ids",
+                  "value": "[12,45,53]",
+                  "description": "篩選特定區域",
+                  "disabled": true
+                },
+                {
+                  "key": "gwl_id",
+                  "value": "1",
+                  "description": "GW1.5 / GW2",
+                  "disabled": true
+                },
+                {
+                  "key": "source_id",
+                  "value": "1",
+                  "description": "推估資料 / TRead",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "取得栽培曆詳細資料（含區域、生長期、分析數據）。已發布的栽培曆可公開存取；未發布的需要 Bearer Token"
+          },
+          "response": [
+            {
+              "name": "取得栽培曆詳細",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops",
+                    "{{cropId}}",
+                    "calendars",
+                    "{{calendarId}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "district_ids",
+                      "value": "[12,45,53]",
+                      "description": "篩選特定區域",
+                      "disabled": true
+                    },
+                    {
+                      "key": "gwl_id",
+                      "value": "1",
+                      "description": "GW1.5 / GW2",
+                      "disabled": true
+                    },
+                    {
+                      "key": "source_id",
+                      "value": "1",
+                      "description": "推估資料 / TRead",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1635"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"663-jmmToH2fosnKpO6I35iU4sOu3rg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 09 Feb 2026 03:22:52 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"cal_001\",\n        \"title\": \"一期紅色芭樂培曆\",\n        \"permissions\": {\n            \"canCopy\": true,\n            \"canEdit\": false,\n            \"canDelete\": false\n        },\n        \"crop_name\": \"芭樂\",\n        \"last_edited_at\": \"2025-08-11 12:00\",\n        \"is_published\": false,\n        \"is_shared\": false,\n        \"zone\": {\n            \"id\": \"201\",\n            \"zone_name\": \"紅色芭樂區\",\n            \"cities\": [\n                {\n                    \"id\": \"22\",\n                    \"name\": \"臺東縣\",\n                    \"districts\": [\n                        {\n                            \"id\": \"1076\",\n                            \"name\": \"蘭嶼鄉\"\n                        },\n                        {\n                            \"id\": \"1119\",\n                            \"name\": \"綠島鄉\"\n                        },\n                        {\n                            \"id\": \"1123\",\n                            \"name\": \"卑南鄉\"\n                        }\n                    ]\n                },\n                {\n                    \"id\": \"23\",\n                    \"name\": \"花蓮縣\",\n                    \"districts\": [\n                        {\n                            \"id\": \"1082\",\n                            \"name\": \"秀林鄉\"\n                        },\n                        {\n                            \"id\": \"1083\",\n                            \"name\": \"吉安鄉\"\n                        }\n                    ]\n                }\n            ]\n        },\n        \"stages\": [\n            {\n                \"id\": \"stage_001\",\n                \"name\": \"育苗期\",\n                \"start_date_range\": {\n                    \"id\": \"start_001\",\n                    \"name\": \"上旬\",\n                    \"month\": 1\n                },\n                \"end_date_range\": {\n                    \"id\": \"end_001\",\n                    \"name\": \"中旬\",\n                    \"month\": 1\n                },\n                \"status\": \"complete\",\n                \"color\": \"\",\n                \"album\": [\n                    {\n                        \"id\": \"201\",\n                        \"url\": \"https://.../album_01.jpg\",\n                        \"name\": \"育苗期照片01.jpg\",\n                        \"source\": \"農委會\",\n                        \"sort_order\": 0\n                    },\n                    {\n                        \"id\": \"202\",\n                        \"url\": \"https://.../album_02.jpg\",\n                        \"name\": \"育苗期照片02.jpg\",\n                        \"source\": \"農委會\",\n                        \"sort_order\": 1\n                    }\n                ]\n            }\n        ],\n        \"analysis\": {\n            \"data_points\": [\n                {\n                    \"label\": \"日高溫>28°C\",\n                    \"unit\": \"次\",\n                    \"source\": \"動力\",\n                    \"gwl\": \"GWL1.5(2020-2024)\",\n                    \"monthly_data\": [\n                        {\n                            \"month\": 1,\n                            \"current\": 25.5,\n                            \"future\": 26.3,\n                            \"current_exceed_count\": 7,\n                            \"future_exceed_count\": 7\n                        },\n                        {\n                            \"month\": 2,\n                            \"current\": 27.2,\n                            \"future\": 28.1,\n                            \"current_exceed_count\": 4,\n                            \"future_exceed_count\": 4\n                        }\n                    ]\n                },\n                {\n                    \"label\": \"降雨量>10mm\",\n                    \"unit\": \"次\",\n                    \"source\": \"統計\",\n                    \"gwl\": \"GWL1.5(2020-2024)\",\n                    \"monthly_data\": [\n                        {\n                            \"month\": 1,\n                            \"current_exceed_count\": 7,\n                            \"future_exceed_count\": 7,\n                            \"daily\": [\n                                {\n                                    \"day\": 1,\n                                    \"current\": 32,\n                                    \"future\": 41\n                                },\n                                {\n                                    \"day\": 2,\n                                    \"current\": 20,\n                                    \"future\": 30\n                                },\n                                {\n                                    \"day\": 3,\n                                    \"current\": 120,\n                                    \"future\": 130\n                                },\n                                {\n                                    \"day\": 30,\n                                    \"current\": 1,\n                                    \"future\": 2\n                                }\n                            ]\n                        }\n                    ]\n                }\n            ]\n        }\n    }\n}"
+            },
+            {
+              "name": "空資料",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"success\",\n  \"data\": []\n}"
+            },
+            {
+              "name": "找不到資源",
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"找不到該栽培曆\"\n}"
+            },
+            {
+              "name": "未授權",
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"未發布的栽培曆需要認證才能存取\"\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "新增栽培曆",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"一期稻作栽培曆\",\n  \"zone\": {\n    \"zone_name\": \"紅色芭樂區\",\n    \"city_ids\": [\"1\", \"2\", \"3\"],\n    \"district_ids\": [\"201\", \"202\", \"203\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crops/{{cropId}}/calendars",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops",
+                "{{cropId}}",
+                "calendars"
+              ]
+            },
+            "description": "建立新的栽培曆（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "新增栽培曆",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"一期稻作栽培曆\",\n  \"zone\": {\n    \"zone_name\": \"紅色芭樂區\",\n    \"city_ids\": [\"1\", \"2\", \"3\"],\n    \"district_ids\": [\"201\", \"202\", \"203\"]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/crops/{{cropId}}/calendars",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops",
+                    "{{cropId}}",
+                    "calendars"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "79"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4f-4ti6nA9yaGbyIfwlGXzm0AxEbT4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:49:38 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"cal_1770266978860_hcczij6ag\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "編輯栽培曆名稱",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"一期稻作（更新後）\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/calendars/{{calendarId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "calendars",
+                "{{calendarId}}"
+              ]
+            },
+            "description": "編輯栽培曆名稱（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "編輯栽培曆名稱",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"一期稻作（更新後）\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/calendars/{{calendarId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "calendars",
+                    "{{calendarId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "59"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3b-QEWHwTEEVzY6UUluc3OtD5/y2YY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:49:46 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"cal_001\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "編輯栽培曆區域",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zone\": {\n    \"zone_name\": \"紅色芭樂區\",\n    \"city_ids\": [\"1\", \"2\", \"3\"],\n    \"district_ids\": [\"201\", \"202\", \"203\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/calendars/{{calendarId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "calendars",
+                "{{calendarId}}"
+              ]
+            },
+            "description": "編輯栽培曆區域清單（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "編輯栽培曆區域",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"zone\": {\n    \"zone_name\": \"紅色芭樂區\",\n    \"city_ids\": [\"1\", \"2\", \"3\"],\n    \"district_ids\": [\"201\", \"202\", \"203\"]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/calendars/{{calendarId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "calendars",
+                    "{{calendarId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "59"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3b-QEWHwTEEVzY6UUluc3OtD5/y2YY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:49:55 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"cal_001\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "刪除栽培曆",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/calendars/{{calendarId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "calendars",
+                "{{calendarId}}"
+              ]
+            },
+            "description": "刪除栽培曆（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "刪除栽培曆",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/calendars/{{calendarId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "calendars",
+                    "{{calendarId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "35"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"23-jm7ZoSZwCuVW4qGrbfcMVE0nM48\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:50:01 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\"\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "共享栽培曆（專家發布）",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"allow_center_use\":true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/calendars/{{calendarId}}/share",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "calendars",
+                "{{calendarId}}",
+                "share"
+              ]
+            },
+            "description": "將栽培曆設為共享，其他專家可見（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "共享栽培曆（專家發布）",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"allow_center_use\":true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/calendars/{{calendarId}}/share",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "calendars",
+                    "{{calendarId}}",
+                    "share"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "59"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3b-QEWHwTEEVzY6UUluc3OtD5/y2YY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:51:35 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"cal_001\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "取消共享栽培曆",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/calendars/{{calendarId}}/unshare",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "calendars",
+                "{{calendarId}}",
+                "unshare"
+              ]
+            },
+            "description": "取消栽培曆共享狀態（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "取消共享栽培曆",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/calendars/{{calendarId}}/unshare",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "calendars",
+                    "{{calendarId}}",
+                    "unshare"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "59"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3b-QEWHwTEEVzY6UUluc3OtD5/y2YY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:51:41 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"cal_001\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "複製栽培曆（後台複製）",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/calendars/{{calendarId}}/copy",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "calendars",
+                "{{calendarId}}",
+                "copy"
+              ]
+            },
+            "description": "產生專家栽培曆副本（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "複製栽培曆（後台複製）",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/calendars/{{calendarId}}/copy",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "calendars",
+                    "{{calendarId}}",
+                    "copy"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "79"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4f-IgzgGT9b/HPctOKf0OuqDmj7At0\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:51:46 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"cal_1770267106950_zw2qrp98z\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "發布栽培曆（後台公開）",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/calendars/{{calendarId}}/publish",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "calendars",
+                "{{calendarId}}",
+                "publish"
+              ]
+            },
+            "description": "發布栽培曆為公開（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "發布栽培曆（後台公開）",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/calendars/{{calendarId}}/publish",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "calendars",
+                    "{{calendarId}}",
+                    "publish"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "59"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3b-QEWHwTEEVzY6UUluc3OtD5/y2YY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:51:53 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"cal_001\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "取消發布栽培曆",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/calendars/{{calendarId}}/unpublish",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "calendars",
+                "{{calendarId}}",
+                "unpublish"
+              ]
+            },
+            "description": "取消栽培曆公開狀態（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "取消發布栽培曆",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/calendars/{{calendarId}}/unpublish",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "calendars",
+                    "{{calendarId}}",
+                    "unpublish"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "59"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3b-QEWHwTEEVzY6UUluc3OtD5/y2YY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:51:59 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"cal_001\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "生長期管理",
+      "item": [
+        {
+          "name": "取得生長期清單（select使用）",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops",
+                "{{cropId}}",
+                "calendars",
+                "{{calendarId}}",
+                "stages"
+              ]
+            },
+            "description": "取得生長期詳細資料（含圖片、圖表數據）。所屬栽培曆已發布可公開存取；未發布需要 Bearer Token"
+          },
+          "response": [
+            {
+              "name": "取得生長期清單（select使用）",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops",
+                    "{{cropId}}",
+                    "calendars",
+                    "{{calendarId}}",
+                    "stages"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "82"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"52-d2C8tNyxbxCGozE485heci7/JRU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:46:39 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": [\n        {\n            \"id\": \"stage_001\",\n            \"name\": \"育苗期\"\n        }\n    ]\n}"
+            },
+            {
+              "name": "空資料",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"success\",\n  \"data\": []\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "取得生長期詳細",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops",
+                "{{cropId}}",
+                "calendars",
+                "{{calendarId}}",
+                "stages",
+                "{{stageId}}"
+              ]
+            },
+            "description": "取得生長期詳細資料（含圖片、圖表數據）。所屬栽培曆已發布可公開存取；未發布需要 Bearer Token"
+          },
+          "response": [
+            {
+              "name": "取得生長期詳細",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops",
+                    "{{cropId}}",
+                    "calendars",
+                    "{{calendarId}}",
+                    "stages",
+                    "{{stageId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "829"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"33d-yefLaf77gRX3A6pVjrSNDxwtWbU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:50:37 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"stage_001\",\n        \"name\": \"育苗期\",\n        \"description\": \"播種至秧苗成長期\",\n        \"start_date_range\": {\n            \"id\": \"start_001\",\n            \"name\": \"上旬\",\n            \"month\": 1\n        },\n        \"end_date_range\": {\n            \"id\": \"end_001\",\n            \"name\": \"中旬\",\n            \"month\": 1\n        },\n        \"status\": \"draft\",\n        \"color\": \"\",\n        \"cover_image\": {\n            \"id\": \"img_1770266804727_6ev66k5fn\",\n            \"url\": \"https://placeholder.com/cover_img_1770266804727_6ev66k5fn.jpg\",\n            \"thumbnail\": \"https://placeholder.com/cover_img_1770266804727_6ev66k5fn_thumb.jpg\",\n            \"name\": \"\",\n            \"source\": \"農委會\"\n        },\n        \"album\": [\n            {\n                \"id\": 201,\n                \"url\": \"https://.../album_01.jpg\",\n                \"thumbnail\": \"https://.../album_01_thumb.jpg\",\n                \"name\": \"育苗期照片01.jpg\",\n                \"source\": \"農委會\",\n                \"sort_order\": 0\n            },\n            {\n                \"id\": 202,\n                \"url\": \"https://.../album_02.jpg\",\n                \"thumbnail\": \"https://.../album_02_thumb.jpg\",\n                \"name\": \"育苗期照片02.jpg\",\n                \"source\": \"農委會\",\n                \"sort_order\": 1\n            }\n        ]\n    }\n}"
+            },
+            {
+              "name": "空資料",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"success\",\n  \"data\": []\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "新增生長期",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  stage_id: ,\n  \"description\": \"播種至秧苗成長期\",\n  \"start_date_range\": { \"month\": 1, stage_id:  },\n  \"end_date_range\": { \"month\": 2, stage_id:  },\n  \"color\": \"#4A90E2\",\n  \"status\": \"draft\",\n  \"thresholds\": [\n    {\n      \"indicator_id\": \"ind_001\",\n      \"operator\": \">\",\n      \"value\": 28,\n      \"duration_days\": 1\n    },\n    {\n      \"indicator_id\": \"ind_005\",\n      \"operator\": \">=\",\n      \"value\": 3,\n      \"duration_days\": 3\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops",
+                "{{cropId}}",
+                "calendars",
+                "{{calendarId}}",
+                "stages"
+              ]
+            },
+            "description": "新增生長期（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "新增生長期",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"育苗期\",\n  \"description\": \"播種至秧苗成長期\",\n  \"start_date_range\": { \"month\": 1, \"name\": \"上旬\" },\n  \"end_date_range\": { \"month\": 2, \"name\": \"上旬\" },\n  \"color\": \"#4A90E2\",\n  \"status\": \"draft\",\n  \"thresholds\": [\n    {\n      \"indicator_id\": \"ind_001\",\n      \"operator\": \">\",\n      \"value\": 28,\n      \"duration_days\": 1\n    },\n    {\n      \"indicator_id\": \"ind_005\",\n      \"operator\": \">=\",\n      \"value\": 3,\n      \"duration_days\": 3\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops",
+                    "{{cropId}}",
+                    "calendars",
+                    "{{calendarId}}",
+                    "stages"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "81"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"51-plNOmhOi+32nx4TP3hNBvJmhBsI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:52:05 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"stage_1770267125944_s1fkmytka\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "編輯生長期",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  stage_id: ,\n  \"description\": \"播種至秧苗成長期\",\n  \"start_date_range\": { \"month\": 1, stage_id:  },\n  \"end_date_range\": { \"month\": 2, stage_id:  },\n  \"color\": \"#4A90E2\",\n  \"status\": \"complete\",\n  \"thresholds\": [\n    {\n      \"indicator_id\": \"ind_001\",\n      \"operator\": \">\",\n      \"value\": 30,\n      \"duration_days\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops",
+                "{{cropId}}",
+                "calendars",
+                "{{calendarId}}",
+                "stages",
+                "{{stageId}}"
+              ]
+            },
+            "description": "編輯生長期（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "編輯生長期",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"育苗期（更新）\",\n  \"description\": \"播種至秧苗成長期\",\n  \"start_date_range\": { \"month\": 1, \"name\": \"上旬\" },\n  \"end_date_range\": { \"month\": 2, \"name\": \"上旬\" },\n  \"color\": \"#4A90E2\",\n  \"status\": \"complete\",\n  \"thresholds\": [\n    {\n      \"indicator_id\": \"ind_001\",\n      \"operator\": \">\",\n      \"value\": 30,\n      \"duration_days\": 1\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops",
+                    "{{cropId}}",
+                    "calendars",
+                    "{{calendarId}}",
+                    "stages",
+                    "{{stageId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "61"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3d-YoGYrkBtRsMuWSSSZ4KF26+cDYk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:50:49 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"stage_001\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "刪除生長期",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops",
+                "{{cropId}}",
+                "calendars",
+                "{{calendarId}}",
+                "stages",
+                "{{stageId}}"
+              ]
+            },
+            "description": "刪除生長期（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "刪除生長期",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops",
+                    "{{cropId}}",
+                    "calendars",
+                    "{{calendarId}}",
+                    "stages",
+                    "{{stageId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "35"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"23-jm7ZoSZwCuVW4qGrbfcMVE0nM48\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:50:56 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\"\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "生長期圖片管理",
+      "item": [
+        {
+          "name": "新增封面圖",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "cover",
+                  "type": "file",
+                  "description": "封面圖檔案 File",
+                  "src": "/Users/yiz/Desktop/空拍/19a96fc505bababdb3dcea2fb57c9b33c45a6b86.png"
+                },
+                {
+                  "key": "source",
+                  "value": "\"農委會\"",
+                  "description": "來源",
+                  "type": "text",
+                  "uuid": "f0cd8bc2-2f97-4f18-9453-ed37f7255620"
+                },
+                {
+                  "key": "name",
+                  "value": "\"123.jpg\"",
+                  "description": "檔名",
+                  "type": "text",
+                  "uuid": "59aa7818-e885-4021-8a4d-a3cd50a39b3d"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/stages/{{stageId}}/cover",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stages",
+                "{{stageId}}",
+                "cover"
+              ]
+            },
+            "description": "上傳生長期封面圖（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "新增封面圖",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "cover",
+                      "type": "file",
+                      "description": "封面圖檔案 File",
+                      "src": "/Users/yiz/Desktop/空拍/19a96fc505bababdb3dcea2fb57c9b33c45a6b86.png"
+                    },
+                    {
+                      "key": "source",
+                      "value": "\"農委會\"",
+                      "description": "來源",
+                      "type": "text",
+                      "uuid": "f0cd8bc2-2f97-4f18-9453-ed37f7255620"
+                    },
+                    {
+                      "key": "name",
+                      "value": "\"123.jpg\"\n",
+                      "description": "檔名",
+                      "type": "text",
+                      "uuid": "59aa7818-e885-4021-8a4d-a3cd50a39b3d"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/stages/{{stageId}}/cover",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "stages",
+                    "{{stageId}}",
+                    "cover"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "79"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4f-Opmf0kBgSaDI3CqH2naJtwRahZw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:52:17 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"img_1770267137260_mz31fd40n\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "編輯封面圖",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "cover",
+                  "type": "file",
+                  "description": "新封面圖檔案",
+                  "src": "/Users/yiz/Desktop/空拍/f3868a6a16c75d75435819deab8bab97926fc54c.png"
+                },
+                {
+                  "key": "source",
+                  "value": "農委會",
+                  "type": "text",
+                  "uuid": "ea79ed23-ef85-41cb-b85a-95e80eecd1d8"
+                },
+                {
+                  "key": "name",
+                  "value": "123.jpg",
+                  "type": "text",
+                  "uuid": "faa3e925-1346-4e22-8170-959d53a808fe"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/stages/{{stageId}}/cover",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stages",
+                "{{stageId}}",
+                "cover"
+              ]
+            },
+            "description": "更換生長期封面圖（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "編輯封面圖",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "cover",
+                      "type": "file",
+                      "description": "新封面圖檔案",
+                      "src": "/Users/yiz/Desktop/空拍/f3868a6a16c75d75435819deab8bab97926fc54c.png"
+                    },
+                    {
+                      "key": "source",
+                      "value": "農委會",
+                      "type": "text",
+                      "uuid": "ea79ed23-ef85-41cb-b85a-95e80eecd1d8"
+                    },
+                    {
+                      "key": "name",
+                      "value": "123.jpg",
+                      "type": "text",
+                      "uuid": "faa3e925-1346-4e22-8170-959d53a808fe"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/stages/{{stageId}}/cover",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "stages",
+                    "{{stageId}}",
+                    "cover"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "79"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4f-dJqQp4VVV0PWVV7VLuwt0GDX45w\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:52:28 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"img_1770267148539_dfoq26bpr\"\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "新增相簿圖片",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "names",
+                  "value": "\"稻田播種.png\"",
+                  "description": "多個檔名",
+                  "type": "text",
+                  "uuid": "5a72efd7-ce0c-4228-a009-09b4b27dc1a4"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "description": "多個檔案",
+                  "src": "/Users/yiz/Desktop/空拍/2b43cb4cdbac1c6c0f318c0cb28dd98cf0bc5d7b.png"
+                },
+                {
+                  "key": "source",
+                  "value": "\"農試所\"",
+                  "type": "text",
+                  "uuid": "82c654bf-816d-4eaf-9220-914f5ca357dd",
+                  "description": "一個來源"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/stages/{{stageId}}/album",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stages",
+                "{{stageId}}",
+                "album"
+              ]
+            },
+            "description": "上傳生長期相簿圖片（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "新增相簿圖片",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "images",
+                      "type": "file",
+                      "description": "多個檔案",
+                      "src": "/Users/yiz/Desktop/空拍/2b43cb4cdbac1c6c0f318c0cb28dd98cf0bc5d7b.png"
+                    },
+                    {
+                      "key": "names",
+                      "value": "\"稻田播種.png\"",
+                      "description": "多個檔名",
+                      "type": "text",
+                      "uuid": "5a72efd7-ce0c-4228-a009-09b4b27dc1a4"
+                    },
+                    {
+                      "key": "source",
+                      "value": "來源",
+                      "type": "text",
+                      "uuid": "82c654bf-816d-4eaf-9220-914f5ca357dd",
+                      "description": "一個來源"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/stages/{{stageId}}/album",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "stages",
+                    "{{stageId}}",
+                    "album"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "82"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"52-e5mbsiWItKEUSNYNzJVVS2XvgZw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:52:35 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"ids\": [\n            \"img_1770267155266_hcn1rdhq3\"\n        ]\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "編輯相簿圖片",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "description": "多個檔案",
+                  "src": "/Users/yiz/Desktop/空拍/f54134fa0e748ccc3a2afc4a70ace59b34ddcb1f.png"
+                },
+                {
+                  "key": "names",
+                  "value": "123.png",
+                  "description": "多個檔名",
+                  "type": "text",
+                  "uuid": "a8bbfc82-c555-481e-8747-e1993eb9f738"
+                },
+                {
+                  "key": "source",
+                  "value": "農委會",
+                  "description": "一個來源",
+                  "type": "text",
+                  "uuid": "f481a652-0ebe-4c45-9fe6-0c2c36f2e037"
+                },
+                {
+                  "key": "delete_ids",
+                  "value": "1,3,6",
+                  "description": "被刪除的圖片id",
+                  "type": "text",
+                  "uuid": "d85213c6-98b2-4cd7-92df-eef91d7c3eea"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/stages/{{stageId}}/album",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stages",
+                "{{stageId}}",
+                "album"
+              ]
+            },
+            "description": "上傳生長期相簿圖片（需 Bearer Token）"
+          },
+          "response": [
+            {
+              "name": "編輯相簿圖片",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "images",
+                      "type": "file",
+                      "description": "多個檔案",
+                      "src": "/Users/yiz/Desktop/空拍/f54134fa0e748ccc3a2afc4a70ace59b34ddcb1f.png"
+                    },
+                    {
+                      "key": "names",
+                      "value": "123.png",
+                      "description": "多個檔名",
+                      "type": "text",
+                      "uuid": "a8bbfc82-c555-481e-8747-e1993eb9f738"
+                    },
+                    {
+                      "key": "source",
+                      "value": "農委會",
+                      "description": "一個來源",
+                      "type": "text",
+                      "uuid": "f481a652-0ebe-4c45-9fe6-0c2c36f2e037"
+                    },
+                    {
+                      "key": "delete_ids",
+                      "value": "1,2,3",
+                      "description": "被刪除的圖片id",
+                      "type": "text",
+                      "uuid": "d85213c6-98b2-4cd7-92df-eef91d7c3eea"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/stages/{{stageId}}/album",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "stages",
+                    "{{stageId}}",
+                    "album"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "82"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"52-cMO8+nQt6tqgb3MZ4tNfg7kKDiE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:52:42 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"ids\": [\n            \"img_1770267162042_ke5toqpcx\"\n        ]\n    }\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "指標管理",
+      "item": [
+        {
+          "name": "取得指標類別",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crops/{{cropId}}/indicator-categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops",
+                "{{cropId}}",
+                "indicator-categories"
+              ]
+            },
+            "description": "取得指標類別清單（氣溫、雨量、日照）"
+          },
+          "response": [
+            {
+              "name": "取得指標類別",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/crops/{{cropId}}/indicator-categories",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops",
+                    "{{cropId}}",
+                    "indicator-categories"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "143"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"8f-z7S2MR5p9FbSu03UEr8SPRoBvrA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:52:50 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": [\n        {\n            \"id\": \"cat_001\",\n            \"name\": \"氣溫\"\n        },\n        {\n            \"id\": \"cat_002\",\n            \"name\": \"雨量\"\n        },\n        {\n            \"id\": \"cat_003\",\n            \"name\": \"日照\"\n        }\n    ]\n}"
+            },
+            {
+              "name": "空資料",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"success\",\n  \"data\": []\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "取得指標明細（依類別篩選）",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crops/{{cropId}}/indicators?category_id=cat_001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crops",
+                "{{cropId}}",
+                "indicators"
+              ],
+              "query": [
+                {
+                  "key": "category_id",
+                  "value": "cat_001",
+                  "description": "指標類別 ID（cat_001=氣溫, cat_002=雨量, cat_003=日照）"
+                }
+              ]
+            },
+            "description": "依類別篩選指標明細"
+          },
+          "response": [
+            {
+              "name": "取得指標明細（依類別篩選）",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/crops/{{cropId}}/indicators?category_id=cat_001",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "crops",
+                    "{{cropId}}",
+                    "indicators"
+                  ],
+                  "query": [
+                    {
+                      "key": "category_id",
+                      "value": "cat_001",
+                      "description": "指標類別 ID（cat_001=氣溫, cat_002=雨量, cat_003=日照）"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "352"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"160-v96V5fdRdKlaZ/sJ4ahb+Vwcd/8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Feb 2026 04:52:56 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": [\n        {\n            \"id\": \"ind_001\",\n            \"name\": \"日均溫\",\n            \"unit\": \"°C\"\n        },\n        {\n            \"id\": \"ind_002\",\n            \"name\": \"日高溫\",\n            \"unit\": \"°C\"\n        },\n        {\n            \"id\": \"ind_003\",\n            \"name\": \"日低溫\",\n            \"unit\": \"°C\"\n        },\n        {\n            \"id\": \"ind_004\",\n            \"name\": \"日雨量\",\n            \"unit\": \"mm\"\n        },\n        {\n            \"id\": \"ind_005\",\n            \"name\": \"連續降雨天數\",\n            \"unit\": \"天\"\n        },\n        {\n            \"id\": \"ind_006\",\n            \"name\": \"日照時數\",\n            \"unit\": \"小時\"\n        }\n    ]\n}"
+            },
+            {
+              "name": "空資料",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"success\",\n  \"data\": []\n}"
+            },
+            {
+              "name": "錯誤",
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"internal error\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/crop-calendars"
+    },
+    {
+      "key": "token",
+      "value": "test_bearer_token_12345"
+    },
+    {
+      "key": "cropId",
+      "value": "crop_001"
+    },
+    {
+      "key": "calendarId",
+      "value": "cal_001"
+    },
+    {
+      "key": "stageId",
+      "value": "stage_001"
+    },
+    {
+      "key": "imageId",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

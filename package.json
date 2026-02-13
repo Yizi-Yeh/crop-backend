@@ -1,0 +1,31 @@
+{
+  "name": "crop-calendar-server",
+  "version": "1.0.0",
+  "description": "作物栽培曆管理 API 伺服器",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "seed": "node prisma/seed.js",
+    "db:fix-perms": "prisma db execute --file prisma/fix_permissions.sql --schema prisma/schema.prisma",
+    "db:prepare": "npm run db:fix-perms && prisma db push && npm run seed"
+  },
+  "keywords": [
+    "crop",
+    "calendar",
+    "api"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  }
+}
