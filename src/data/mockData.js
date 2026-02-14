@@ -375,6 +375,194 @@ const calendars = [
         id: "stage_001",
         name: "接穗結果期",
         description: "接穗與砧木癒合完成後進入結果期，需維持穩定水分與通風，避免高溫造成落果。",
+        // cover_image: {
+        //   id: "cover_stage_001",
+        //   url: "https://picsum.photos/seed/cover-1/800/500",
+        //   thumbnail: "https://picsum.photos/seed/cover-1/320/200",
+        //   name: "接穗結果期封面.jpg",
+        //   source: "農委會",
+        // },
+        start_date_range: { id: "start_001", name: "上旬", month: "1" },
+        end_date_range: { id: "end_001", name: "下旬", month: "3" },
+        status: "complete",
+        // color: "#476dc6",
+        // album: [
+        //   {
+        //     id: "img_001",
+        //     url: "https://picsum.photos/seed/stock-1/600/400",
+        //     thumbnail: "https://picsum.photos/seed/stock-1/300/200",
+        //     name: "接穗結果期示意圖01.jpg",
+        //     source: "農委會",
+        //     sort_order: 0,
+        //   },
+        //   {
+        //     id: "img_002",
+        //     url: "https://picsum.photos/seed/stock-2/600/400",
+        //     thumbnail: "https://picsum.photos/seed/stock-2/300/200",
+        //     name: "接穗結果期示意圖02.jpg",
+        //     source: "農委會",
+        //     sort_order: 1,
+        //   },
+        //   {
+        //     id: "img_003",
+        //     url: "https://picsum.photos/seed/stock-3/600/400",
+        //     thumbnail: "https://picsum.photos/seed/stock-3/300/200",
+        //     name: "接穗結果期示意圖03.jpg",
+        //     source: "農委會",
+        //     sort_order: 2,
+        //   },
+        //   {
+        //     id: "img_004",
+        //     url: "https://picsum.photos/seed/stock-4/600/400",
+        //     thumbnail: "https://picsum.photos/seed/stock-4/300/200",
+        //     name: "接穗結果期示意圖04.jpg",
+        //     source: "農委會",
+        //     sort_order: 3,
+        //   },
+        //   {
+        //     id: "img_005",
+        //     url: "https://picsum.photos/seed/stock-5/600/400",
+        //     thumbnail: "https://picsum.photos/seed/stock-5/300/200",
+        //     name: "接穗結果期示意圖05.jpg",
+        //     source: "農委會",
+        //     sort_order: 4,
+        //   },
+        //   {
+        //     id: "img_006",
+        //     url: "https://picsum.photos/seed/stock-6/600/400",
+        //     thumbnail: "https://picsum.photos/seed/stock-6/300/200",
+        //     name: "接穗結果期示意圖06.jpg",
+        //     source: "農委會",
+        //     sort_order: 5,
+        //   },
+        //   {
+        //     id: "img_007",
+        //     url: "https://picsum.photos/seed/stock-7/600/400",
+        //     thumbnail: "https://picsum.photos/seed/stock-7/300/200",
+        //     name: "接穗結果期示意圖07.jpg",
+        //     source: "農委會",
+        //     sort_order: 6,
+        //   },
+        //   {
+        //     id: "img_008",
+        //     url: "https://picsum.photos/seed/stock-8/600/400",
+        //     thumbnail: "https://picsum.photos/seed/stock-8/300/200",
+        //     name: "接穗結果期示意圖08.jpg",
+        //     source: "農委會",
+        //     sort_order: 7,
+        //   },
+        //   {
+        //     id: "img_009",
+        //     url: "https://picsum.photos/seed/stock-9/600/400",
+        //     thumbnail: "https://picsum.photos/seed/stock-9/300/200",
+        //     name: "接穗結果期示意圖09.jpg",
+        //     source: "農委會",
+        //     sort_order: 8,
+        //   },
+        //   {
+        //     id: "img_010",
+        //     url: "https://picsum.photos/seed/stock-10/600/400",
+        //     thumbnail: "https://picsum.photos/seed/stock-10/300/200",
+        //     name: "接穗結果期示意圖10.jpg",
+        //     source: "農委會",
+        //     sort_order: 9,
+        //   }
+        // ],
+      },
+      {
+        id: "stage_002",
+        name: "接穗結果期",
+        description: "果實持續膨大，建議適度疏果並補充鉀肥以提升品質與糖度。",
+        start_date_range: { id: "start_002", name: "中旬", month: "2" },
+        end_date_range: { id: "end_002", name: "中旬", month: "4" },
+        status: "complete",
+      },
+      {
+        id: "stage_003",
+        name: "果實成長期",
+        description: "果實快速生長，注意水分均衡與病蟲害監測，避免裂果與日灼。",
+        start_date_range: { id: "start_003", name: "下旬", month: "3" },
+        end_date_range: { id: "end_003", name: "下旬", month: "6" },
+        status: "complete",
+      },
+      {
+        id: "stage_004",
+        name: "果實成熟期",
+        description: "成熟期需降低氮肥、提高通風，掌握採收時機以確保外觀與風味。",
+        start_date_range: { id: "start_004", name: "上旬", month: "5" },
+        end_date_range: { id: "end_004", name: "下旬", month: "9" },
+        status: "complete",
+      },
+      {
+        id: "stage_005",
+        name: "砧木生育期",
+        description: "砧木持續營養生長，重點在根系健全與枝條整齊，為後續嫁接做準備。",
+        start_date_range: { id: "start_005", name: "中旬", month: "10" },
+        end_date_range: { id: "end_005", name: "下旬", month: "12" },
+        status: "complete",
+      },
+    ],
+
+    // 指標（清單頁只需要名稱）
+    indicators: [
+      { id: "ind_001", name: "日均溫" },
+      { id: "ind_002", name: "降雨量" },
+    ],
+  },
+];
+
+calendars.push(...extraCalendars);
+
+// 栽培曆詳細
+// GET /api/crop-calendars/crops/{crop_id}/calendars/{calendar_id}
+// Query
+// city_id → 1 篩選該城市的栽培曆 (TOC)
+// gwl_id: 1 [GW1.5/GW2]
+// source_id: 1 [推估資料/TRead]
+const calendarDetails = [
+  {
+    id: "cal_001", // 栽培曆 ID
+    title: "一期紅色芭樂培曆", // 栽培曆標題
+    permissions: {
+      canCopy: true,
+      canEdit: false,
+      canDelete: false,
+    },
+    crop_name: "芭樂",
+    last_edited_at: "2025-08-11 12:00",
+    is_published: false, // 民眾公開開關
+    is_shared: false, // 專家共享開關
+    // 區域資訊
+    zone: {
+      id: "201",
+      zone_name: "紅色芭樂區",
+      cities: [
+        {
+          id: "22",
+          name: "臺東縣",
+          districts: [
+            { id: "1076", name: "蘭嶼鄉" },
+            { id: "1119", name: "綠島鄉" },
+            { id: "1123", name: "卑南鄉" },
+          ],
+        },
+        {
+          id: "23",
+          name: "花蓮縣",
+          districts: [
+            { id: "1082", name: "秀林鄉" },
+            { id: "1083", name: "吉安鄉" },
+          ],
+        },
+      ],
+    },
+
+    // 生長期清單
+    stages: [
+      {
+        id: "stage_001",
+        name: "接穗結果期",
+        description: "接穗與砧木癒合完成後進入結果期，需維持穩定水分與通風，避免高溫造成落果。",
         cover_image: {
           id: "cover_stage_001",
           url: "https://picsum.photos/seed/cover-1/800/500",
@@ -774,514 +962,6 @@ const calendars = [
           name: "砧木生育期封面.jpg",
           source: "農委會",
         },
-        start_date_range: { id: "start_005", name: "中旬", month: "10" },
-        end_date_range: { id: "end_005", name: "下旬", month: "12" },
-        status: "complete",
-        color: "#C64C0A",
-        album: [
-          {
-            id: "img_009",
-            url: "https://picsum.photos/seed/root-9/600/400",
-            thumbnail: "https://picsum.photos/seed/root-9/300/200",
-            name: "砧木生育期示意圖09.jpg",
-            source: "農委會",
-            sort_order: 0,
-          },
-          {
-            id: "img_010",
-            url: "https://picsum.photos/seed/root-10/600/400",
-            thumbnail: "https://picsum.photos/seed/root-10/300/200",
-            name: "砧木生育期示意圖10.jpg",
-            source: "農委會",
-            sort_order: 1,
-          },
-          {
-            id: "img_011",
-            url: "https://picsum.photos/seed/root-11/600/400",
-            thumbnail: "https://picsum.photos/seed/root-11/300/200",
-            name: "砧木生育期示意圖11.jpg",
-            source: "農委會",
-            sort_order: 2,
-          },
-          {
-            id: "img_012",
-            url: "https://picsum.photos/seed/root-12/600/400",
-            thumbnail: "https://picsum.photos/seed/root-12/300/200",
-            name: "砧木生育期示意圖12.jpg",
-            source: "農委會",
-            sort_order: 3,
-          },
-          {
-            id: "img_013",
-            url: "https://picsum.photos/seed/root-13/600/400",
-            thumbnail: "https://picsum.photos/seed/root-13/300/200",
-            name: "砧木生育期示意圖13.jpg",
-            source: "農委會",
-            sort_order: 4,
-          },
-          {
-            id: "img_014",
-            url: "https://picsum.photos/seed/root-14/600/400",
-            thumbnail: "https://picsum.photos/seed/root-14/300/200",
-            name: "砧木生育期示意圖14.jpg",
-            source: "農委會",
-            sort_order: 5,
-          },
-          {
-            id: "img_015",
-            url: "https://picsum.photos/seed/root-15/600/400",
-            thumbnail: "https://picsum.photos/seed/root-15/300/200",
-            name: "砧木生育期示意圖15.jpg",
-            source: "農委會",
-            sort_order: 6,
-          },
-          {
-            id: "img_016",
-            url: "https://picsum.photos/seed/root-16/600/400",
-            thumbnail: "https://picsum.photos/seed/root-16/300/200",
-            name: "砧木生育期示意圖16.jpg",
-            source: "農委會",
-            sort_order: 7,
-          },
-          {
-            id: "img_017",
-            url: "https://picsum.photos/seed/root-17/600/400",
-            thumbnail: "https://picsum.photos/seed/root-17/300/200",
-            name: "砧木生育期示意圖17.jpg",
-            source: "農委會",
-            sort_order: 8,
-          },
-          {
-            id: "img_018",
-            url: "https://picsum.photos/seed/root-18/600/400",
-            thumbnail: "https://picsum.photos/seed/root-18/300/200",
-            name: "砧木生育期示意圖18.jpg",
-            source: "農委會",
-            sort_order: 9,
-          }
-        ],
-      },
-    ],
-
-    // 指標（清單頁只需要名稱）
-    indicators: [
-      { id: "ind_001", name: "日均溫" },
-      { id: "ind_002", name: "降雨量" },
-    ],
-  },
-];
-
-calendars.push(...extraCalendars);
-
-// 栽培曆詳細
-// GET /api/crop-calendars/crops/{crop_id}/calendars/{calendar_id}
-// Query
-// city_id → 1 篩選該城市的栽培曆 (TOC)
-// gwl_id: 1 [GW1.5/GW2]
-// source_id: 1 [推估資料/TRead]
-const calendarDetails = [
-  {
-    id: "cal_001", // 栽培曆 ID
-    title: "一期紅色芭樂培曆", // 栽培曆標題
-    permissions: {
-      canCopy: true,
-      canEdit: false,
-      canDelete: false,
-    },
-    crop_name: "芭樂",
-    last_edited_at: "2025-08-11 12:00",
-    is_published: false, // 民眾公開開關
-    is_shared: false, // 專家共享開關
-    // 區域資訊
-    zone: {
-      id: "201",
-      zone_name: "紅色芭樂區",
-      cities: [
-        {
-          id: "22",
-          name: "臺東縣",
-          districts: [
-            { id: "1076", name: "蘭嶼鄉" },
-            { id: "1119", name: "綠島鄉" },
-            { id: "1123", name: "卑南鄉" },
-          ],
-        },
-        {
-          id: "23",
-          name: "花蓮縣",
-          districts: [
-            { id: "1082", name: "秀林鄉" },
-            { id: "1083", name: "吉安鄉" },
-          ],
-        },
-      ],
-    },
-
-    // 生長期清單
-    stages: [
-      {
-        id: "stage_001",
-        name: "接穗結果期",
-        start_date_range: { id: "start_001", name: "上旬", month: "1" },
-        end_date_range: { id: "end_001", name: "下旬", month: "3" },
-        status: "complete",
-        color: "#476dc6",
-        album: [
-          {
-            id: "img_001",
-            url: "https://picsum.photos/seed/stock-1/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-1/300/200",
-            name: "接穗結果期示意圖01.jpg",
-            source: "農委會",
-            sort_order: 0,
-          },
-          {
-            id: "img_002",
-            url: "https://picsum.photos/seed/stock-2/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-2/300/200",
-            name: "接穗結果期示意圖02.jpg",
-            source: "農委會",
-            sort_order: 1,
-          },
-          {
-            id: "img_003",
-            url: "https://picsum.photos/seed/stock-3/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-3/300/200",
-            name: "接穗結果期示意圖03.jpg",
-            source: "農委會",
-            sort_order: 2,
-          },
-          {
-            id: "img_004",
-            url: "https://picsum.photos/seed/stock-4/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-4/300/200",
-            name: "接穗結果期示意圖04.jpg",
-            source: "農委會",
-            sort_order: 3,
-          },
-          {
-            id: "img_005",
-            url: "https://picsum.photos/seed/stock-5/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-5/300/200",
-            name: "接穗結果期示意圖05.jpg",
-            source: "農委會",
-            sort_order: 4,
-          },
-          {
-            id: "img_006",
-            url: "https://picsum.photos/seed/stock-6/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-6/300/200",
-            name: "接穗結果期示意圖06.jpg",
-            source: "農委會",
-            sort_order: 5,
-          },
-          {
-            id: "img_007",
-            url: "https://picsum.photos/seed/stock-7/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-7/300/200",
-            name: "接穗結果期示意圖07.jpg",
-            source: "農委會",
-            sort_order: 6,
-          },
-          {
-            id: "img_008",
-            url: "https://picsum.photos/seed/stock-8/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-8/300/200",
-            name: "接穗結果期示意圖08.jpg",
-            source: "農委會",
-            sort_order: 7,
-          },
-          {
-            id: "img_009",
-            url: "https://picsum.photos/seed/stock-9/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-9/300/200",
-            name: "接穗結果期示意圖09.jpg",
-            source: "農委會",
-            sort_order: 8,
-          },
-          {
-            id: "img_010",
-            url: "https://picsum.photos/seed/stock-10/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-10/300/200",
-            name: "接穗結果期示意圖10.jpg",
-            source: "農委會",
-            sort_order: 9,
-          }
-        ],
-      },
-      {
-        id: "stage_002",
-        name: "接穗結果期",
-        start_date_range: { id: "start_002", name: "中旬", month: "2" },
-        end_date_range: { id: "end_002", name: "中旬", month: "4" },
-        status: "complete",
-        color: "#0AA7C6",
-        album: [
-          {
-            id: "img_003",
-            url: "https://picsum.photos/seed/stock-3/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-3/300/200",
-            name: "接穗結果期示意圖03.jpg",
-            source: "農委會",
-            sort_order: 0,
-          },
-          {
-            id: "img_004",
-            url: "https://picsum.photos/seed/stock-4/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-4/300/200",
-            name: "接穗結果期示意圖04.jpg",
-            source: "農委會",
-            sort_order: 1,
-          },
-          {
-            id: "img_005",
-            url: "https://picsum.photos/seed/stock-5/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-5/300/200",
-            name: "接穗結果期示意圖05.jpg",
-            source: "農委會",
-            sort_order: 2,
-          },
-          {
-            id: "img_006",
-            url: "https://picsum.photos/seed/stock-6/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-6/300/200",
-            name: "接穗結果期示意圖06.jpg",
-            source: "農委會",
-            sort_order: 3,
-          },
-          {
-            id: "img_007",
-            url: "https://picsum.photos/seed/stock-7/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-7/300/200",
-            name: "接穗結果期示意圖07.jpg",
-            source: "農委會",
-            sort_order: 4,
-          },
-          {
-            id: "img_008",
-            url: "https://picsum.photos/seed/stock-8/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-8/300/200",
-            name: "接穗結果期示意圖08.jpg",
-            source: "農委會",
-            sort_order: 5,
-          },
-          {
-            id: "img_009",
-            url: "https://picsum.photos/seed/stock-9/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-9/300/200",
-            name: "接穗結果期示意圖09.jpg",
-            source: "農委會",
-            sort_order: 6,
-          },
-          {
-            id: "img_010",
-            url: "https://picsum.photos/seed/stock-10/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-10/300/200",
-            name: "接穗結果期示意圖10.jpg",
-            source: "農委會",
-            sort_order: 7,
-          },
-          {
-            id: "img_011",
-            url: "https://picsum.photos/seed/stock-11/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-11/300/200",
-            name: "接穗結果期示意圖11.jpg",
-            source: "農委會",
-            sort_order: 8,
-          },
-          {
-            id: "img_012",
-            url: "https://picsum.photos/seed/stock-12/600/400",
-            thumbnail: "https://picsum.photos/seed/stock-12/300/200",
-            name: "接穗結果期示意圖12.jpg",
-            source: "農委會",
-            sort_order: 9,
-          }
-        ],
-      },
-      {
-        id: "stage_003",
-        name: "果實成長期",
-        start_date_range: { id: "start_003", name: "下旬", month: "3" },
-        end_date_range: { id: "end_003", name: "下旬", month: "6" },
-        status: "complete",
-        color: "#0AC675",
-        album: [
-          {
-            id: "img_005",
-            url: "https://picsum.photos/seed/grow-5/600/400",
-            thumbnail: "https://picsum.photos/seed/grow-5/300/200",
-            name: "果實成長期示意圖05.jpg",
-            source: "農委會",
-            sort_order: 0,
-          },
-          {
-            id: "img_006",
-            url: "https://picsum.photos/seed/grow-6/600/400",
-            thumbnail: "https://picsum.photos/seed/grow-6/300/200",
-            name: "果實成長期示意圖06.jpg",
-            source: "農委會",
-            sort_order: 1,
-          },
-          {
-            id: "img_007",
-            url: "https://picsum.photos/seed/grow-7/600/400",
-            thumbnail: "https://picsum.photos/seed/grow-7/300/200",
-            name: "果實成長期示意圖07.jpg",
-            source: "農委會",
-            sort_order: 2,
-          },
-          {
-            id: "img_008",
-            url: "https://picsum.photos/seed/grow-8/600/400",
-            thumbnail: "https://picsum.photos/seed/grow-8/300/200",
-            name: "果實成長期示意圖08.jpg",
-            source: "農委會",
-            sort_order: 3,
-          },
-          {
-            id: "img_009",
-            url: "https://picsum.photos/seed/grow-9/600/400",
-            thumbnail: "https://picsum.photos/seed/grow-9/300/200",
-            name: "果實成長期示意圖09.jpg",
-            source: "農委會",
-            sort_order: 4,
-          },
-          {
-            id: "img_010",
-            url: "https://picsum.photos/seed/grow-10/600/400",
-            thumbnail: "https://picsum.photos/seed/grow-10/300/200",
-            name: "果實成長期示意圖10.jpg",
-            source: "農委會",
-            sort_order: 5,
-          },
-          {
-            id: "img_011",
-            url: "https://picsum.photos/seed/grow-11/600/400",
-            thumbnail: "https://picsum.photos/seed/grow-11/300/200",
-            name: "果實成長期示意圖11.jpg",
-            source: "農委會",
-            sort_order: 6,
-          },
-          {
-            id: "img_012",
-            url: "https://picsum.photos/seed/grow-12/600/400",
-            thumbnail: "https://picsum.photos/seed/grow-12/300/200",
-            name: "果實成長期示意圖12.jpg",
-            source: "農委會",
-            sort_order: 7,
-          },
-          {
-            id: "img_013",
-            url: "https://picsum.photos/seed/grow-13/600/400",
-            thumbnail: "https://picsum.photos/seed/grow-13/300/200",
-            name: "果實成長期示意圖13.jpg",
-            source: "農委會",
-            sort_order: 8,
-          },
-          {
-            id: "img_014",
-            url: "https://picsum.photos/seed/grow-14/600/400",
-            thumbnail: "https://picsum.photos/seed/grow-14/300/200",
-            name: "果實成長期示意圖14.jpg",
-            source: "農委會",
-            sort_order: 9,
-          }
-        ],
-      },
-      {
-        id: "stage_004",
-        name: "果實成熟期",
-        start_date_range: { id: "start_004", name: "上旬", month: "5" },
-        end_date_range: { id: "end_004", name: "下旬", month: "9" },
-        status: "complete",
-        color: "#C6B30A",
-        album: [
-          {
-            id: "img_007",
-            url: "https://picsum.photos/seed/fruit-7/600/400",
-            thumbnail: "https://picsum.photos/seed/fruit-7/300/200",
-            name: "果實成熟期示意圖07.jpg",
-            source: "農委會",
-            sort_order: 0,
-          },
-          {
-            id: "img_008",
-            url: "https://picsum.photos/seed/fruit-8/600/400",
-            thumbnail: "https://picsum.photos/seed/fruit-8/300/200",
-            name: "果實成熟期示意圖08.jpg",
-            source: "農委會",
-            sort_order: 1,
-          },
-          {
-            id: "img_009",
-            url: "https://picsum.photos/seed/fruit-9/600/400",
-            thumbnail: "https://picsum.photos/seed/fruit-9/300/200",
-            name: "果實成熟期示意圖09.jpg",
-            source: "農委會",
-            sort_order: 2,
-          },
-          {
-            id: "img_010",
-            url: "https://picsum.photos/seed/fruit-10/600/400",
-            thumbnail: "https://picsum.photos/seed/fruit-10/300/200",
-            name: "果實成熟期示意圖10.jpg",
-            source: "農委會",
-            sort_order: 3,
-          },
-          {
-            id: "img_011",
-            url: "https://picsum.photos/seed/fruit-11/600/400",
-            thumbnail: "https://picsum.photos/seed/fruit-11/300/200",
-            name: "果實成熟期示意圖11.jpg",
-            source: "農委會",
-            sort_order: 4,
-          },
-          {
-            id: "img_012",
-            url: "https://picsum.photos/seed/fruit-12/600/400",
-            thumbnail: "https://picsum.photos/seed/fruit-12/300/200",
-            name: "果實成熟期示意圖12.jpg",
-            source: "農委會",
-            sort_order: 5,
-          },
-          {
-            id: "img_013",
-            url: "https://picsum.photos/seed/fruit-13/600/400",
-            thumbnail: "https://picsum.photos/seed/fruit-13/300/200",
-            name: "果實成熟期示意圖13.jpg",
-            source: "農委會",
-            sort_order: 6,
-          },
-          {
-            id: "img_014",
-            url: "https://picsum.photos/seed/fruit-14/600/400",
-            thumbnail: "https://picsum.photos/seed/fruit-14/300/200",
-            name: "果實成熟期示意圖14.jpg",
-            source: "農委會",
-            sort_order: 7,
-          },
-          {
-            id: "img_015",
-            url: "https://picsum.photos/seed/fruit-15/600/400",
-            thumbnail: "https://picsum.photos/seed/fruit-15/300/200",
-            name: "果實成熟期示意圖15.jpg",
-            source: "農委會",
-            sort_order: 8,
-          },
-          {
-            id: "img_016",
-            url: "https://picsum.photos/seed/fruit-16/600/400",
-            thumbnail: "https://picsum.photos/seed/fruit-16/300/200",
-            name: "果實成熟期示意圖16.jpg",
-            source: "農委會",
-            sort_order: 9,
-          }
-        ],
-      },
-      {
-        id: "stage_005",
-        name: "砧木生育期",
         start_date_range: { id: "start_005", name: "中旬", month: "10" },
         end_date_range: { id: "end_005", name: "下旬", month: "12" },
         status: "complete",

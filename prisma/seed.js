@@ -87,6 +87,24 @@ const seedGwls = async () => {
   }
 };
 
+const resetDatabase = async () => {
+  await prisma.stageThreshold.deleteMany();
+  await prisma.stageImage.deleteMany();
+  await prisma.stage.deleteMany();
+  await prisma.calendarIndicator.deleteMany();
+  await prisma.calendarZoneDistrict.deleteMany();
+  await prisma.calendarZone.deleteMany();
+  await prisma.calendar.deleteMany();
+  await prisma.zoneDistrict.deleteMany();
+  await prisma.zone.deleteMany();
+  await prisma.district.deleteMany();
+  await prisma.city.deleteMany();
+  await prisma.indicator.deleteMany();
+  await prisma.indicatorCategory.deleteMany();
+  await prisma.crop.deleteMany();
+  await prisma.gwl.deleteMany();
+};
+
 const seedZones = async () => {
   for (const zone of zones) {
     const zoneId = String(zone.id);
@@ -177,9 +195,14 @@ const seedCalendars = async () => {
       }
     }
 
-    if (calendar.indicators && calendar.indicators.length > 0) {
+    const indicatorsToUse =
+      calendar.indicators && calendar.indicators.length > 0
+        ? calendar.indicators
+        : indicators.map((ind) => ({ id: ind.id, name: ind.name }));
+
+    if (indicatorsToUse.length > 0) {
       await prisma.calendarIndicator.createMany({
-        data: calendar.indicators.map((ind) => ({
+        data: indicatorsToUse.map((ind) => ({
           calendarId: calendar.id,
           indicatorId: ind.id,
           nameSnapshot: ind.name,
@@ -190,105 +213,93 @@ const seedCalendars = async () => {
 };
 
 const seedStages = async () => {
-  const calendarId = calendars[0]?.id;
-  if (!calendarId) return;
+  if (calendars.length === 0) return;
 
-  for (const stage of stages) {
-    const startMonthRaw = stage.start_date_range?.month;
-    const endMonthRaw = stage.end_date_range?.month;
-    const startMonth = startMonthRaw === undefined || startMonthRaw === null
-      ? null
-      : Number(startMonthRaw);
-    const endMonth = endMonthRaw === undefined || endMonthRaw === null
-      ? null
-      : Number(endMonthRaw);
+  for (const calendar of calendars) {
+    await prisma.stage.deleteMany({ where: { calendarId: calendar.id } });
 
-    const created = await prisma.stage.upsert({
-      where: { id: stage.id },
-      update: {
-        calendarId,
-        name: stage.name,
-        description: stage.description || "",
-        status: stageStatusToEnum(stage.status),
-        color: stage.color || "",
-        startTenDay: tenDayLabelToEnum(stage.start_date_range?.name),
-        startMonth,
-        endTenDay: tenDayLabelToEnum(stage.end_date_range?.name),
-        endMonth,
-        analysis: calendarDetails[0]?.analysis || null,
-      },
-      create: {
-        id: stage.id,
-        calendarId,
-        name: stage.name,
-        description: stage.description || "",
-        status: stageStatusToEnum(stage.status),
-        color: stage.color || "",
-        startTenDay: tenDayLabelToEnum(stage.start_date_range?.name),
-        startMonth,
-        endTenDay: tenDayLabelToEnum(stage.end_date_range?.name),
-        endMonth,
-        analysis: calendarDetails[0]?.analysis || null,
-      },
-    });
+    for (const [order, stage] of stages.entries()) {
+      const startMonthRaw = stage.start_date_range?.month;
+      const endMonthRaw = stage.end_date_range?.month;
+      const startMonth =
+        startMonthRaw === undefined || startMonthRaw === null
+          ? null
+          : Number(startMonthRaw);
+      const endMonth =
+        endMonthRaw === undefined || endMonthRaw === null
+          ? null
+          : Number(endMonthRaw);
 
-    await prisma.stageImage.deleteMany({ where: { stageId: created.id } });
+      const stageId = `${calendar.id}_${stage.id}`;
 
-    if (stage.cover_image) {
-      const coverId = stage.cover_image.id
-        ? `${stage.id}_${stage.cover_image.id}`
-        : undefined;
-      await prisma.stageImage.create({
+      const created = await prisma.stage.create({
         data: {
-          id: coverId ? String(coverId) : undefined,
-          stageId: created.id,
-          type: "COVER",
-          url: stage.cover_image.url,
-          thumbnail: stage.cover_image.thumbnail,
-          name: stage.cover_image.name,
-          source: stage.cover_image.source,
-          sortOrder: 0,
+          id: stageId,
+          calendarId: calendar.id,
+          order,
+          name: stage.name,
+          description: stage.description || "",
+          status: stageStatusToEnum(stage.status),
+          color: stage.color || "",
+          startTenDay: tenDayLabelToEnum(stage.start_date_range?.name),
+          startMonth,
+          endTenDay: tenDayLabelToEnum(stage.end_date_range?.name),
+          endMonth,
+          analysis: calendarDetails[0]?.analysis || null,
         },
       });
-    }
 
-    if (stage.album && stage.album.length > 0) {
-      await prisma.stageImage.createMany({
-        data: stage.album.map((img) => ({
-          id: img.id ? String(`${stage.id}_${img.id}`) : undefined,
-          stageId: created.id,
-          type: "ALBUM",
-          url: img.url,
-          thumbnail: img.thumbnail,
-          name: img.name,
-          source: img.source,
-          sortOrder: img.sort_order || 0,
-        })),
-      });
+      if (stage.cover_image) {
+        const coverId = stage.cover_image.id
+          ? `${stageId}_${stage.cover_image.id}`
+          : undefined;
+        await prisma.stageImage.create({
+          data: {
+            id: coverId ? String(coverId) : undefined,
+            stageId: created.id,
+            type: "COVER",
+            url: stage.cover_image.url,
+            thumbnail: stage.cover_image.thumbnail,
+            name: stage.cover_image.name,
+            source: stage.cover_image.source,
+            sortOrder: 0,
+          },
+        });
+      }
+
+      if (stage.album && stage.album.length > 0) {
+        await prisma.stageImage.createMany({
+          data: stage.album.map((img) => ({
+            id: img.id ? String(`${stageId}_${img.id}`) : undefined,
+            stageId: created.id,
+            type: "ALBUM",
+            url: img.url,
+            thumbnail: img.thumbnail,
+            name: img.name,
+            source: img.source,
+            sortOrder: img.sort_order || 0,
+          })),
+        });
+      }
+
+      if (stage.thresholds && stage.thresholds.length > 0) {
+        await prisma.stageThreshold.createMany({
+          data: stage.thresholds.map((t) => ({
+            stageId: created.id,
+            indicatorId: t.indicator_id,
+            operator: operatorToEnum(t.operator),
+            value: t.value,
+            unit: t.unit,
+            durationDays: t.duration_days || 1,
+          })),
+        });
+      }
     }
   }
 };
 
-const seedThresholds = async () => {
-  const stage = stages[0];
-  if (!stage || !stage.thresholds) return;
-
-  await prisma.stageThreshold.deleteMany({ where: { stageId: stage.id } });
-  if (stage.thresholds.length > 0) {
-    await prisma.stageThreshold.createMany({
-      data: stage.thresholds.map((t) => ({
-        stageId: stage.id,
-        indicatorId: t.indicator_id,
-        operator: operatorToEnum(t.operator),
-        value: t.value,
-        unit: t.unit,
-        durationDays: t.duration_days || 1,
-      })),
-    });
-  }
-};
-
-const main = async () => {
+const seedAll = async ({ disconnect = false } = {}) => {
+  await resetDatabase();
   await seedCities();
   await seedCrops();
   await seedIndicators();
@@ -296,15 +307,17 @@ const main = async () => {
   await seedZones();
   await seedCalendars();
   await seedStages();
-  await seedThresholds();
+  if (disconnect) {
+    await prisma.$disconnect();
+  }
 };
 
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (error) => {
+if (require.main === module) {
+  seedAll({ disconnect: true }).catch(async (error) => {
     console.error(error);
     await prisma.$disconnect();
     process.exit(1);
   });
+}
+
+module.exports = seedAll;

@@ -33,6 +33,34 @@ const buildZoneView = (calendarZone) => {
   };
 };
 
+const extractStageBaseId = (id) => {
+  const match = String(id).match(/stage_\d+/);
+  return match ? match[0] : String(id);
+};
+
+const buildStageListItem = (stage) => {
+  const baseId = extractStageBaseId(stage.id);
+  return {
+    id: baseId,
+    name: stage.name,
+    start_date_range: stage.startMonth
+      ? {
+          id: `start_${baseId.replace("stage_", "")}`,
+          name: tenDayEnumToLabel(stage.startTenDay),
+          month: Number(stage.startMonth),
+        }
+      : null,
+    end_date_range: stage.endMonth
+      ? {
+          id: `end_${baseId.replace("stage_", "")}`,
+          name: tenDayEnumToLabel(stage.endTenDay),
+          month: Number(stage.endMonth),
+        }
+      : null,
+    status: stageStatusToString(stage.status),
+  };
+};
+
 const buildStageSummary = (stage) => ({
   id: stage.id,
   name: stage.name,
@@ -202,7 +230,7 @@ const getCalendarsByCrop = async (cropId) => {
       published_at: cal.publishedAt ? cal.publishedAt.toISOString() : null,
       last_edited_at: cal.lastEditedAt.toISOString(),
       zone,
-      stages: cal.stages.map(buildStageSummary),
+      stages: cal.stages.map(buildStageListItem),
       indicators: cal.calendarIndicators.map((ci) => ({
         id: ci.indicatorId,
         name: ci.indicator?.name || ci.nameSnapshot,

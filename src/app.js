@@ -2,14 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database');
 const cropCalendarRoutes = require('./routes/cropCalendarRoutes');
+const seedMockData = require('../prisma/seed');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// 連線資料庫
-connectDB().catch((error) => {
-  console.error("資料庫連線失敗:", error.message);
-});
 
 // 中介軟體
 app.use(cors());
@@ -69,8 +65,25 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: '伺服器內部錯誤' });
 });
 
-app.listen(PORT, () => {
-  console.log(`伺服器運行於 http://localhost:${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+  } catch (error) {
+    console.error("資料庫連線失敗:", error.message);
+  }
+
+  try {
+    await seedMockData();
+    console.log("Mock 資料已寫入資料庫");
+  } catch (error) {
+    console.error("Mock 資料寫入失敗:", error.message);
+  }
+
+  app.listen(PORT, () => {
+    console.log(`伺服器運行於 http://localhost:${PORT}`);
+  });
+};
+
+startServer();
 
 module.exports = app;
