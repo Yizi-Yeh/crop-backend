@@ -20,6 +20,8 @@ services:
       POSTGRES_DB: crop_calendar_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+    expose:
+      - "5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
