@@ -9,6 +9,8 @@ services:
       - PORT=3000
     depends_on:
       - postgres
+    networks:
+      - zihyan-net
     restart: unless-stopped
 
   postgres:
@@ -22,7 +24,13 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - zihyan-net
     restart: unless-stopped
 
 volumes:
   postgres_data:
+
+networks:
+  zihyan-net:
+    external: true
