@@ -73,7 +73,7 @@ const startServer = async () => {
   }
 
   try {
-    await seedMockData();
+    await seedMockData({ reset: false });
     console.log("Mock 資料已寫入資料庫");
   } catch (error) {
     console.error("Mock 資料寫入失敗:", error.message);

@@ -298,8 +298,10 @@ const seedStages = async () => {
   }
 };
 
-const seedAll = async ({ disconnect = false } = {}) => {
-  await resetDatabase();
+const seedAll = async ({ disconnect = false, reset = false } = {}) => {
+  if (reset) {
+    await resetDatabase();
+  }
   await seedCities();
   await seedCrops();
   await seedIndicators();
