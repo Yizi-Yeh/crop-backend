@@ -2,7 +2,6 @@ const prisma = require("../db/prisma");
 const {
   tenDayLabelToEnum,
   tenDayEnumToLabel,
-  fileTypeToEnum,
   fileTypeToString,
   stageStatusToEnum,
   stageStatusToString,
