@@ -1,11 +1,14 @@
+version: '3.8'
+
 services:
   app:
     image: g384357/crop-backend:latest
-    build: .
+    # 如果你已經 push 到 Docker Hub，這裡就不需要 build: .
     expose:
       - "3000"
     environment:
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/crop_calendar_db
+      # 注意這裡改用 @crop-postgres，對應下方的 container_name
+      - DATABASE_URL=postgresql://postgres:password@crop-postgres:5432/crop_calendar_db
       - PORT=3000
     depends_on:
       - postgres
