@@ -21,7 +21,9 @@ const buildZoneView = (calendarZone) => {
     if (!cityMap.has(city.id)) {
       cityMap.set(city.id, { id: city.id, name: city.name, districts: [] });
     }
-    cityMap.get(city.id).districts.push({ id: district.id, name: district.name });
+    cityMap
+      .get(city.id)
+      .districts.push({ id: district.id, name: district.name });
   });
 
   return {
@@ -165,9 +167,11 @@ const defaultPermissions = () => ({
   canDelete: false,
 });
 
-const getCrops = async () => prisma.crop.findMany({ select: { id: true, name: true } });
+const getCrops = async () =>
+  prisma.crop.findMany({ select: { id: true, name: true } });
 
-const getGwls = async () => prisma.gwl.findMany({ select: { id: true, name: true } });
+const getGwls = async () =>
+  prisma.gwl.findMany({ select: { id: true, name: true } });
 
 const getCities = async () =>
   prisma.city.findMany({
@@ -275,10 +279,6 @@ const getCalendarDetail = async (calendarId) => {
     is_shared: calendar.isShared,
     zone,
     stages: calendar.stages.map(buildStageSummary),
-    indicators: calendar.calendarIndicators.map((ci) => ({
-      id: ci.indicatorId,
-      name: ci.indicator?.name || ci.nameSnapshot,
-    })),
     analysis: calendar.stages[0]?.analysis || undefined,
   };
 };
@@ -298,7 +298,9 @@ const createCalendar = async ({
     const existingZones = await prisma.zone.findMany({
       where: { id: { in: zoneIds.map((id) => String(id)) } },
     });
-    existingZones.forEach((zone) => zones.push({ zoneId: zone.id, zoneName: zone.zoneName }));
+    existingZones.forEach((zone) =>
+      zones.push({ zoneId: zone.id, zoneName: zone.zoneName }),
+    );
   } else if (zoneName) {
     const zone = await prisma.zone.create({
       data: {
@@ -539,7 +541,15 @@ const getStageDetail = async (stageId) => {
 };
 
 const createStage = async ({ calendarId, payload }) => {
-  const { name, description, start_date_range, end_date_range, color, status, thresholds = [] } = payload;
+  const {
+    name,
+    description,
+    start_date_range,
+    end_date_range,
+    color,
+    status,
+    thresholds = [],
+  } = payload;
 
   const stage = await prisma.stage.create({
     data: {
@@ -568,7 +578,15 @@ const createStage = async ({ calendarId, payload }) => {
 };
 
 const updateStage = async ({ stageId, payload }) => {
-  const { name, description, start_date_range, end_date_range, color, status, thresholds } = payload;
+  const {
+    name,
+    description,
+    start_date_range,
+    end_date_range,
+    color,
+    status,
+    thresholds,
+  } = payload;
 
   const updateData = {};
   if (name !== undefined) updateData.name = name;
@@ -657,7 +675,10 @@ const addStageAlbum = async ({ stageId, source, files, names = [] }) => {
     where: { stageId, type: "ALBUM" },
     orderBy: { sortOrder: "asc" },
   });
-  const maxOrder = existing.reduce((max, img) => Math.max(max, img.sortOrder || 0), -1);
+  const maxOrder = existing.reduce(
+    (max, img) => Math.max(max, img.sortOrder || 0),
+    -1,
+  );
 
   const created = await prisma.$transaction(
     files.map((file, index) => {
@@ -674,13 +695,19 @@ const addStageAlbum = async ({ stageId, source, files, names = [] }) => {
           sortOrder: maxOrder + 1 + index,
         },
       });
-    })
+    }),
   );
 
   return created;
 };
 
-const updateStageAlbum = async ({ stageId, source, deleteIds = [], files = [], names = [] }) => {
+const updateStageAlbum = async ({
+  stageId,
+  source,
+  deleteIds = [],
+  files = [],
+  names = [],
+}) => {
   if (source !== undefined) {
     await prisma.stageImage.updateMany({
       where: { stageId, type: "ALBUM" },
