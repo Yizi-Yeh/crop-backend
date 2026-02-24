@@ -9,6 +9,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
+    "publish-image": "./scripts/publish-image.sh",
     "seed": "node prisma/seed.js",
     "db:fix-perms": "prisma db execute --file prisma/fix_permissions.sql --schema prisma/schema.prisma",
     "db:prepare": "npm run db:fix-perms && prisma db push && npm run seed"
