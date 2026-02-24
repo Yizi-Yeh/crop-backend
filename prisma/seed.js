@@ -12,10 +12,14 @@ const {
 } = require("../src/data/mockData");
 const {
   tenDayLabelToEnum,
+  tenDayDecadeToEnum,
   fileTypeToEnum,
   stageStatusToEnum,
   operatorToEnum,
 } = require("../src/services/mappers");
+
+const tenDayPayloadToEnum = (range) =>
+  tenDayDecadeToEnum(range?.decade) ?? tenDayLabelToEnum(range?.name);
 
 const seedCities = async () => {
   for (const city of cities) {
@@ -241,9 +245,9 @@ const seedStages = async () => {
           description: stage.description || "",
           status: stageStatusToEnum(stage.status),
           color: stage.color || "",
-          startTenDay: tenDayLabelToEnum(stage.start_date_range?.name),
+          startTenDay: tenDayPayloadToEnum(stage.start_date_range),
           startMonth,
-          endTenDay: tenDayLabelToEnum(stage.end_date_range?.name),
+          endTenDay: tenDayPayloadToEnum(stage.end_date_range),
           endMonth,
           analysis: calendarDetails[0]?.analysis || null,
         },

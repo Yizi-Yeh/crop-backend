@@ -383,8 +383,8 @@ const calendars = [
         //   name: "接穗結果期封面.jpg",
         //   source: "農委會",
         // },
-        start_date_range: { id: "start_001", name: "上旬", month: "1" },
-        end_date_range: { id: "end_001", name: "下旬", month: "3" },
+        start_date_range: { id: "start_stage_001", decade: "upper", month: "1" },
+        end_date_range: { id: "end_stage_001", decade: "lower", month: "3" },
         status: "complete",
         // color: "#476dc6",
         // album: [
@@ -474,16 +474,16 @@ const calendars = [
         id: "stage_002",
         name: "接穗結果期",
         description: "果實持續膨大，建議適度疏果並補充鉀肥以提升品質與糖度。",
-        start_date_range: { id: "start_002", name: "中旬", month: "2" },
-        end_date_range: { id: "end_002", name: "中旬", month: "4" },
+        start_date_range: { id: "start_stage_002", decade: "middle", month: "2" },
+        end_date_range: { id: "end_stage_002", decade: "middle", month: "4" },
         status: "complete",
       },
       {
         id: "stage_003",
         name: "果實成長期",
         description: "果實快速生長，注意水分均衡與病蟲害監測，避免裂果與日灼。",
-        start_date_range: { id: "start_003", name: "下旬", month: "3" },
-        end_date_range: { id: "end_003", name: "下旬", month: "6" },
+        start_date_range: { id: "start_stage_003", decade: "lower", month: "3" },
+        end_date_range: { id: "end_stage_003", decade: "lower", month: "6" },
         status: "complete",
       },
       {
@@ -491,8 +491,8 @@ const calendars = [
         name: "果實成熟期",
         description:
           "成熟期需降低氮肥、提高通風，掌握採收時機以確保外觀與風味。",
-        start_date_range: { id: "start_004", name: "上旬", month: "5" },
-        end_date_range: { id: "end_004", name: "下旬", month: "9" },
+        start_date_range: { id: "start_stage_004", decade: "upper", month: "5" },
+        end_date_range: { id: "end_stage_004", decade: "lower", month: "9" },
         status: "complete",
       },
       {
@@ -500,8 +500,8 @@ const calendars = [
         name: "砧木生育期",
         description:
           "砧木持續營養生長，重點在根系健全與枝條整齊，為後續嫁接做準備。",
-        start_date_range: { id: "start_005", name: "中旬", month: "10" },
-        end_date_range: { id: "end_005", name: "下旬", month: "12" },
+        start_date_range: { id: "start_stage_005", decade: "middle", month: "10" },
+        end_date_range: { id: "end_stage_005", decade: "lower", month: "12" },
         status: "complete",
       },
     ],
@@ -574,8 +574,8 @@ const calendarDetails = [
           name: "接穗結果期封面.jpg",
           source: "農委會",
         },
-        start_date_range: { id: "start_001", name: "上旬", month: "1" },
-        end_date_range: { id: "end_001", name: "下旬", month: "3" },
+        start_date_range: { id: "start_stage_001", decade: "upper", month: "1" },
+        end_date_range: { id: "end_stage_001", decade: "lower", month: "3" },
         status: "complete",
         color: "#476dc6",
         album: [
@@ -672,8 +672,8 @@ const calendarDetails = [
           name: "果實膨大期封面.jpg",
           source: "農委會",
         },
-        start_date_range: { id: "start_002", name: "中旬", month: "2" },
-        end_date_range: { id: "end_002", name: "中旬", month: "4" },
+        start_date_range: { id: "start_stage_002", decade: "middle", month: "2" },
+        end_date_range: { id: "end_stage_002", decade: "middle", month: "4" },
         status: "complete",
         color: "#0AA7C6",
         album: [
@@ -770,8 +770,8 @@ const calendarDetails = [
           name: "果實成長期封面.jpg",
           source: "農委會",
         },
-        start_date_range: { id: "start_003", name: "下旬", month: "3" },
-        end_date_range: { id: "end_003", name: "下旬", month: "6" },
+        start_date_range: { id: "start_stage_003", decade: "lower", month: "3" },
+        end_date_range: { id: "end_stage_003", decade: "lower", month: "6" },
         status: "complete",
         color: "#0AC675",
         album: [
@@ -869,8 +869,8 @@ const calendarDetails = [
           name: "果實成熟期封面.jpg",
           source: "農委會",
         },
-        start_date_range: { id: "start_004", name: "上旬", month: "5" },
-        end_date_range: { id: "end_004", name: "下旬", month: "9" },
+        start_date_range: { id: "start_stage_004", decade: "upper", month: "5" },
+        end_date_range: { id: "end_stage_004", decade: "lower", month: "9" },
         status: "complete",
         color: "#C6B30A",
         album: [
@@ -968,8 +968,8 @@ const calendarDetails = [
           name: "砧木生育期封面.jpg",
           source: "農委會",
         },
-        start_date_range: { id: "start_005", name: "中旬", month: "10" },
-        end_date_range: { id: "end_005", name: "下旬", month: "12" },
+        start_date_range: { id: "start_stage_005", decade: "middle", month: "10" },
+        end_date_range: { id: "end_stage_005", decade: "lower", month: "12" },
         status: "complete",
         color: "#C64C0A",
         album: [
@@ -1647,8 +1647,8 @@ const stages = [
       name: "接穗結果期封面.jpg",
       source: "農委會",
     },
-    start_date_range: { id: "start_001", name: "上旬", month: "1" },
-    end_date_range: { id: "end_001", name: "下旬", month: "3" },
+    start_date_range: { id: "start_stage_001", decade: "upper", month: "1" },
+    end_date_range: { id: "end_stage_001", decade: "lower", month: "3" },
     status: "complete",
     color: "#FDBA74",
     album: [
@@ -1745,8 +1745,8 @@ const stages = [
       name: "果實膨大期封面.jpg",
       source: "農委會",
     },
-    start_date_range: { id: "start_002", name: "中旬", month: "2" },
-    end_date_range: { id: "end_002", name: "中旬", month: "4" },
+    start_date_range: { id: "start_stage_002", decade: "middle", month: "2" },
+    end_date_range: { id: "end_stage_002", decade: "middle", month: "4" },
     status: "complete",
     color: "#FCD34D",
     album: [
@@ -1843,8 +1843,8 @@ const stages = [
       name: "果實成長期封面.jpg",
       source: "農委會",
     },
-    start_date_range: { id: "start_003", name: "下旬", month: "3" },
-    end_date_range: { id: "end_003", name: "下旬", month: "6" },
+    start_date_range: { id: "start_stage_003", decade: "lower", month: "3" },
+    end_date_range: { id: "end_stage_003", decade: "lower", month: "6" },
     status: "complete",
     color: "#FDE68A",
     album: [
@@ -1941,8 +1941,8 @@ const stages = [
       name: "果實成熟期封面.jpg",
       source: "農委會",
     },
-    start_date_range: { id: "start_004", name: "上旬", month: "5" },
-    end_date_range: { id: "end_004", name: "下旬", month: "9" },
+    start_date_range: { id: "start_stage_004", decade: "upper", month: "5" },
+    end_date_range: { id: "end_stage_004", decade: "lower", month: "9" },
     status: "complete",
     color: "#FCA5A5",
     album: [
@@ -2040,8 +2040,8 @@ const stages = [
       name: "砧木生育期封面.jpg",
       source: "農委會",
     },
-    start_date_range: { id: "start_005", name: "中旬", month: "10" },
-    end_date_range: { id: "end_005", name: "下旬", month: "12" },
+    start_date_range: { id: "start_stage_005", decade: "middle", month: "10" },
+    end_date_range: { id: "end_stage_005", decade: "lower", month: "12" },
     status: "complete",
     color: "#FED7AA",
     album: [
@@ -2133,8 +2133,8 @@ const stages = [
 // {
 //      "name": "育苗期",
 //     "description": "播種至秧苗成長期",
-//     "start_date_range": { "month": 1, "name": "上旬" },
-//     "end_date_range": { "month": 2, "name": "上旬" },
+//     "start_date_range": { "month": 1, "decade": "upper" },
+//     "end_date_range": { "month": 2, "decade": "upper" },
 //     "color": "#4A90E2",
 //     "status": "draft",   // draft | complete
 //     "thresholds": [
@@ -2157,8 +2157,8 @@ const stages = [
 // {
 //   "name": "育苗期",
 //   "description": "播種至秧苗成長期",
-//   "start_date_range": { "month": 1, "name": "上旬" },
-//   "end_date_range": { "month": 2, "name": "上旬" },
+//   "start_date_range": { "month": 1, "decade": "upper" },
+//   "end_date_range": { "month": 2, "decade": "upper" },
 //   "color": "#4A90E2",
 //   "status": "draft",   // draft | complete
 //   "thresholds": [

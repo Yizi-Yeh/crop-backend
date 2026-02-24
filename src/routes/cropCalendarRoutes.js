@@ -444,7 +444,7 @@ router.get(
         .json({ status: "error", message: "未發布的栽培曆需要認證才能存取" });
     }
 
-    const stage = await getStageDetail(stageId);
+    const stage = await getStageDetail(calendarId, stageId);
     if (!stage) {
       return res
         .status(404)
@@ -506,14 +506,14 @@ router.put(
   "/crops/:cropId/calendars/:calendarId/stages/:stageId",
   authMiddleware,
   asyncHandler(async (req, res) => {
-    const { stageId } = req.params;
+    const { calendarId, stageId } = req.params;
     const payload =
       req.body.stage_id !== undefined && req.body.name === undefined
         ? { ...req.body, name: req.body.stage_id }
         : req.body;
 
     try {
-      const updated = await updateStage({ stageId, payload });
+      const updated = await updateStage({ calendarId, stageId, payload });
       res.json({ status: "ok", message: "success", data: { id: updated.id } });
     } catch (error) {
       if (error.code === "P2025") {
@@ -534,10 +534,10 @@ router.delete(
   "/crops/:cropId/calendars/:calendarId/stages/:stageId",
   authMiddleware,
   asyncHandler(async (req, res) => {
-    const { stageId } = req.params;
+    const { calendarId, stageId } = req.params;
 
     try {
-      await deleteStage(stageId);
+      await deleteStage(calendarId, stageId);
     } catch (error) {
       if (error.code === "P2025") {
         return res

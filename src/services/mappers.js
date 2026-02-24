@@ -28,6 +28,34 @@ const tenDayEnumToLabel = (value) => {
   }
 };
 
+const tenDayDecadeToEnum = (decade) => {
+  if (!decade) return null;
+  switch (decade) {
+    case "upper":
+      return TenDay.FIRST;
+    case "middle":
+      return TenDay.MIDDLE;
+    case "lower":
+      return TenDay.LAST;
+    default:
+      return null;
+  }
+};
+
+const tenDayEnumToDecade = (value) => {
+  if (!value) return null;
+  switch (value) {
+    case TenDay.FIRST:
+      return "upper";
+    case TenDay.MIDDLE:
+      return "middle";
+    case TenDay.LAST:
+      return "lower";
+    default:
+      return null;
+  }
+};
+
 const fileTypeToEnum = (value) => {
   if (!value) return CalendarFileType.ORIGINAL;
   return value === "copy" ? CalendarFileType.COPY : CalendarFileType.ORIGINAL;
@@ -85,6 +113,8 @@ const imageTypeToEnum = (value) => {
 module.exports = {
   tenDayLabelToEnum,
   tenDayEnumToLabel,
+  tenDayDecadeToEnum,
+  tenDayEnumToDecade,
   fileTypeToEnum,
   fileTypeToString,
   stageStatusToEnum,

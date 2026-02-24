@@ -1,7 +1,8 @@
 const prisma = require("../db/prisma");
 const {
   tenDayLabelToEnum,
-  tenDayEnumToLabel,
+  tenDayDecadeToEnum,
+  tenDayEnumToDecade,
   fileTypeToString,
   stageStatusToEnum,
   stageStatusToString,
@@ -39,6 +40,17 @@ const extractStageBaseId = (id) => {
   return match ? match[0] : String(id);
 };
 
+const resolveStageId = (calendarId, stageId) => {
+  if (!calendarId || !stageId) return stageId;
+  const stageIdStr = String(stageId);
+  if (stageIdStr.startsWith(`${calendarId}_`)) return stageIdStr;
+  if (/^stage_\d+/.test(stageIdStr)) return `${calendarId}_${stageIdStr}`;
+  return stageIdStr;
+};
+
+const tenDayPayloadToEnum = (range) =>
+  tenDayDecadeToEnum(range?.decade) ?? tenDayLabelToEnum(range?.name);
+
 const buildStageListItem = (stage) => {
   const baseId = extractStageBaseId(stage.id);
   return {
@@ -46,15 +58,15 @@ const buildStageListItem = (stage) => {
     name: stage.name,
     start_date_range: stage.startMonth
       ? {
-          id: `start_${baseId.replace("stage_", "")}`,
-          name: tenDayEnumToLabel(stage.startTenDay),
+          id: `start_${baseId}`,
+          decade: tenDayEnumToDecade(stage.startTenDay),
           month: Number(stage.startMonth),
         }
       : null,
     end_date_range: stage.endMonth
       ? {
-          id: `end_${baseId.replace("stage_", "")}`,
-          name: tenDayEnumToLabel(stage.endTenDay),
+          id: `end_${baseId}`,
+          decade: tenDayEnumToDecade(stage.endTenDay),
           month: Number(stage.endMonth),
         }
       : null,
@@ -62,52 +74,56 @@ const buildStageListItem = (stage) => {
   };
 };
 
-const buildStageSummary = (stage) => ({
-  id: stage.id,
-  name: stage.name,
-  description: stage.description || "",
-  cover_image: (() => {
-    const cover = (stage.images || []).find((img) => img.type === "COVER");
-    return cover
+const buildStageSummary = (stage) => {
+  const baseId = extractStageBaseId(stage.id);
+  return {
+    id: stage.id,
+    name: stage.name,
+    description: stage.description || "",
+    cover_image: (() => {
+      const cover = (stage.images || []).find((img) => img.type === "COVER");
+      return cover
+        ? {
+            id: cover.id,
+            url: cover.url,
+            thumbnail: cover.thumbnail,
+            name: cover.name,
+            source: cover.source || "",
+          }
+        : null;
+    })(),
+    start_date_range: stage.startMonth
       ? {
-          id: cover.id,
-          url: cover.url,
-          thumbnail: cover.thumbnail,
-          name: cover.name,
-          source: cover.source || "",
+          id: `start_${baseId}`,
+          decade: tenDayEnumToDecade(stage.startTenDay),
+          month: String(stage.startMonth),
         }
-      : null;
-  })(),
-  start_date_range: stage.startMonth
-    ? {
-        id: `start_${stage.id}`,
-        name: tenDayEnumToLabel(stage.startTenDay),
-        month: String(stage.startMonth),
-      }
-    : null,
-  end_date_range: stage.endMonth
-    ? {
-        id: `end_${stage.id}`,
-        name: tenDayEnumToLabel(stage.endTenDay),
-        month: String(stage.endMonth),
-      }
-    : null,
-  status: stageStatusToString(stage.status),
-  color: stage.color || "",
-  album: (stage.images || [])
-    .filter((img) => img.type === "ALBUM")
-    .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
-    .map((img) => ({
-      id: img.id,
-      url: img.url,
-      thumbnail: img.thumbnail,
-      name: img.name,
-      source: img.source || "",
-      sort_order: img.sortOrder || 0,
-    })),
-});
+      : null,
+    end_date_range: stage.endMonth
+      ? {
+          id: `end_${baseId}`,
+          decade: tenDayEnumToDecade(stage.endTenDay),
+          month: String(stage.endMonth),
+        }
+      : null,
+    status: stageStatusToString(stage.status),
+    color: stage.color || "",
+    album: (stage.images || [])
+      .filter((img) => img.type === "ALBUM")
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+      .map((img) => ({
+        id: img.id,
+        url: img.url,
+        thumbnail: img.thumbnail,
+        name: img.name,
+        source: img.source || "",
+        sort_order: img.sortOrder || 0,
+      })),
+  };
+};
 
 const buildStageDetail = (stage) => {
+  const baseId = extractStageBaseId(stage.id);
   const cover = stage.images.find((img) => img.type === "COVER");
   const album = stage.images
     .filter((img) => img.type === "ALBUM")
@@ -119,15 +135,15 @@ const buildStageDetail = (stage) => {
     description: stage.description || "",
     start_date_range: stage.startMonth
       ? {
-          id: `start_${stage.id}`,
-          name: tenDayEnumToLabel(stage.startTenDay),
+          id: `start_${baseId}`,
+          decade: tenDayEnumToDecade(stage.startTenDay),
           month: String(stage.startMonth),
         }
       : null,
     end_date_range: stage.endMonth
       ? {
-          id: `end_${stage.id}`,
-          name: tenDayEnumToLabel(stage.endTenDay),
+          id: `end_${baseId}`,
+          decade: tenDayEnumToDecade(stage.endTenDay),
           month: String(stage.endMonth),
         }
       : null,
@@ -531,9 +547,14 @@ const getStageList = async (calendarId) => {
   return stages;
 };
 
-const getStageDetail = async (stageId) => {
+const getStageDetail = async (calendarId, stageId) => {
+  if (stageId === undefined) {
+    stageId = calendarId;
+    calendarId = null;
+  }
+  const resolvedStageId = resolveStageId(calendarId, stageId);
   const stage = await prisma.stage.findUnique({
-    where: { id: stageId },
+    where: { id: resolvedStageId },
     include: { images: true, thresholds: true },
   });
   if (!stage) return null;
@@ -556,9 +577,9 @@ const createStage = async ({ calendarId, payload }) => {
       calendarId,
       name,
       description: description || "",
-      startTenDay: tenDayLabelToEnum(start_date_range?.name),
+      startTenDay: tenDayPayloadToEnum(start_date_range),
       startMonth: start_date_range?.month || null,
-      endTenDay: tenDayLabelToEnum(end_date_range?.name),
+      endTenDay: tenDayPayloadToEnum(end_date_range),
       endMonth: end_date_range?.month || null,
       status: stageStatusToEnum(status),
       color: color || "",
@@ -577,7 +598,7 @@ const createStage = async ({ calendarId, payload }) => {
   return stage;
 };
 
-const updateStage = async ({ stageId, payload }) => {
+const updateStage = async ({ calendarId, stageId, payload }) => {
   const {
     name,
     description,
@@ -594,25 +615,26 @@ const updateStage = async ({ stageId, payload }) => {
   if (color !== undefined) updateData.color = color;
   if (status !== undefined) updateData.status = stageStatusToEnum(status);
   if (start_date_range !== undefined) {
-    updateData.startTenDay = tenDayLabelToEnum(start_date_range?.name);
+    updateData.startTenDay = tenDayPayloadToEnum(start_date_range);
     updateData.startMonth = start_date_range?.month || null;
   }
   if (end_date_range !== undefined) {
-    updateData.endTenDay = tenDayLabelToEnum(end_date_range?.name);
+    updateData.endTenDay = tenDayPayloadToEnum(end_date_range);
     updateData.endMonth = end_date_range?.month || null;
   }
 
+  const resolvedStageId = resolveStageId(calendarId, stageId);
   const stage = await prisma.stage.update({
-    where: { id: stageId },
+    where: { id: resolvedStageId },
     data: updateData,
   });
 
   if (thresholds !== undefined) {
-    await prisma.stageThreshold.deleteMany({ where: { stageId } });
+    await prisma.stageThreshold.deleteMany({ where: { stageId: resolvedStageId } });
     if (thresholds.length > 0) {
       await prisma.stageThreshold.createMany({
         data: thresholds.map((t) => ({
-          stageId,
+          stageId: resolvedStageId,
           indicatorId: t.indicator_id,
           operator: operatorToEnum(t.operator),
           value: t.value,
@@ -626,8 +648,9 @@ const updateStage = async ({ stageId, payload }) => {
   return stage;
 };
 
-const deleteStage = async (stageId) => {
-  await prisma.stage.delete({ where: { id: stageId } });
+const deleteStage = async (calendarId, stageId) => {
+  const resolvedStageId = resolveStageId(calendarId, stageId);
+  await prisma.stage.delete({ where: { id: resolvedStageId } });
 };
 
 const addStageCover = async ({ stageId, source, file }) => {
@@ -754,6 +777,7 @@ module.exports = {
   getStageList,
   getStageDetail,
   createStage,
+  resolveStageId,
   updateStage,
   deleteStage,
   addStageCover,
