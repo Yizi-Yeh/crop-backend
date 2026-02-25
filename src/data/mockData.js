@@ -295,32 +295,11 @@ for (let i = 0; i < EXTRA_ZONE_COUNT; i += 1) {
 
 zones.push(...extraZones);
 
-// 編輯栽培曆區域清單
-// PATCH /api/crop-calendars/calendars/{calendar_id}
-// Request Body 範例
-// {
-//   "zone_name": "北區更新名稱",
-//   "cities":[1076, 1119, 1123, 1082, 1083],
-//   "districts": [1076, 1119, 1123, 1082, 1083]
-// }
-
-// 編輯栽培曆名稱
-//  PATCH /api/crop-calendars/calendars/{calendar_id}
-//  Request Body 範例
-// {
-//   "title": "一期稻作（更新後）"
-// }
-
-// 取得栽培曆清單 (後台 & 前台左側卡片)
-// GET /api/crop-calendars/crops/{crop_id}/calendars
-// Query:
-// is_shared → true | false | 不帶（回傳所有）。true=專家共享, false=僅自己可見
-// is_published → true | false | 不帶（回傳所有）。true=後台公開, false=未公開
-
 const calendars = [
   {
     // 基本資訊
     id: "cal_001",
+    source_calendar_id: "cal_001",
     title: "一期紅色芭樂培曆",
 
     // 建立者
@@ -330,6 +309,7 @@ const calendars = [
     },
 
     permissions: {
+      canCreate: true,
       canCopy: true,
       canEdit: false,
       canDelete: false,
@@ -376,105 +356,23 @@ const calendars = [
         name: "接穗結果期",
         description:
           "接穗與砧木癒合完成後進入結果期，需維持穩定水分與通風，避免高溫造成落果。",
-        // cover_image: {
-        //   id: "cover_stage_001",
-        //   url: "https://picsum.photos/seed/cover-1/800/500",
-        //   thumbnail: "https://picsum.photos/seed/cover-1/320/200",
-        //   name: "接穗結果期封面.jpg",
-        //   source: "農委會",
-        // },
-        start_date_range: { id: "start_stage_001", decade: "upper", month: "1" },
+        start_date_range: {
+          id: "start_stage_001",
+          decade: "upper",
+          month: "1",
+        },
         end_date_range: { id: "end_stage_001", decade: "lower", month: "3" },
         status: "complete",
-        // color: "#476dc6",
-        // album: [
-        //   {
-        //     id: "img_001",
-        //     url: "https://picsum.photos/seed/stock-1/600/400",
-        //     thumbnail: "https://picsum.photos/seed/stock-1/300/200",
-        //     name: "接穗結果期示意圖01.jpg",
-        //     source: "農委會",
-        //     sort_order: 0,
-        //   },
-        //   {
-        //     id: "img_002",
-        //     url: "https://picsum.photos/seed/stock-2/600/400",
-        //     thumbnail: "https://picsum.photos/seed/stock-2/300/200",
-        //     name: "接穗結果期示意圖02.jpg",
-        //     source: "農委會",
-        //     sort_order: 1,
-        //   },
-        //   {
-        //     id: "img_003",
-        //     url: "https://picsum.photos/seed/stock-3/600/400",
-        //     thumbnail: "https://picsum.photos/seed/stock-3/300/200",
-        //     name: "接穗結果期示意圖03.jpg",
-        //     source: "農委會",
-        //     sort_order: 2,
-        //   },
-        //   {
-        //     id: "img_004",
-        //     url: "https://picsum.photos/seed/stock-4/600/400",
-        //     thumbnail: "https://picsum.photos/seed/stock-4/300/200",
-        //     name: "接穗結果期示意圖04.jpg",
-        //     source: "農委會",
-        //     sort_order: 3,
-        //   },
-        //   {
-        //     id: "img_005",
-        //     url: "https://picsum.photos/seed/stock-5/600/400",
-        //     thumbnail: "https://picsum.photos/seed/stock-5/300/200",
-        //     name: "接穗結果期示意圖05.jpg",
-        //     source: "農委會",
-        //     sort_order: 4,
-        //   },
-        //   {
-        //     id: "img_006",
-        //     url: "https://picsum.photos/seed/stock-6/600/400",
-        //     thumbnail: "https://picsum.photos/seed/stock-6/300/200",
-        //     name: "接穗結果期示意圖06.jpg",
-        //     source: "農委會",
-        //     sort_order: 5,
-        //   },
-        //   {
-        //     id: "img_007",
-        //     url: "https://picsum.photos/seed/stock-7/600/400",
-        //     thumbnail: "https://picsum.photos/seed/stock-7/300/200",
-        //     name: "接穗結果期示意圖07.jpg",
-        //     source: "農委會",
-        //     sort_order: 6,
-        //   },
-        //   {
-        //     id: "img_008",
-        //     url: "https://picsum.photos/seed/stock-8/600/400",
-        //     thumbnail: "https://picsum.photos/seed/stock-8/300/200",
-        //     name: "接穗結果期示意圖08.jpg",
-        //     source: "農委會",
-        //     sort_order: 7,
-        //   },
-        //   {
-        //     id: "img_009",
-        //     url: "https://picsum.photos/seed/stock-9/600/400",
-        //     thumbnail: "https://picsum.photos/seed/stock-9/300/200",
-        //     name: "接穗結果期示意圖09.jpg",
-        //     source: "農委會",
-        //     sort_order: 8,
-        //   },
-        //   {
-        //     id: "img_010",
-        //     url: "https://picsum.photos/seed/stock-10/600/400",
-        //     thumbnail: "https://picsum.photos/seed/stock-10/300/200",
-        //     name: "接穗結果期示意圖10.jpg",
-        //     source: "農委會",
-        //     sort_order: 9,
-        //   }
-        // ],
       },
       {
         id: "stage_002",
         name: "接穗結果期",
         description: "果實持續膨大，建議適度疏果並補充鉀肥以提升品質與糖度。",
-        start_date_range: { id: "start_stage_002", decade: "middle", month: "2" },
+        start_date_range: {
+          id: "start_stage_002",
+          decade: "middle",
+          month: "2",
+        },
         end_date_range: { id: "end_stage_002", decade: "middle", month: "4" },
         status: "complete",
       },
@@ -482,7 +380,11 @@ const calendars = [
         id: "stage_003",
         name: "果實成長期",
         description: "果實快速生長，注意水分均衡與病蟲害監測，避免裂果與日灼。",
-        start_date_range: { id: "start_stage_003", decade: "lower", month: "3" },
+        start_date_range: {
+          id: "start_stage_003",
+          decade: "lower",
+          month: "3",
+        },
         end_date_range: { id: "end_stage_003", decade: "lower", month: "6" },
         status: "complete",
       },
@@ -491,7 +393,11 @@ const calendars = [
         name: "果實成熟期",
         description:
           "成熟期需降低氮肥、提高通風，掌握採收時機以確保外觀與風味。",
-        start_date_range: { id: "start_stage_004", decade: "upper", month: "5" },
+        start_date_range: {
+          id: "start_stage_004",
+          decade: "upper",
+          month: "5",
+        },
         end_date_range: { id: "end_stage_004", decade: "lower", month: "9" },
         status: "complete",
       },
@@ -500,7 +406,11 @@ const calendars = [
         name: "砧木生育期",
         description:
           "砧木持續營養生長，重點在根系健全與枝條整齊，為後續嫁接做準備。",
-        start_date_range: { id: "start_stage_005", decade: "middle", month: "10" },
+        start_date_range: {
+          id: "start_stage_005",
+          decade: "middle",
+          month: "10",
+        },
         end_date_range: { id: "end_stage_005", decade: "lower", month: "12" },
         status: "complete",
       },
@@ -527,6 +437,7 @@ const calendarDetails = [
     id: "cal_001", // 栽培曆 ID
     title: "一期紅色芭樂培曆", // 栽培曆標題
     permissions: {
+      canCreate: false,
       canCopy: true,
       canEdit: false,
       canDelete: false,
@@ -574,7 +485,11 @@ const calendarDetails = [
           name: "接穗結果期封面.jpg",
           source: "農委會",
         },
-        start_date_range: { id: "start_stage_001", decade: "upper", month: "1" },
+        start_date_range: {
+          id: "start_stage_001",
+          decade: "upper",
+          month: "1",
+        },
         end_date_range: { id: "end_stage_001", decade: "lower", month: "3" },
         status: "complete",
         color: "#476dc6",
@@ -672,7 +587,11 @@ const calendarDetails = [
           name: "果實膨大期封面.jpg",
           source: "農委會",
         },
-        start_date_range: { id: "start_stage_002", decade: "middle", month: "2" },
+        start_date_range: {
+          id: "start_stage_002",
+          decade: "middle",
+          month: "2",
+        },
         end_date_range: { id: "end_stage_002", decade: "middle", month: "4" },
         status: "complete",
         color: "#0AA7C6",
@@ -770,7 +689,11 @@ const calendarDetails = [
           name: "果實成長期封面.jpg",
           source: "農委會",
         },
-        start_date_range: { id: "start_stage_003", decade: "lower", month: "3" },
+        start_date_range: {
+          id: "start_stage_003",
+          decade: "lower",
+          month: "3",
+        },
         end_date_range: { id: "end_stage_003", decade: "lower", month: "6" },
         status: "complete",
         color: "#0AC675",
@@ -869,7 +792,11 @@ const calendarDetails = [
           name: "果實成熟期封面.jpg",
           source: "農委會",
         },
-        start_date_range: { id: "start_stage_004", decade: "upper", month: "5" },
+        start_date_range: {
+          id: "start_stage_004",
+          decade: "upper",
+          month: "5",
+        },
         end_date_range: { id: "end_stage_004", decade: "lower", month: "9" },
         status: "complete",
         color: "#C6B30A",
@@ -968,7 +895,11 @@ const calendarDetails = [
           name: "砧木生育期封面.jpg",
           source: "農委會",
         },
-        start_date_range: { id: "start_stage_005", decade: "middle", month: "10" },
+        start_date_range: {
+          id: "start_stage_005",
+          decade: "middle",
+          month: "10",
+        },
         end_date_range: { id: "end_stage_005", decade: "lower", month: "12" },
         status: "complete",
         color: "#C64C0A",
@@ -1136,204 +1067,6 @@ const calendarDetails = [
                 },
               ],
             },
-            {
-              month: "4",
-              current_exceed_count: "6",
-              future_exceed_count: "8",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "29.6",
-                  future_average: "31.1",
-                },
-                {
-                  decade: "middle",
-                  current_average: "29.6",
-                  future_average: "31.1",
-                },
-                {
-                  decade: "lower",
-                  current_average: "29.6",
-                  future_average: "31.1",
-                },
-              ],
-            },
-            {
-              month: "5",
-              current_exceed_count: "8",
-              future_exceed_count: "10",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "30.6",
-                  future_average: "32.1",
-                },
-                {
-                  decade: "middle",
-                  current_average: "30.6",
-                  future_average: "32.1",
-                },
-                {
-                  decade: "lower",
-                  current_average: "30.6",
-                  future_average: "32.1",
-                },
-              ],
-            },
-            {
-              month: "6",
-              current_exceed_count: "10",
-              future_exceed_count: "12",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "31.6",
-                  future_average: "33.2",
-                },
-                {
-                  decade: "middle",
-                  current_average: "31.6",
-                  future_average: "33.2",
-                },
-                {
-                  decade: "lower",
-                  current_average: "31.6",
-                  future_average: "33.2",
-                },
-              ],
-            },
-            {
-              month: "7",
-              current_exceed_count: "12",
-              future_exceed_count: "15",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "32.9",
-                  future_average: "34.7",
-                },
-                {
-                  decade: "middle",
-                  current_average: "32.9",
-                  future_average: "34.7",
-                },
-                {
-                  decade: "lower",
-                  current_average: "32.9",
-                  future_average: "34.7",
-                },
-              ],
-            },
-            {
-              month: "8",
-              current_exceed_count: "13",
-              future_exceed_count: "16",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "33.6",
-                  future_average: "35.3",
-                },
-                {
-                  decade: "middle",
-                  current_average: "33.6",
-                  future_average: "35.3",
-                },
-                {
-                  decade: "lower",
-                  current_average: "33.6",
-                  future_average: "35.3",
-                },
-              ],
-            },
-            {
-              month: "9",
-              current_exceed_count: "9",
-              future_exceed_count: "12",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "31.8",
-                  future_average: "33.3",
-                },
-                {
-                  decade: "middle",
-                  current_average: "31.8",
-                  future_average: "33.3",
-                },
-                {
-                  decade: "lower",
-                  current_average: "31.8",
-                  future_average: "33.3",
-                },
-              ],
-            },
-            {
-              month: "10",
-              current_exceed_count: "6",
-              future_exceed_count: "8",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "29.7",
-                  future_average: "31.2",
-                },
-                {
-                  decade: "middle",
-                  current_average: "29.7",
-                  future_average: "31.2",
-                },
-                {
-                  decade: "lower",
-                  current_average: "29.7",
-                  future_average: "31.2",
-                },
-              ],
-            },
-            {
-              month: "11",
-              current_exceed_count: "3",
-              future_exceed_count: "5",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "27.3",
-                  future_average: "28.7",
-                },
-                {
-                  decade: "middle",
-                  current_average: "27.3",
-                  future_average: "28.7",
-                },
-                {
-                  decade: "lower",
-                  current_average: "27.3",
-                  future_average: "28.7",
-                },
-              ],
-            },
-            {
-              month: "12",
-              current_exceed_count: "1",
-              future_exceed_count: "3",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "25.8",
-                  future_average: "27.1",
-                },
-                {
-                  decade: "middle",
-                  current_average: "25.8",
-                  future_average: "27.1",
-                },
-                {
-                  decade: "lower",
-                  current_average: "25.8",
-                  future_average: "27.1",
-                },
-              ],
-            },
           ],
         },
         {
@@ -1407,204 +1140,6 @@ const calendarDetails = [
                   decade: "lower",
                   current_average: "16.8",
                   future_average: "19.9",
-                },
-              ],
-            },
-            {
-              month: "4",
-              current_exceed_count: "9",
-              future_exceed_count: "12",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "22.6",
-                  future_average: "26.3",
-                },
-                {
-                  decade: "middle",
-                  current_average: "21.9",
-                  future_average: "25.5",
-                },
-                {
-                  decade: "lower",
-                  current_average: "21.1",
-                  future_average: "24.7",
-                },
-              ],
-            },
-            {
-              month: "5",
-              current_exceed_count: "12",
-              future_exceed_count: "15",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "28.9",
-                  future_average: "33.1",
-                },
-                {
-                  decade: "middle",
-                  current_average: "27.8",
-                  future_average: "32.0",
-                },
-                {
-                  decade: "lower",
-                  current_average: "26.9",
-                  future_average: "31.0",
-                },
-              ],
-            },
-            {
-              month: "6",
-              current_exceed_count: "14",
-              future_exceed_count: "18",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "34.6",
-                  future_average: "39.8",
-                },
-                {
-                  decade: "middle",
-                  current_average: "33.4",
-                  future_average: "38.6",
-                },
-                {
-                  decade: "lower",
-                  current_average: "32.1",
-                  future_average: "37.2",
-                },
-              ],
-            },
-            {
-              month: "7",
-              current_exceed_count: "16",
-              future_exceed_count: "21",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "41.2",
-                  future_average: "47.9",
-                },
-                {
-                  decade: "middle",
-                  current_average: "39.8",
-                  future_average: "46.3",
-                },
-                {
-                  decade: "lower",
-                  current_average: "38.6",
-                  future_average: "45.0",
-                },
-              ],
-            },
-            {
-              month: "8",
-              current_exceed_count: "15",
-              future_exceed_count: "20",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "39.7",
-                  future_average: "46.1",
-                },
-                {
-                  decade: "middle",
-                  current_average: "38.5",
-                  future_average: "44.8",
-                },
-                {
-                  decade: "lower",
-                  current_average: "37.2",
-                  future_average: "43.5",
-                },
-              ],
-            },
-            {
-              month: "9",
-              current_exceed_count: "13",
-              future_exceed_count: "17",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "32.8",
-                  future_average: "38.4",
-                },
-                {
-                  decade: "middle",
-                  current_average: "31.7",
-                  future_average: "37.1",
-                },
-                {
-                  decade: "lower",
-                  current_average: "30.6",
-                  future_average: "35.9",
-                },
-              ],
-            },
-            {
-              month: "10",
-              current_exceed_count: "9",
-              future_exceed_count: "12",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "24.3",
-                  future_average: "28.1",
-                },
-                {
-                  decade: "middle",
-                  current_average: "23.6",
-                  future_average: "27.4",
-                },
-                {
-                  decade: "lower",
-                  current_average: "22.8",
-                  future_average: "26.6",
-                },
-              ],
-            },
-            {
-              month: "11",
-              current_exceed_count: "6",
-              future_exceed_count: "8",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "17.5",
-                  future_average: "20.3",
-                },
-                {
-                  decade: "middle",
-                  current_average: "16.8",
-                  future_average: "19.6",
-                },
-                {
-                  decade: "lower",
-                  current_average: "16.1",
-                  future_average: "18.9",
-                },
-              ],
-            },
-            {
-              month: "12",
-              current_exceed_count: "4",
-              future_exceed_count: "6",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "13.2",
-                  future_average: "15.6",
-                },
-                {
-                  decade: "middle",
-                  current_average: "12.6",
-                  future_average: "15.0",
-                },
-                {
-                  decade: "lower",
-                  current_average: "11.9",
-                  future_average: "14.3",
                 },
               ],
             },
