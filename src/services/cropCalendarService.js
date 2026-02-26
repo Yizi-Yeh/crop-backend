@@ -306,9 +306,38 @@ const getZonesByCrop = async (cropId) => {
   return Array.from(zoneMap.values());
 };
 
-const getCalendarsByCrop = async (cropId) => {
+const getCalendarsByCrop = async (cropId, options = {}) => {
+  const {
+    userId = null,
+    role = null,
+    isShared = undefined,
+    isPublished = undefined,
+  } = options;
+
+  let where = { cropId };
+  let visibility = null;
+
+  if (role === "admin" || role === "center") {
+    visibility = null;
+  } else if (userId) {
+    visibility = {
+      OR: [{ isPublished: true }, { isShared: true }, { creatorId: userId }],
+    };
+  } else {
+    visibility = { isPublished: true };
+  }
+
+  const filters = [];
+  if (visibility) filters.push(visibility);
+  if (isShared !== undefined) filters.push({ isShared });
+  if (isPublished !== undefined) filters.push({ isPublished });
+
+  if (filters.length > 0) {
+    where.AND = filters;
+  }
+
   const calendars = await prisma.calendar.findMany({
-    where: { cropId },
+    where,
     include: {
       calendarZones: {
         include: {
@@ -378,6 +407,7 @@ const getCalendarDetail = async (calendarId, stageId) => {
     id: calendar.id,
     title: calendar.title,
     permissions: defaultPermissions(),
+    creator_id: calendar.creatorId,
     crop_name: calendar.crop?.name || "",
     updated_at: calendar.lastEditedAt.toISOString(),
     is_published: calendar.isPublished,
@@ -387,6 +417,28 @@ const getCalendarDetail = async (calendarId, stageId) => {
     stages: calendar.stages.map(buildStageSummary),
     analysis: buildAnalysisForStage(calendar, stageId),
   };
+};
+
+const getCalendarAccess = async (calendarId) => {
+  return prisma.calendar.findUnique({
+    where: { id: calendarId },
+    select: {
+      id: true,
+      creatorId: true,
+      sourceCalendarId: true,
+      isPublished: true,
+      isShared: true,
+      allowCenterUse: true,
+    },
+  });
+};
+
+const getStageCalendarId = async (stageId) => {
+  const stage = await prisma.stage.findUnique({
+    where: { id: stageId },
+    select: { calendarId: true },
+  });
+  return stage?.calendarId || null;
 };
 
 const createCalendar = async ({
@@ -494,10 +546,10 @@ const deleteCalendar = async (calendarId) => {
   await prisma.calendar.delete({ where: { id: calendarId } });
 };
 
-const shareCalendar = async (calendarId, isShared) => {
+const shareCalendar = async (calendarId) => {
   return prisma.calendar.update({
     where: { id: calendarId },
-    data: { isShared, lastEditedAt: new Date() },
+    data: { isShared: true, lastEditedAt: new Date() },
   });
 };
 
@@ -966,6 +1018,8 @@ module.exports = {
   getZonesByCrop,
   getCalendarsByCrop,
   getCalendarDetail,
+  getCalendarAccess,
+  getStageCalendarId,
   createCalendar,
   updateCalendar,
   deleteCalendar,

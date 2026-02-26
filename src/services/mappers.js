@@ -1,14 +1,14 @@
-const { CalendarFileType, StageStatus, ThresholdOperator, TenDay, StageImageType } = require("@prisma/client");
+const { CalendarFileType, StageStatus, ThresholdOperator, Decade, StageImageType } = require("@prisma/client");
 
 const tenDayLabelToEnum = (label) => {
   if (!label) return null;
   switch (label) {
     case "上旬":
-      return TenDay.FIRST;
+      return Decade.UPPER;
     case "中旬":
-      return TenDay.MIDDLE;
+      return Decade.MIDDLE;
     case "下旬":
-      return TenDay.LAST;
+      return Decade.LOWER;
     default:
       return null;
   }
@@ -17,11 +17,11 @@ const tenDayLabelToEnum = (label) => {
 const tenDayEnumToLabel = (value) => {
   if (!value) return null;
   switch (value) {
-    case TenDay.FIRST:
+    case Decade.UPPER:
       return "上旬";
-    case TenDay.MIDDLE:
+    case Decade.MIDDLE:
       return "中旬";
-    case TenDay.LAST:
+    case Decade.LOWER:
       return "下旬";
     default:
       return null;
@@ -32,11 +32,11 @@ const tenDayDecadeToEnum = (decade) => {
   if (!decade) return null;
   switch (decade) {
     case "upper":
-      return TenDay.FIRST;
+      return Decade.UPPER;
     case "middle":
-      return TenDay.MIDDLE;
+      return Decade.MIDDLE;
     case "lower":
-      return TenDay.LAST;
+      return Decade.LOWER;
     default:
       return null;
   }
@@ -45,11 +45,11 @@ const tenDayDecadeToEnum = (decade) => {
 const tenDayEnumToDecade = (value) => {
   if (!value) return null;
   switch (value) {
-    case TenDay.FIRST:
+    case Decade.UPPER:
       return "upper";
-    case TenDay.MIDDLE:
+    case Decade.MIDDLE:
       return "middle";
-    case TenDay.LAST:
+    case Decade.LOWER:
       return "lower";
     default:
       return null;

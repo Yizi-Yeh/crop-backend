@@ -24,225 +24,149 @@ enum ThresholdOperator {
   LTE
 }
 
-enum TenDay {
-  FIRST
+enum Decade {
+  UPPER
   MIDDLE
-  LAST
+  LOWER
 }
 
-enum StageImageType {
-  COVER
-  ALBUM
-}
+// ─── 作物 ───
 
 model Crop {
-  id          String   @id @default(uuid())
-  name        String   @db.VarChar(100)
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  calendars   Calendar[]
+// calendars Calendar[]：這個模型有一對多關係，Calendar 會透過外鍵指向這個模型（例如 Crop 的所有 Calendar）。
+  calendars Calendar[]
 
+// @@index([name])，代表這個欄位可能是常用查詢條件。
   @@index([name])
 }
 
-model IndicatorCategory {
-  id          String   @id @default(uuid())
-  name        String   @unique @db.VarChar(50)
-  description String?
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+// ─── 建立者 ───
 
-  indicators  Indicator[]
-
-  @@index([order])
-}
-
-model Indicator {
-  id          String   @id @default(uuid())
-  categoryId  String
-  name        String   @db.VarChar(100)
-  unit        String   @db.VarChar(20)
-  description String?
-  source      String   @default("")
-  defaultMin  Float?
-  defaultMax  Float?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  category    IndicatorCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  thresholds  StageThreshold[]
-  calendarIndicators CalendarIndicator[]
-
-  @@index([categoryId, name])
-}
-
-model Zone {
-  id         String   @id @default(uuid())
-  zoneName   String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  zoneDistricts ZoneDistrict[]
-  calendarZones CalendarZone[]
-}
-
-model City {
-  id        Int      @id
+model Creator {
+  id        String   @id @default(uuid())
   name      String
+  role      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  districts District[]
+  calendars Calendar[]
 }
 
-model District {
-  id        Int      @id
-  name      String
-  cityId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  city          City         @relation(fields: [cityId], references: [id], onDelete: Cascade)
-  zoneDistricts ZoneDistrict[]
-  calendarZoneDistricts CalendarZoneDistrict[]
-}
-
-model ZoneDistrict {
-  zoneId     String
-  districtId Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  zone     Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
-  district District @relation(fields: [districtId], references: [id], onDelete: Cascade)
-
-  @@id([zoneId, districtId])
-}
+// ─── 栽培曆 ───
 
 model Calendar {
-  id             String           @id @default(uuid())
-  cropId         String
-  title          String           @db.VarChar(200)
-
-  creatorId      String
-  creatorName    String
+  id               String           @id @default(uuid())
+  cropId           String
+  creatorId        String
   sourceCalendarId String?
+  title            String           @db.VarChar(200)
+  zoneName         String           @default("")
+  isShared         Boolean          @default(false)
+  isPublished      Boolean          @default(false)
+  fileType         CalendarFileType @default(ORIGINAL)
+  allowCenterUse   Boolean          @default(false)
+  sharedAt         DateTime?
+  publishedAt      DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
-  isShared       Boolean          @default(false)
-  isPublished    Boolean          @default(false)
-  fileType       CalendarFileType @default(ORIGINAL)
-  allowCenterUse Boolean          @default(false)
-
-  publishedAt    DateTime?
-  lastEditedAt   DateTime         @default(now())
-
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  crop           Crop       @relation(fields: [cropId], references: [id], onDelete: Cascade)
+  crop           Crop               @relation(fields: [cropId], references: [id], onDelete: Cascade)
+  creator        Creator            @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  sourceCalendar Calendar?          @relation("CalendarCopy", fields: [sourceCalendarId], references: [id], onDelete: SetNull)
+  copy           Calendar?          @relation("CalendarCopy")
   stages         Stage[]
-  calendarZones  CalendarZone[]
-  calendarIndicators CalendarIndicator[]
+  districts      CalendarDistrict[]
 
   @@index([cropId, isShared])
   @@index([isPublished, createdAt(sort: Desc)])
   @@index([creatorId])
+  @@unique([sourceCalendarId])
 }
 
-model CalendarZone {
-  id            String   @id @default(uuid())
-  calendarId    String
-  zoneId        String
+// ─── 栽培曆地區 ───
 
-  zoneName      String
-  cityCount     Int      @default(0)
-  districtCount Int      @default(0)
+model City {
+  id   String @id
+  name String
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  calendar      Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
-  zone          Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
-  districts     CalendarZoneDistrict[]
-
-  @@index([calendarId])
-  @@index([zoneId])
+  districts         District[]
+  calendarDistricts CalendarDistrict[]
 }
 
-model CalendarZoneDistrict {
-  calendarZoneId String
-  districtId     Int
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+model District {
+  id     String @id
+  cityId String
+  name   String
 
-  calendarZone CalendarZone @relation(fields: [calendarZoneId], references: [id], onDelete: Cascade)
-  district     District     @relation(fields: [districtId], references: [id], onDelete: Cascade)
-
-  @@id([calendarZoneId, districtId])
+  city              City               @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  calendarDistricts CalendarDistrict[]
 }
 
-model CalendarIndicator {
-  id            String   @id @default(uuid())
-  calendarId    String
-  indicatorId   String
+model CalendarDistrict {
+  calendarId String
+  cityId     String
+  districtId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  nameSnapshot  String
+  calendar Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  city     City     @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  district District @relation(fields: [districtId], references: [id], onDelete: Cascade)
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  calendar      Calendar  @relation(fields: [calendarId], references: [id], onDelete: Cascade)
-  indicator     Indicator @relation(fields: [indicatorId], references: [id], onDelete: Cascade)
-
-  @@index([calendarId])
-  @@index([indicatorId])
+  @@id([calendarId, cityId, districtId])
 }
+
+// ─── 生長期 ───
 
 model Stage {
-  id            String      @id @default(uuid())
-  calendarId    String
-  order         Int         @default(0)
-  name          String
-  description   String?
-  status        StageStatus @default(DRAFT)
-  color         String      @default("")
+  id             String      @id @default(uuid())
+  calendarId     String
+  name           String
+  description    String?
+  startMonth     String?
+  startDecade    Decade?
+  endMonth       String?
+  endDecade      Decade?
+  color          String      @default("")
+  status         StageStatus @default(DRAFT)
+  coverUrl       String?
+  coverName      String?
+  coverThumbnail String?
+  coverSource    String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 
-  startTenDay   TenDay?
-  startMonth    Int?
-  endTenDay     TenDay?
-  endMonth      Int?
+  calendar   Calendar         @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  thresholds StageThreshold[]
+  albums     StageAlbum[]
 
-  analysis      Json?
-
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  calendar      Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
-  images        StageImage[]
-  thresholds    StageThreshold[]
-
-  @@index([calendarId, order])
+  @@index([calendarId])
 }
 
-model StageImage {
-  id        String         @id @default(uuid())
+// ─── 生長期相簿 ───
+
+model StageAlbum {
+  id        String   @id @default(uuid())
   stageId   String
-  type      StageImageType
   url       String
-  thumbnail String?
   name      String?
-  source    String?        @default("")
-  sortOrder Int            @default(0)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  thumbnail String?
+  source    String?  @default("")
+  sortOrder String   @default("0")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  stage     Stage @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  stage Stage @relation(fields: [stageId], references: [id], onDelete: Cascade)
 
-  @@index([stageId, type])
+  @@index([stageId])
 }
+
+// ─── 門檻臨界值 ───
 
 model StageThreshold {
   id           String            @id @default(uuid())
@@ -250,20 +174,45 @@ model StageThreshold {
   indicatorId  String
   operator     ThresholdOperator
   value        Float
-  unit         String?
-  durationDays Int               @default(1)
+  durationDays String            @default("1")
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
 
-  stage        Stage     @relation(fields: [stageId], references: [id], onDelete: Cascade)
-  indicator    Indicator @relation(fields: [indicatorId], references: [id], onDelete: Cascade)
+  stage     Stage     @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  indicator Indicator @relation(fields: [indicatorId], references: [id], onDelete: Cascade)
 
   @@index([stageId])
 }
 
-model Gwl {
-  id        Int      @id
-  name      String
+// ─── 指標 ───
+
+model IndicatorCategory {
+  id        String   @id @default(uuid())
+  name      String   @unique @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  indicators Indicator[]
+}
+
+model Indicator {
+  id         String   @id @default(uuid())
+  categoryId String
+  name       String   @db.VarChar(100)
+  source     String   @default("")
+  unit       String   @db.VarChar(20)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  category   IndicatorCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  thresholds StageThreshold[]
+
+  @@index([categoryId, name])
+}
+
+// ─── 溫度上升情境 ───
+
+model Gwl {
+  id   String @id @default(uuid())
+  name String
 }

@@ -16,7 +16,9 @@
       "Bash(npx prisma studio:*)",
       "Bash(docker exec:*)",
       "Bash(npx prisma db push:*)",
-      "Bash(npm run seed:*)"
+      "Bash(npm run seed:*)",
+      "Bash(npx prisma format:*)",
+      "Bash(npx prisma validate:*)"
     ]
   }
 }

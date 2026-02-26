@@ -10,6 +10,8 @@ const {
   getZonesByCrop,
   getCalendarsByCrop,
   getCalendarDetail,
+  getCalendarAccess,
+  getStageCalendarId,
   createCalendar,
   updateCalendar,
   deleteCalendar,
@@ -34,6 +36,71 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
+
+// 權限備註：
+// - expert: 可看「自己 + 已發布 + 已共享」；只能操作自己；可分享，不可發布；可複製自己
+// - center:
+//   - 原稿 allow_center_use=true: 可看、可複製
+//   - 原稿 allow_center_use=false: 只可看
+//   - 副本: 可看、可公開、可編輯、可刪除
+// - admin:
+//   - 原稿 allow_center_use=true: 可看、可複製、可分享、可編輯、可刪除
+//   - 原稿 allow_center_use=false: 可看、可分享、可編輯、可刪除
+//   - 副本: 可看、可公開、可分享、可編輯、可刪除
+// - 無 token: 只能看已發布
+const canViewUnpublished = (user, calendar) => {
+  if (!user) return false;
+  if (user.role === "admin" || user.role === "center") return true;
+  if (user.role === "expert") return calendar.creatorId === user.id;
+  return false;
+};
+
+const canEditCalendar = (user, calendar) => {
+  if (!user) return false;
+  if (user.role === "admin") return true;
+  if (user.role === "expert") return calendar.creatorId === user.id;
+  if (user.role === "center") return calendar.sourceCalendarId != null;
+  return false;
+};
+
+const canCopyCalendar = (user, calendar) => {
+  if (!user) return false;
+  if (calendar.sourceCalendarId) return false;
+  if (user.role === "admin") return calendar.allowCenterUse === true;
+  if (user.role === "center") return calendar.allowCenterUse === true;
+  if (user.role === "expert") return calendar.creatorId === user.id;
+  return false;
+};
+
+const canPublishCalendar = (user, calendar) => {
+  if (!user) return false;
+  if (!calendar.sourceCalendarId) return false;
+  if (user.role === "admin") return true;
+  if (user.role === "center") return true;
+  return false;
+};
+
+const requireCalendarPermission = async (req, res, calendarId, action) => {
+  const calendar = await getCalendarAccess(calendarId);
+  if (!calendar) {
+    res.status(404).json({ status: "error", message: "找不到該栽培曆" });
+    return null;
+  }
+  const user = req.user;
+  let allowed = false;
+  if (action === "edit" || action === "delete") allowed = canEditCalendar(user, calendar);
+  if (action === "copy") allowed = canCopyCalendar(user, calendar);
+  if (action === "publish") allowed = canPublishCalendar(user, calendar);
+  if (action === "share") {
+    if (user?.role === "admin") allowed = true;
+    if (user?.role === "expert") allowed = calendar.creatorId === user.id;
+  }
+  if (!allowed) {
+    res.status(403).json({ status: "error", message: "沒有權限操作該栽培曆" });
+    return null;
+  }
+  return calendar;
+};
 
 // ============================================
 // 一、作物管理
@@ -113,13 +180,19 @@ router.get(
   optionalAuth,
   asyncHandler(async (req, res) => {
     const { cropId } = req.params;
+    const { is_shared, is_published } = req.query;
 
     const crop = (await getCrops()).find((c) => c.id === cropId);
     if (!crop) {
       return res.status(404).json({ status: "error", message: "找不到該作物" });
     }
 
-    const calendars = await getCalendarsByCrop(cropId);
+    const calendars = await getCalendarsByCrop(cropId, {
+      userId: req.user?.id || null,
+      role: req.user?.role || null,
+      isShared: is_shared === undefined ? undefined : is_shared === "true",
+      isPublished: is_published === undefined ? undefined : is_published === "true",
+    });
     res.json({ status: "ok", message: "success", data: calendars });
   }),
 );
@@ -146,7 +219,11 @@ router.get(
       return res.status(200).json({ status: "ok", message: "success", data: [] });
     }
 
-    if (!calendarDetail.is_published && !req.user) {
+    if (
+      !calendarDetail.is_published &&
+      !calendarDetail.is_shared &&
+      (!req.user || req.user.id !== calendarDetail.creator_id)
+    ) {
       return res.status(200).json({ status: "ok", message: "success", data: [] });
     }
 
@@ -180,6 +257,10 @@ router.post(
   asyncHandler(async (req, res) => {
     const { cropId } = req.params;
     const { title, zone_name, districts = [], zone_ids = [] } = req.body;
+    const role = req.user?.role;
+    if (role !== "expert" && role !== "admin" && role !== "center") {
+      return res.status(403).json({ status: "error", message: "沒有權限新增栽培曆" });
+    }
 
     if (!title) {
       return res.status(400).json({ status: "error", message: "title 為必填" });
@@ -221,6 +302,8 @@ router.patch(
     const { title, zone_name, districts } = req.body;
 
     try {
+      const calendar = await requireCalendarEditPermission(req, res, calendarId);
+      if (!calendar) return;
       const updated = await updateCalendar(calendarId, {
         title,
         zoneName: zone_name,
@@ -254,6 +337,8 @@ router.delete(
     const { calendarId } = req.params;
 
     try {
+      const calendar = await requireCalendarEditPermission(req, res, calendarId);
+      if (!calendar) return;
       await deleteCalendar(calendarId);
     } catch (error) {
       if (error.code === "P2025") {
@@ -277,33 +362,15 @@ router.post(
   authMiddleware,
   asyncHandler(async (req, res) => {
     const { calendarId } = req.params;
-
-    try {
-      const calendar = await shareCalendar(calendarId, true);
-      res.json({ status: "ok", message: "success", data: { id: calendar.id } });
-    } catch (error) {
-      if (error.code === "P2025") {
-        return res
-          .status(404)
-          .json({ status: "error", message: "找不到該栽培曆" });
-      }
-      throw error;
+    const role = req.user?.role;
+    if (role !== "expert" && role !== "admin") {
+      return res.status(403).json({ status: "error", message: "只有專家或管理員可以分享栽培曆" });
     }
-  }),
-);
-
-/**
- * 取消共享栽培曆
- * POST /api/crop-calendars/calendars/:calendarId/unshare
- */
-router.post(
-  "/calendars/:calendarId/unshare",
-  authMiddleware,
-  asyncHandler(async (req, res) => {
-    const { calendarId } = req.params;
+    const calendar = await requireCalendarPermission(req, res, calendarId, "share");
+    if (!calendar) return;
 
     try {
-      const calendar = await shareCalendar(calendarId, false);
+      const calendar = await shareCalendar(calendarId);
       res.json({ status: "ok", message: "success", data: { id: calendar.id } });
     } catch (error) {
       if (error.code === "P2025") {
@@ -325,6 +392,10 @@ router.post(
   authMiddleware,
   asyncHandler(async (req, res) => {
     const { calendarId } = req.params;
+    const role = req.user?.role;
+    if (role !== "expert" && role !== "admin" && role !== "center") {
+      return res.status(403).json({ status: "error", message: "沒有權限複製栽培曆" });
+    }
 
     const copied = await copyCalendar(calendarId, req.user.id, "專家A");
     if (!copied) {
@@ -350,6 +421,19 @@ router.post(
   authMiddleware,
   asyncHandler(async (req, res) => {
     const { calendarId } = req.params;
+    const role = req.user?.role;
+    if (role !== "center" && role !== "admin") {
+      return res.status(403).json({ status: "error", message: "只有中心人員或管理員可以發布栽培曆" });
+    }
+    if (role === "center") {
+      const calendar = await getCalendarAccess(calendarId);
+      if (!calendar) {
+        return res.status(404).json({ status: "error", message: "找不到該栽培曆" });
+      }
+      if (!calendar.sourceCalendarId) {
+        return res.status(403).json({ status: "error", message: "中心人員需先複製原稿後才能發布" });
+      }
+    }
 
     try {
       const calendar = await publishCalendar(calendarId, true);
@@ -410,7 +494,11 @@ router.get(
         .json({ status: "error", message: "找不到該栽培曆" });
     }
 
-    if (!calendarDetail.is_published && !req.user) {
+    if (
+      !calendarDetail.is_published &&
+      !calendarDetail.is_shared &&
+      (!req.user || req.user.id !== calendarDetail.creator_id)
+    ) {
       return res
         .status(401)
         .json({ status: "error", message: "未發布的栽培曆需要認證才能存取" });
@@ -438,7 +526,11 @@ router.get(
         .json({ status: "error", message: "找不到該栽培曆" });
     }
 
-    if (!calendarDetail.is_published && !req.user) {
+    if (
+      !calendarDetail.is_published &&
+      !calendarDetail.is_shared &&
+      (!req.user || req.user.id !== calendarDetail.creator_id)
+    ) {
       return res
         .status(401)
         .json({ status: "error", message: "未發布的栽培曆需要認證才能存取" });
