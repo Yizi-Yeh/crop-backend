@@ -134,14 +134,14 @@ router.get(
   optionalAuth,
   asyncHandler(async (req, res) => {
     const { cropId, calendarId } = req.params;
-    const { city_id } = req.query;
+    const { city_id, stage_id } = req.query;
 
     const crop = (await getCrops()).find((c) => c.id === cropId);
     if (!crop) {
       return res.status(404).json({ status: "error", message: "找不到該作物" });
     }
 
-    const calendarDetail = await getCalendarDetail(calendarId);
+    const calendarDetail = await getCalendarDetail(calendarId, stage_id);
     if (!calendarDetail) {
       return res.status(200).json({ status: "ok", message: "success", data: [] });
     }

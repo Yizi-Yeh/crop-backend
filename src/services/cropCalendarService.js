@@ -51,6 +51,102 @@ const resolveStageId = (calendarId, stageId) => {
 const tenDayPayloadToEnum = (range) =>
   tenDayDecadeToEnum(range?.decade) ?? tenDayLabelToEnum(range?.name);
 
+const TEN_DAY_ORDER = {
+  upper: 1,
+  middle: 2,
+  lower: 3,
+};
+
+const filterMonthlyDataByRange = (monthlyData = [], startRange, endRange) => {
+  if (!Array.isArray(monthlyData) || monthlyData.length === 0) return [];
+  const startMonth = startRange?.month ? Number(startRange.month) : null;
+  const endMonth = endRange?.month ? Number(endRange.month) : null;
+  const startDecade = startRange?.decade;
+  const endDecade = endRange?.decade;
+  if (!startMonth || !endMonth) return monthlyData;
+
+  const startOrder = TEN_DAY_ORDER[startDecade] || null;
+  const endOrder = TEN_DAY_ORDER[endDecade] || null;
+
+  return monthlyData
+    .filter((monthEntry) => {
+      const monthNum = Number(monthEntry.month);
+      return monthNum >= startMonth && monthNum <= endMonth;
+    })
+    .map((monthEntry) => {
+      const monthNum = Number(monthEntry.month);
+      const decadeData = Array.isArray(monthEntry.decade_data)
+        ? monthEntry.decade_data
+        : [];
+
+      if (!startOrder || !endOrder || decadeData.length === 0) {
+        return monthEntry;
+      }
+
+      let filteredDecades = decadeData;
+      if (startMonth === endMonth && monthNum === startMonth) {
+        filteredDecades = decadeData.filter((d) => {
+          const order = TEN_DAY_ORDER[d.decade];
+          return order >= startOrder && order <= endOrder;
+        });
+      } else if (monthNum === startMonth) {
+        filteredDecades = decadeData.filter((d) => {
+          const order = TEN_DAY_ORDER[d.decade];
+          return order >= startOrder;
+        });
+      } else if (monthNum === endMonth) {
+        filteredDecades = decadeData.filter((d) => {
+          const order = TEN_DAY_ORDER[d.decade];
+          return order <= endOrder;
+        });
+      }
+
+      if (filteredDecades.length === 0) return null;
+      return { ...monthEntry, decade_data: filteredDecades };
+    })
+    .filter(Boolean);
+};
+
+const buildAnalysisForStage = (calendar, stageId) => {
+  const stages = calendar?.stages || [];
+  let stage = stages[0] || null;
+
+  if (stageId) {
+    const resolvedStageId = resolveStageId(calendar?.id, stageId);
+    stage = stages.find((s) => s.id === resolvedStageId) || stage;
+  }
+
+  if (!stage || !stage.analysis) return undefined;
+
+  const startRange = stage.startMonth
+    ? {
+        month: String(stage.startMonth),
+        decade: tenDayEnumToDecade(stage.startTenDay),
+      }
+    : null;
+  const endRange = stage.endMonth
+    ? {
+        month: String(stage.endMonth),
+        decade: tenDayEnumToDecade(stage.endTenDay),
+      }
+    : null;
+
+  if (!startRange || !endRange) return stage.analysis;
+
+  const indicators = Array.isArray(stage.analysis.indicators)
+    ? stage.analysis.indicators.map((indicator) => ({
+        ...indicator,
+        monthly_data: filterMonthlyDataByRange(
+          indicator.monthly_data,
+          startRange,
+          endRange,
+        ),
+      }))
+    : stage.analysis.indicators;
+
+  return { ...stage.analysis, indicators };
+};
+
 const buildStageListItem = (stage) => {
   const baseId = extractStageBaseId(stage.id);
   return {
@@ -251,7 +347,7 @@ const getCalendarsByCrop = async (cropId) => {
   });
 };
 
-const getCalendarDetail = async (calendarId) => {
+const getCalendarDetail = async (calendarId, stageId) => {
   const calendar = await prisma.calendar.findUnique({
     where: { id: calendarId },
     include: {
@@ -289,7 +385,7 @@ const getCalendarDetail = async (calendarId) => {
     source_calendar_id: calendar.sourceCalendarId || null,
     zone,
     stages: calendar.stages.map(buildStageSummary),
-    analysis: calendar.stages[0]?.analysis || undefined,
+    analysis: buildAnalysisForStage(calendar, stageId),
   };
 };
 
