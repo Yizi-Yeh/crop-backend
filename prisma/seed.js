@@ -118,7 +118,9 @@ const seedZones = async () => {
       create: { id: zoneId, zoneName: zone.zone_name },
     });
 
-    const districtIds = zone.cities.flatMap((city) => city.districts.map((d) => d.id));
+    const districtIds = zone.cities.flatMap((city) =>
+      city.districts.map((d) => d.id),
+    );
     await prisma.zoneDistrict.deleteMany({ where: { zoneId } });
     if (districtIds.length > 0) {
       await prisma.zoneDistrict.createMany({
@@ -146,9 +148,11 @@ const seedCalendars = async () => {
         isPublished: calendar.is_published,
         fileType: fileTypeToEnum(calendar.file_type),
         allowCenterUse: calendar.allow_center_use || false,
-        publishedAt: calendar.published_at ? new Date(calendar.published_at) : null,
-        lastEditedAt: calendar.last_edited_at
-          ? new Date(calendar.last_edited_at)
+        publishedAt: calendar.published_at
+          ? new Date(calendar.published_at)
+          : null,
+        lastEditedAt: calendar.updated_at
+          ? new Date(calendar.updated_at)
           : new Date(),
       },
       create: {
@@ -161,16 +165,22 @@ const seedCalendars = async () => {
         isPublished: calendar.is_published,
         fileType: fileTypeToEnum(calendar.file_type),
         allowCenterUse: calendar.allow_center_use || false,
-        publishedAt: calendar.published_at ? new Date(calendar.published_at) : null,
-        lastEditedAt: calendar.last_edited_at
-          ? new Date(calendar.last_edited_at)
+        publishedAt: calendar.published_at
+          ? new Date(calendar.published_at)
+          : null,
+        lastEditedAt: calendar.updated_at
+          ? new Date(calendar.updated_at)
           : new Date(),
       },
     });
 
     // 讓 seed 可重複執行：先清掉該栽培曆既有關聯，再重建
-    await prisma.calendarZone.deleteMany({ where: { calendarId: calendar.id } });
-    await prisma.calendarIndicator.deleteMany({ where: { calendarId: calendar.id } });
+    await prisma.calendarZone.deleteMany({
+      where: { calendarId: calendar.id },
+    });
+    await prisma.calendarIndicator.deleteMany({
+      where: { calendarId: calendar.id },
+    });
 
     if (calendar.zone) {
       const zoneId = String(calendar.zone.id);

@@ -60,14 +60,14 @@ const buildStageListItem = (stage) => {
       ? {
           id: `start_${baseId}`,
           decade: tenDayEnumToDecade(stage.startTenDay),
-          month: Number(stage.startMonth),
+          month: String(stage.startMonth),
         }
       : null,
     end_date_range: stage.endMonth
       ? {
           id: `end_${baseId}`,
           decade: tenDayEnumToDecade(stage.endTenDay),
-          month: Number(stage.endMonth),
+          month: String(stage.endMonth),
         }
       : null,
     status: stageStatusToString(stage.status),
@@ -166,14 +166,6 @@ const buildStageDetail = (stage) => {
       source: img.source || "",
       sort_order: img.sortOrder || 0,
     })),
-    thresholds: stage.thresholds.map((t) => ({
-      indicator_id: t.indicatorId,
-      operator: operatorToString(t.operator),
-      value: t.value,
-      unit: t.unit || undefined,
-      duration_days: t.durationDays,
-    })),
-    analysis: stage.analysis || undefined,
   };
 };
 
@@ -239,6 +231,7 @@ const getCalendarsByCrop = async (cropId) => {
     const zone = zones[0] || null;
     return {
       id: cal.id,
+      source_calendar_id: cal.sourceCalendarId || null,
       title: cal.title,
       creator: { id: cal.creatorId, name: cal.creatorName },
       permissions: defaultPermissions(),
@@ -247,7 +240,7 @@ const getCalendarsByCrop = async (cropId) => {
       file_type: fileTypeToString(cal.fileType),
       allow_center_use: cal.allowCenterUse,
       published_at: cal.publishedAt ? cal.publishedAt.toISOString() : null,
-      last_edited_at: cal.lastEditedAt.toISOString(),
+      updated_at: cal.lastEditedAt.toISOString(),
       zone,
       stages: cal.stages.map(buildStageListItem),
       indicators: cal.calendarIndicators.map((ci) => ({
@@ -290,9 +283,10 @@ const getCalendarDetail = async (calendarId) => {
     title: calendar.title,
     permissions: defaultPermissions(),
     crop_name: calendar.crop?.name || "",
-    last_edited_at: calendar.lastEditedAt.toISOString(),
+    updated_at: calendar.lastEditedAt.toISOString(),
     is_published: calendar.isPublished,
     is_shared: calendar.isShared,
+    source_calendar_id: calendar.sourceCalendarId || null,
     zone,
     stages: calendar.stages.map(buildStageSummary),
     analysis: calendar.stages[0]?.analysis || undefined,
@@ -446,6 +440,7 @@ const copyCalendar = async (calendarId, creatorId, creatorName) => {
         title: `${calendar.title}（副本）`,
         creatorId,
         creatorName,
+        sourceCalendarId: calendar.id,
         isShared: false,
         isPublished: false,
         fileType: "COPY",
@@ -630,7 +625,9 @@ const updateStage = async ({ calendarId, stageId, payload }) => {
   });
 
   if (thresholds !== undefined) {
-    await prisma.stageThreshold.deleteMany({ where: { stageId: resolvedStageId } });
+    await prisma.stageThreshold.deleteMany({
+      where: { stageId: resolvedStageId },
+    });
     if (thresholds.length > 0) {
       await prisma.stageThreshold.createMany({
         data: thresholds.map((t) => ({
@@ -670,13 +667,12 @@ const addStageCover = async ({ stageId, source, file }) => {
   return created;
 };
 
-const updateStageCover = async ({ stageId, source, name, file }) => {
+const updateStageCover = async ({ stageId, source, file, coverImageId }) => {
   const existing = await prisma.stageImage.findFirst({
     where: { stageId, type: "COVER" },
   });
 
-  if (!existing && !file) return null;
-
+  // 情況 1：上傳新圖片（優先級最高）
   if (file) {
     if (existing) {
       await prisma.stageImage.delete({ where: { id: existing.id } });
@@ -684,16 +680,52 @@ const updateStageCover = async ({ stageId, source, name, file }) => {
     return addStageCover({ stageId, source, file });
   }
 
-  return prisma.stageImage.update({
-    where: { id: existing.id },
-    data: {
-      name: name !== undefined ? name : existing.name,
-      source: source !== undefined ? source : existing.source,
-    },
-  });
+  // 情況 2：刪除封面圖（coverImageId 為 null 或 "null"）
+  if (coverImageId === null || coverImageId === "null") {
+    if (!existing) {
+      return null; // 本來就沒有封面圖，返回 null
+    }
+    await prisma.stageImage.delete({ where: { id: existing.id } });
+    return { deleted: true, id: existing.id };
+  }
+
+  // 情況 3：保留現有封面圖，更新 source
+  if (coverImageId) {
+    if (!existing) {
+      return null; // 沒有現有封面圖，無法保留
+    }
+    // 驗證 coverImageId 是否與現有封面圖一致
+    if (existing.id !== coverImageId) {
+      throw new Error(
+        `cover_image_id (${coverImageId}) 與現有封面圖 (${existing.id}) 不符`,
+      );
+    }
+    // 更新 source
+    if (source !== undefined) {
+      return prisma.stageImage.update({
+        where: { id: existing.id },
+        data: { source },
+      });
+    }
+    return existing;
+  }
+
+  // 情況 4：只更新 source
+  if (!existing) {
+    return null;
+  }
+
+  if (source !== undefined) {
+    return prisma.stageImage.update({
+      where: { id: existing.id },
+      data: { source },
+    });
+  }
+
+  return existing;
 };
 
-const addStageAlbum = async ({ stageId, source, files, names = [] }) => {
+const addStageAlbum = async ({ stageId, source, files, sortOrders = [] }) => {
   const existing = await prisma.stageImage.findMany({
     where: { stageId, type: "ALBUM" },
     orderBy: { sortOrder: "asc" },
@@ -706,6 +738,12 @@ const addStageAlbum = async ({ stageId, source, files, names = [] }) => {
   const created = await prisma.$transaction(
     files.map((file, index) => {
       const photoId = generateId("img");
+      // 使用傳入的 sortOrder，如果沒有則自動遞增
+      const sortOrder =
+        sortOrders[index] !== undefined
+          ? parseInt(sortOrders[index], 10)
+          : maxOrder + 1 + index;
+
       return prisma.stageImage.create({
         data: {
           id: photoId,
@@ -713,9 +751,9 @@ const addStageAlbum = async ({ stageId, source, files, names = [] }) => {
           type: "ALBUM",
           url: `https://placeholder.com/album_${photoId}.jpg`,
           thumbnail: `https://placeholder.com/album_${photoId}_thumb.jpg`,
-          name: names[index] || file.originalname,
+          name: file.originalname,
           source: source || "",
-          sortOrder: maxOrder + 1 + index,
+          sortOrder,
         },
       });
     }),
@@ -726,28 +764,92 @@ const addStageAlbum = async ({ stageId, source, files, names = [] }) => {
 
 const updateStageAlbum = async ({
   stageId,
+  images = [],
   source,
-  deleteIds = [],
   files = [],
-  names = [],
 }) => {
-  if (source !== undefined) {
-    await prisma.stageImage.updateMany({
-      where: { stageId, type: "ALBUM" },
-      data: { source },
-    });
+  // 1. 取得 DB 中現有的所有相簿圖片
+  const existingImages = await prisma.stageImage.findMany({
+    where: { stageId, type: "ALBUM" },
+  });
+
+  // 2. 從 images 陣列中取得要保留的 ID
+  const keepIds = images.filter((img) => img.id).map((img) => img.id);
+
+  // 3. 找出要刪除的圖片
+  const toDelete = existingImages
+    .filter((img) => !keepIds.includes(img.id))
+    .map((img) => img.id);
+
+  // 4. 找出新圖片的索引（沒有 id 的元素）
+  const newImageIndices = images
+    .map((img, index) => ({ ...img, index }))
+    .filter((img) => !img.id);
+
+  // 5. 驗證新圖片數量與上傳檔案數量一致
+  if (newImageIndices.length !== files.length) {
+    throw new Error(
+      `新圖片數量 (${newImageIndices.length}) 與上傳檔案數量 (${files.length}) 不符`,
+    );
   }
 
-  if (deleteIds.length > 0) {
-    await prisma.stageImage.deleteMany({ where: { id: { in: deleteIds } } });
-  }
+  // 6. 使用 transaction 執行所有操作
+  const result = await prisma.$transaction(async (tx) => {
+    const createdIds = [];
+    const updatedIds = [];
 
-  let created = [];
-  if (files.length > 0) {
-    created = await addStageAlbum({ stageId, source, files, names });
-  }
+    // 6.1 刪除不在列表中的圖片
+    if (toDelete.length > 0) {
+      await tx.stageImage.deleteMany({
+        where: { id: { in: toDelete } },
+      });
+    }
 
-  return { createdIds: created.map((item) => item.id) };
+    // 6.2 新增圖片
+    for (let i = 0; i < newImageIndices.length; i++) {
+      const imgConfig = newImageIndices[i];
+      const file = files[i];
+      const photoId = generateId("img");
+
+      await tx.stageImage.create({
+        data: {
+          id: photoId,
+          stageId,
+          type: "ALBUM",
+          url: `https://placeholder.com/album_${photoId}.jpg`,
+          thumbnail: `https://placeholder.com/album_${photoId}_thumb.jpg`,
+          name: file.originalname,
+          source: source || "",
+          sortOrder: imgConfig.sort_order,
+        },
+      });
+
+      createdIds.push(photoId);
+    }
+
+    // 6.3 更新現有圖片的 sort_order（以及可選的 source）
+    for (const img of images.filter((img) => img.id)) {
+      const updateData = {
+        sortOrder: img.sort_order,
+      };
+
+      // 如果有提供 source，也一併更新
+      if (source !== undefined) {
+        updateData.source = source;
+      }
+
+      await tx.stageImage.update({
+        where: { id: img.id },
+        data: updateData,
+      });
+
+      updatedIds.push(img.id);
+    }
+
+    return { createdIds, updatedIds, deletedIds: toDelete };
+  });
+
+  return result;
 };
 
 const getIndicatorCategories = async () =>

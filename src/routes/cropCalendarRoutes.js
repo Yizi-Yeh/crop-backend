@@ -562,7 +562,7 @@ router.delete(
 router.post(
   "/stages/:stageId/cover",
   authMiddleware,
-  upload.single("cover"),
+  upload.single("file"),
   asyncHandler(async (req, res) => {
     const { stageId } = req.params;
     const { source = "" } = req.body;
@@ -591,12 +591,17 @@ router.post(
 router.put(
   "/stages/:stageId/cover",
   authMiddleware,
-  upload.single("cover"),
+  upload.single("file"),
   asyncHandler(async (req, res) => {
     const { stageId } = req.params;
-    const { source, name } = req.body;
+    const { source, cover_image_id } = req.body;
 
-    const updated = await updateStageCover({ stageId, source, name, file: req.file });
+    const updated = await updateStageCover({
+      stageId,
+      source,
+      file: req.file,
+      coverImageId: cover_image_id
+    });
     if (!updated) {
       return res
         .status(400)
@@ -618,7 +623,7 @@ router.put(
 router.post(
   "/stages/:stageId/album",
   authMiddleware,
-  upload.array("images", 10),
+  upload.array("file", 10),
   asyncHandler(async (req, res) => {
     const { stageId } = req.params;
     const { source = "" } = req.body;
@@ -636,18 +641,18 @@ router.post(
         .json({ status: "error", message: "請至少上傳一張圖片" });
     }
 
-    let names = [];
+    let sortOrders = [];
     try {
-      names = req.body.names ? JSON.parse(req.body.names) : [];
+      sortOrders = req.body.sort_order ? JSON.parse(req.body.sort_order) : [];
     } catch {
-      names = [];
+      sortOrders = [];
     }
 
     const newPhotos = await addStageAlbum({
       stageId,
       source,
       files: req.files,
-      names,
+      sortOrders,
     });
 
     res.status(201).json({
@@ -659,54 +664,57 @@ router.post(
 );
 
 /**
- * 編輯相簿（批次更新 source / 刪除既有圖片 / 新增圖片）
+ * 編輯相簿（最終狀態更新）
  * PUT /api/crop-calendars/stages/:stageId/album
+ *
+ * 參數說明：
+ * - images: JSON 陣列，描述最終狀態
+ *   - 有 id: 保留的現有圖片
+ *   - 無 id: 新圖片（按順序對應 files）
+ *   - sort_order: 最終排序
+ * - source: 選填，套用到所有圖片
+ * - files: 新圖片檔案
  */
 router.put(
   "/stages/:stageId/album",
   authMiddleware,
-  upload.array("images", 10),
+  upload.array("files", 10),
   asyncHandler(async (req, res) => {
     const { stageId } = req.params;
     const { source } = req.body;
 
-    let deleteIds = [];
+    let images = [];
     try {
-      deleteIds = req.body.delete_ids ? JSON.parse(req.body.delete_ids) : [];
-    } catch {
-      deleteIds = [];
-    }
-
-    const hasDeletes = deleteIds.length > 0;
-    const hasUploads = req.files && req.files.length > 0;
-    const hasSourceUpdate = source !== undefined;
-
-    if (!hasDeletes && !hasUploads && !hasSourceUpdate) {
+      images = req.body.images ? JSON.parse(req.body.images) : [];
+    } catch (error) {
       return res.status(400).json({
         status: "error",
-        message: "請提供 source、delete_ids 或 images",
+        message: "images 格式錯誤，必須是有效的 JSON 陣列",
       });
     }
 
-    let names = [];
-    try {
-      names = req.body.names ? JSON.parse(req.body.names) : [];
-    } catch {
-      names = [];
+    if (images.length === 0) {
+      return res.status(400).json({
+        status: "error",
+        message: "請提供 images 陣列",
+      });
     }
 
     const result = await updateStageAlbum({
       stageId,
+      images,
       source,
-      deleteIds,
       files: req.files || [],
-      names,
     });
 
     res.json({
       status: "ok",
       message: "success",
-      data: { ids: result.createdIds },
+      data: {
+        created: result.createdIds,
+        updated: result.updatedIds,
+        deleted: result.deletedIds,
+      },
     });
   }),
 );

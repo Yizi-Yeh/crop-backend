@@ -18,12 +18,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/crops",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crops"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crops"]
             },
             "description": "取得所有作物清單"
           },
@@ -35,12 +31,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/crops",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "crops"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["crops"]
                 }
               },
               "status": "OK",
@@ -123,12 +115,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/cities",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "cities"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["cities"]
             },
             "description": "取得所有作物清單"
           },
@@ -140,12 +128,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/cities",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "cities"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["cities"]
                 }
               },
               "status": "OK",
@@ -228,14 +212,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/crops/{{cropId}}/zones",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crops",
-                "{{cropId}}",
-                "zones"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crops", "{{cropId}}", "zones"]
             },
             "description": "取得該作物的栽培曆區域清單（含城市與鄉鎮區）"
           },
@@ -256,14 +234,8 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/crops/{{cropId}}/zones",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "crops",
-                    "{{cropId}}",
-                    "zones"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["crops", "{{cropId}}", "zones"]
                 }
               },
               "status": "OK",
@@ -346,12 +318,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/gwls",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "gwls"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["gwls"]
             },
             "description": "取得該作物的栽培曆區域清單（含城市與鄉鎮區）"
           },
@@ -363,12 +331,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/gwls",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "gwls"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["gwls"]
                 }
               },
               "status": "OK",
@@ -473,14 +437,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crops/{{cropId}}/calendars?is_shared=true&is_published=true&district_ids=[2,3,4,5,8]",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crops",
-                "{{cropId}}",
-                "calendars"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["crops", "{{cropId}}", "calendars"],
               "query": [
                 {
                   "key": "is_shared",
@@ -518,14 +476,8 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/crops/{{cropId}}/calendars?is_shared=true&is_published=true&district_ids=[2,3,4,5,8]",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "crops",
-                    "{{cropId}}",
-                    "calendars"
-                  ],
+                  "host": ["{{baseUrl}}"],
+                  "path": ["crops", "{{cropId}}", "calendars"],
                   "query": [
                     {
                       "key": "is_shared",
@@ -591,7 +543,7 @@
                   "path": ""
                 }
               ],
-              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": [\n        {\n            \"id\": \"cal_001\",\n            \"title\": \"一期紅色芭樂培曆\",\n            \"creator\": {\n                \"id\": \"user_001\",\n                \"name\": \"專家A\"\n            },\n            \"permissions\": {\n                \"canCopy\": true,\n                \"canEdit\": false,\n                \"canDelete\": false\n            },\n            \"is_shared\": false,\n            \"is_published\": false,\n            \"file_type\": \"original\",\n            \"allow_center_use\": true,\n            \"published_at\": \"2025-06-11 12:00\",\n            \"last_edited_at\": \"2025-08-11 12:00\",\n            \"zone\": {\n                \"id\": \"201\",\n                \"zone_name\": \"紅色芭樂區\",\n                \"cities\": [\n                    {\n                        \"id\": \"22\",\n                        \"name\": \"臺東縣\",\n                        \"districts\": [\n                            {\n                                \"id\": \"1076\",\n                                \"name\": \"蘭嶼鄉\"\n                            },\n                            {\n                                \"id\": \"1119\",\n                                \"name\": \"綠島鄉\"\n                            },\n                            {\n                                \"id\": \"1123\",\n                                \"name\": \"卑南鄉\"\n                            }\n                        ]\n                    },\n                    {\n                        \"id\": \"23\",\n                        \"name\": \"花蓮縣\",\n                        \"districts\": [\n                            {\n                                \"id\": \"1082\",\n                                \"name\": \"秀林鄉\"\n                            },\n                            {\n                                \"id\": \"1083\",\n                                \"name\": \"吉安鄉\"\n                            }\n                        ]\n                    }\n                ]\n            },\n            \"stages\": [\n                {\n                    \"id\": \"stage_001\",\n                    \"name\": \"育苗期\",\n                    \"start_date_range\": {\n                        \"id\": \"start_stage_001\",\n                        \"decade\": \"upper\",\n                        \"month\": 1\n                    },\n                    \"end_date_range\": {\n                        \"id\": \"end_stage_001\",\n                        \"decade\": \"middle\",\n                        \"month\": 1\n                    },\n                    \"status\": \"complete\"\n                },\n                {\n                    \"id\": \"stage_002\",\n                    \"name\": \"成熟期\",\n                    \"start_date_range\": {\n                        \"id\": \"start_stage_001\",\n                        \"decade\": \"upper\",\n                        \"month\": 2\n                    },\n                    \"end_date_range\": {\n                        \"id\": \"end_stage_001\",\n                        \"decade\": \"middle\",\n                        \"month\": 2\n                    },\n                    \"status\": \"complete\"\n                }\n            ],\n            \"indicators\": [\n                {\n                    \"id\": \"ind_001\",\n                    \"name\": \"日均溫\"\n                },\n                {\n                    \"id\": \"ind_002\",\n                    \"name\": \"降雨量\"\n                }\n            ]\n        }\n    ]\n}"
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": [\n        {\n            \"id\": \"cal_001\",\n            \"title\": \"一期紅色芭樂培曆\",\n            \"creator\": {\n                \"id\": \"user_001\",\n                \"name\": \"專家A\"\n            },\n            \"permissions\": {\n                \"canCopy\": true,\n                \"canEdit\": false,\n                \"canDelete\": false\n            },\n            \"is_shared\": false,\n            \"is_published\": false,\n            \"file_type\": \"original\",\n            \"allow_center_use\": true,\n            \"published_at\": \"2025-06-11 12:00\",\n            \"updated_at\": \"2025-08-11 12:00\",\n            \"zone\": {\n                \"id\": \"201\",\n                \"zone_name\": \"紅色芭樂區\",\n                \"cities\": [\n                    {\n                        \"id\": \"22\",\n                        \"name\": \"臺東縣\",\n                        \"districts\": [\n                            {\n                                \"id\": \"1076\",\n                                \"name\": \"蘭嶼鄉\"\n                            },\n                            {\n                                \"id\": \"1119\",\n                                \"name\": \"綠島鄉\"\n                            },\n                            {\n                                \"id\": \"1123\",\n                                \"name\": \"卑南鄉\"\n                            }\n                        ]\n                    },\n                    {\n                        \"id\": \"23\",\n                        \"name\": \"花蓮縣\",\n                        \"districts\": [\n                            {\n                                \"id\": \"1082\",\n                                \"name\": \"秀林鄉\"\n                            },\n                            {\n                                \"id\": \"1083\",\n                                \"name\": \"吉安鄉\"\n                            }\n                        ]\n                    }\n                ]\n            },\n            \"stages\": [\n                {\n                    \"id\": \"stage_001\",\n                    \"name\": \"育苗期\",\n                    \"start_date_range\": {\n                        \"id\": \"start_stage_001\",\n                        \"decade\": \"upper\",\n                        \"month\": 1\n                    },\n                    \"end_date_range\": {\n                        \"id\": \"end_stage_001\",\n                        \"decade\": \"middle\",\n                        \"month\": 1\n                    },\n                    \"status\": \"complete\"\n                },\n                {\n                    \"id\": \"stage_002\",\n                    \"name\": \"成熟期\",\n                    \"start_date_range\": {\n                        \"id\": \"start_stage_001\",\n                        \"decade\": \"upper\",\n                        \"month\": 2\n                    },\n                    \"end_date_range\": {\n                        \"id\": \"end_stage_001\",\n                        \"decade\": \"middle\",\n                        \"month\": 2\n                    },\n                    \"status\": \"complete\"\n                }\n            ],\n            \"indicators\": [\n                {\n                    \"id\": \"ind_001\",\n                    \"name\": \"日均溫\"\n                },\n                {\n                    \"id\": \"ind_002\",\n                    \"name\": \"降雨量\"\n                }\n            ]\n        }\n    ]\n}"
             },
             {
               "name": "空資料",
@@ -630,15 +582,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crops",
-                "{{cropId}}",
-                "calendars",
-                "{{calendarId}}"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["crops", "{{cropId}}", "calendars", "{{calendarId}}"],
               "query": [
                 {
                   "key": "district_ids",
@@ -670,9 +615,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
+                  "host": ["{{baseUrl}}"],
                   "path": [
                     "crops",
                     "{{cropId}}",
@@ -747,7 +690,7 @@
                   "path": ""
                 }
               ],
-              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"cal_001\",\n        \"title\": \"一期紅色芭樂培曆\",\n        \"permissions\": {\n            \"canCopy\": true,\n            \"canEdit\": false,\n            \"canDelete\": false\n        },\n        \"crop_name\": \"芭樂\",\n        \"last_edited_at\": \"2025-08-11 12:00\",\n        \"is_published\": false,\n        \"is_shared\": false,\n        \"zone\": {\n            \"id\": \"201\",\n            \"zone_name\": \"紅色芭樂區\",\n            \"cities\": [\n                {\n                    \"id\": \"22\",\n                    \"name\": \"臺東縣\",\n                    \"districts\": [\n                        {\n                            \"id\": \"1076\",\n                            \"name\": \"蘭嶼鄉\"\n                        },\n                        {\n                            \"id\": \"1119\",\n                            \"name\": \"綠島鄉\"\n                        },\n                        {\n                            \"id\": \"1123\",\n                            \"name\": \"卑南鄉\"\n                        }\n                    ]\n                },\n                {\n                    \"id\": \"23\",\n                    \"name\": \"花蓮縣\",\n                    \"districts\": [\n                        {\n                            \"id\": \"1082\",\n                            \"name\": \"秀林鄉\"\n                        },\n                        {\n                            \"id\": \"1083\",\n                            \"name\": \"吉安鄉\"\n                        }\n                    ]\n                }\n            ]\n        },\n        \"stages\": [\n            {\n                \"id\": \"stage_001\",\n                \"name\": \"育苗期\",\n                \"start_date_range\": {\n                    \"id\": \"start_stage_001\",\n                    \"decade\": \"upper\",\n                    \"month\": 1\n                },\n                \"end_date_range\": {\n                    \"id\": \"end_stage_001\",\n                    \"decade\": \"middle\",\n                    \"month\": 1\n                },\n                \"status\": \"complete\",\n                \"color\": \"\",\n                \"album\": [\n                    {\n                        \"id\": \"201\",\n                        \"url\": \"https://.../album_01.jpg\",\n                        \"name\": \"育苗期照片01.jpg\",\n                        \"source\": \"農委會\",\n                        \"sort_order\": 0\n                    },\n                    {\n                        \"id\": \"202\",\n                        \"url\": \"https://.../album_02.jpg\",\n                        \"name\": \"育苗期照片02.jpg\",\n                        \"source\": \"農委會\",\n                        \"sort_order\": 1\n                    }\n                ]\n            }\n        ],\n        \"analysis\": {\n            \"data_points\": [\n                {\n                    \"label\": \"日高溫>28°C\",\n                    \"unit\": \"次\",\n                    \"source\": \"動力\",\n                    \"gwl\": \"GWL1.5(2020-2024)\",\n                    \"monthly_data\": [\n                        {\n                            \"month\": 1,\n                            \"current\": 25.5,\n                            \"future\": 26.3,\n                            \"current_exceed_count\": 7,\n                            \"future_exceed_count\": 7\n                        },\n                        {\n                            \"month\": 2,\n                            \"current\": 27.2,\n                            \"future\": 28.1,\n                            \"current_exceed_count\": 4,\n                            \"future_exceed_count\": 4\n                        }\n                    ]\n                },\n                {\n                    \"label\": \"降雨量>10mm\",\n                    \"unit\": \"次\",\n                    \"source\": \"統計\",\n                    \"gwl\": \"GWL1.5(2020-2024)\",\n                    \"monthly_data\": [\n                        {\n                            \"month\": 1,\n                            \"current_exceed_count\": 7,\n                            \"future_exceed_count\": 7,\n                            \"daily\": [\n                                {\n                                    \"day\": 1,\n                                    \"current\": 32,\n                                    \"future\": 41\n                                },\n                                {\n                                    \"day\": 2,\n                                    \"current\": 20,\n                                    \"future\": 30\n                                },\n                                {\n                                    \"day\": 3,\n                                    \"current\": 120,\n                                    \"future\": 130\n                                },\n                                {\n                                    \"day\": 30,\n                                    \"current\": 1,\n                                    \"future\": 2\n                                }\n                            ]\n                        }\n                    ]\n                }\n            ]\n        }\n    }\n}"
+              "body": "{\n    \"status\": \"ok\",\n    \"message\": \"success\",\n    \"data\": {\n        \"id\": \"cal_001\",\n        \"title\": \"一期紅色芭樂培曆\",\n        \"permissions\": {\n            \"canCopy\": true,\n            \"canEdit\": false,\n            \"canDelete\": false\n        },\n        \"crop_name\": \"芭樂\",\n        \"updated_at\": \"2025-08-11 12:00\",\n        \"is_published\": false,\n        \"is_shared\": false,\n        \"zone\": {\n            \"id\": \"201\",\n            \"zone_name\": \"紅色芭樂區\",\n            \"cities\": [\n                {\n                    \"id\": \"22\",\n                    \"name\": \"臺東縣\",\n                    \"districts\": [\n                        {\n                            \"id\": \"1076\",\n                            \"name\": \"蘭嶼鄉\"\n                        },\n                        {\n                            \"id\": \"1119\",\n                            \"name\": \"綠島鄉\"\n                        },\n                        {\n                            \"id\": \"1123\",\n                            \"name\": \"卑南鄉\"\n                        }\n                    ]\n                },\n                {\n                    \"id\": \"23\",\n                    \"name\": \"花蓮縣\",\n                    \"districts\": [\n                        {\n                            \"id\": \"1082\",\n                            \"name\": \"秀林鄉\"\n                        },\n                        {\n                            \"id\": \"1083\",\n                            \"name\": \"吉安鄉\"\n                        }\n                    ]\n                }\n            ]\n        },\n        \"stages\": [\n            {\n                \"id\": \"stage_001\",\n                \"name\": \"育苗期\",\n                \"start_date_range\": {\n                    \"id\": \"start_stage_001\",\n                    \"decade\": \"upper\",\n                    \"month\": 1\n                },\n                \"end_date_range\": {\n                    \"id\": \"end_stage_001\",\n                    \"decade\": \"middle\",\n                    \"month\": 1\n                },\n                \"status\": \"complete\",\n                \"color\": \"\",\n                \"album\": [\n                    {\n                        \"id\": \"201\",\n                        \"url\": \"https://.../album_01.jpg\",\n                        \"name\": \"育苗期照片01.jpg\",\n                        \"source\": \"農委會\",\n                        \"sort_order\": 0\n                    },\n                    {\n                        \"id\": \"202\",\n                        \"url\": \"https://.../album_02.jpg\",\n                        \"name\": \"育苗期照片02.jpg\",\n                        \"source\": \"農委會\",\n                        \"sort_order\": 1\n                    }\n                ]\n            }\n        ],\n        \"analysis\": {\n            \"data_points\": [\n                {\n                    \"label\": \"日高溫>28°C\",\n                    \"unit\": \"次\",\n                    \"source\": \"動力\",\n                    \"gwl\": \"GWL1.5(2020-2024)\",\n                    \"monthly_data\": [\n                        {\n                            \"month\": 1,\n                            \"current\": 25.5,\n                            \"future\": 26.3,\n                            \"current_exceed_count\": 7,\n                            \"future_exceed_count\": 7\n                        },\n                        {\n                            \"month\": 2,\n                            \"current\": 27.2,\n                            \"future\": 28.1,\n                            \"current_exceed_count\": 4,\n                            \"future_exceed_count\": 4\n                        }\n                    ]\n                },\n                {\n                    \"label\": \"降雨量>10mm\",\n                    \"unit\": \"次\",\n                    \"source\": \"統計\",\n                    \"gwl\": \"GWL1.5(2020-2024)\",\n                    \"monthly_data\": [\n                        {\n                            \"month\": 1,\n                            \"current_exceed_count\": 7,\n                            \"future_exceed_count\": 7,\n                            \"daily\": [\n                                {\n                                    \"day\": 1,\n                                    \"current\": 32,\n                                    \"future\": 41\n                                },\n                                {\n                                    \"day\": 2,\n                                    \"current\": 20,\n                                    \"future\": 30\n                                },\n                                {\n                                    \"day\": 3,\n                                    \"current\": 120,\n                                    \"future\": 130\n                                },\n                                {\n                                    \"day\": 30,\n                                    \"current\": 1,\n                                    \"future\": 2\n                                }\n                            ]\n                        }\n                    ]\n                }\n            ]\n        }\n    }\n}"
             },
             {
               "name": "空資料",
@@ -813,14 +756,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crops/{{cropId}}/calendars",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crops",
-                "{{cropId}}",
-                "calendars"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crops", "{{cropId}}", "calendars"]
             },
             "description": "建立新的栽培曆（需 Bearer Token）"
           },
@@ -847,14 +784,8 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/crops/{{cropId}}/calendars",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "crops",
-                    "{{cropId}}",
-                    "calendars"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["crops", "{{cropId}}", "calendars"]
                 }
               },
               "status": "Created",
@@ -942,13 +873,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/calendars/{{calendarId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "calendars",
-                "{{calendarId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["calendars", "{{calendarId}}"]
             },
             "description": "編輯栽培曆名稱（需 Bearer Token）"
           },
@@ -975,13 +901,8 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/calendars/{{calendarId}}",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "calendars",
-                    "{{calendarId}}"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["calendars", "{{calendarId}}"]
                 }
               },
               "status": "OK",
@@ -1069,13 +990,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/calendars/{{calendarId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "calendars",
-                "{{calendarId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["calendars", "{{calendarId}}"]
             },
             "description": "編輯栽培曆區域清單（需 Bearer Token）"
           },
@@ -1102,13 +1018,8 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/calendars/{{calendarId}}",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "calendars",
-                    "{{calendarId}}"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["calendars", "{{calendarId}}"]
                 }
               },
               "status": "OK",
@@ -1187,13 +1098,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/calendars/{{calendarId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "calendars",
-                "{{calendarId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["calendars", "{{calendarId}}"]
             },
             "description": "刪除栽培曆（需 Bearer Token）"
           },
@@ -1205,13 +1111,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/calendars/{{calendarId}}",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "calendars",
-                    "{{calendarId}}"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["calendars", "{{calendarId}}"]
                 }
               },
               "status": "OK",
@@ -1299,14 +1200,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/calendars/{{calendarId}}/share",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "calendars",
-                "{{calendarId}}",
-                "share"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["calendars", "{{calendarId}}", "share"]
             },
             "description": "將栽培曆設為共享，其他專家可見（需 Bearer Token）"
           },
@@ -1327,14 +1222,8 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/calendars/{{calendarId}}/share",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "calendars",
-                    "{{calendarId}}",
-                    "share"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["calendars", "{{calendarId}}", "share"]
                 }
               },
               "status": "OK",
@@ -1413,14 +1302,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/calendars/{{calendarId}}/unshare",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "calendars",
-                "{{calendarId}}",
-                "unshare"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["calendars", "{{calendarId}}", "unshare"]
             },
             "description": "取消栽培曆共享狀態（需 Bearer Token）"
           },
@@ -1432,14 +1315,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/calendars/{{calendarId}}/unshare",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "calendars",
-                    "{{calendarId}}",
-                    "unshare"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["calendars", "{{calendarId}}", "unshare"]
                 }
               },
               "status": "OK",
@@ -1518,14 +1395,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/calendars/{{calendarId}}/copy",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "calendars",
-                "{{calendarId}}",
-                "copy"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["calendars", "{{calendarId}}", "copy"]
             },
             "description": "產生專家栽培曆副本（需 Bearer Token）"
           },
@@ -1537,14 +1408,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/calendars/{{calendarId}}/copy",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "calendars",
-                    "{{calendarId}}",
-                    "copy"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["calendars", "{{calendarId}}", "copy"]
                 }
               },
               "status": "Created",
@@ -1623,14 +1488,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/calendars/{{calendarId}}/publish",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "calendars",
-                "{{calendarId}}",
-                "publish"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["calendars", "{{calendarId}}", "publish"]
             },
             "description": "發布栽培曆為公開（需 Bearer Token）"
           },
@@ -1642,14 +1501,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/calendars/{{calendarId}}/publish",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "calendars",
-                    "{{calendarId}}",
-                    "publish"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["calendars", "{{calendarId}}", "publish"]
                 }
               },
               "status": "OK",
@@ -1728,14 +1581,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/calendars/{{calendarId}}/unpublish",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "calendars",
-                "{{calendarId}}",
-                "unpublish"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["calendars", "{{calendarId}}", "unpublish"]
             },
             "description": "取消栽培曆公開狀態（需 Bearer Token）"
           },
@@ -1747,14 +1594,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/calendars/{{calendarId}}/unpublish",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "calendars",
-                    "{{calendarId}}",
-                    "unpublish"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["calendars", "{{calendarId}}", "unpublish"]
                 }
               },
               "status": "OK",
@@ -1838,9 +1679,7 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages",
-              "host": [
-                "{{baseUrl}}"
-              ],
+              "host": ["{{baseUrl}}"],
               "path": [
                 "crops",
                 "{{cropId}}",
@@ -1859,9 +1698,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
+                  "host": ["{{baseUrl}}"],
                   "path": [
                     "crops",
                     "{{cropId}}",
@@ -1956,9 +1793,7 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
+              "host": ["{{baseUrl}}"],
               "path": [
                 "crops",
                 "{{cropId}}",
@@ -1978,9 +1813,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
+                  "host": ["{{baseUrl}}"],
                   "path": [
                     "crops",
                     "{{cropId}}",
@@ -2085,9 +1918,7 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages",
-              "host": [
-                "{{baseUrl}}"
-              ],
+              "host": ["{{baseUrl}}"],
               "path": [
                 "crops",
                 "{{cropId}}",
@@ -2121,9 +1952,7 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
+                  "host": ["{{baseUrl}}"],
                   "path": [
                     "crops",
                     "{{cropId}}",
@@ -2218,9 +2047,7 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
+              "host": ["{{baseUrl}}"],
               "path": [
                 "crops",
                 "{{cropId}}",
@@ -2255,9 +2082,7 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
+                  "host": ["{{baseUrl}}"],
                   "path": [
                     "crops",
                     "{{cropId}}",
@@ -2344,9 +2169,7 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
+              "host": ["{{baseUrl}}"],
               "path": [
                 "crops",
                 "{{cropId}}",
@@ -2366,9 +2189,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/crops/{{cropId}}/calendars/{{calendarId}}/stages/{{stageId}}",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
+                  "host": ["{{baseUrl}}"],
                   "path": [
                     "crops",
                     "{{cropId}}",
@@ -2485,14 +2306,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/stages/{{stageId}}/cover",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "stages",
-                "{{stageId}}",
-                "cover"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["stages", "{{stageId}}", "cover"]
             },
             "description": "上傳生長期封面圖（需 Bearer Token）"
           },
@@ -2529,14 +2344,8 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/stages/{{stageId}}/cover",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "stages",
-                    "{{stageId}}",
-                    "cover"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["stages", "{{stageId}}", "cover"]
                 }
               },
               "status": "Created",
@@ -2638,14 +2447,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/stages/{{stageId}}/cover",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "stages",
-                "{{stageId}}",
-                "cover"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["stages", "{{stageId}}", "cover"]
             },
             "description": "更換生長期封面圖（需 Bearer Token）"
           },
@@ -2680,14 +2483,8 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/stages/{{stageId}}/cover",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "stages",
-                    "{{stageId}}",
-                    "cover"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["stages", "{{stageId}}", "cover"]
                 }
               },
               "status": "OK",
@@ -2791,14 +2588,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/stages/{{stageId}}/album",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "stages",
-                "{{stageId}}",
-                "album"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["stages", "{{stageId}}", "album"]
             },
             "description": "上傳生長期相簿圖片（需 Bearer Token）"
           },
@@ -2835,14 +2626,8 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/stages/{{stageId}}/album",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "stages",
-                    "{{stageId}}",
-                    "album"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["stages", "{{stageId}}", "album"]
                 }
               },
               "status": "Created",
@@ -2953,14 +2738,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/stages/{{stageId}}/album",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "stages",
-                "{{stageId}}",
-                "album"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["stages", "{{stageId}}", "album"]
             },
             "description": "上傳生長期相簿圖片（需 Bearer Token）"
           },
@@ -3004,14 +2783,8 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/stages/{{stageId}}/album",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "stages",
-                    "{{stageId}}",
-                    "album"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["stages", "{{stageId}}", "album"]
                 }
               },
               "status": "OK",
@@ -3085,14 +2858,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/crops/{{cropId}}/indicator-categories",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crops",
-                "{{cropId}}",
-                "indicator-categories"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crops", "{{cropId}}", "indicator-categories"]
             },
             "description": "取得指標類別清單（氣溫、雨量、日照）"
           },
@@ -3104,14 +2871,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/crops/{{cropId}}/indicator-categories",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "crops",
-                    "{{cropId}}",
-                    "indicator-categories"
-                  ]
+                  "host": ["{{baseUrl}}"],
+                  "path": ["crops", "{{cropId}}", "indicator-categories"]
                 }
               },
               "status": "OK",
@@ -3189,14 +2950,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/crops/{{cropId}}/indicators?category_id=cat_001",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crops",
-                "{{cropId}}",
-                "indicators"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["crops", "{{cropId}}", "indicators"],
               "query": [
                 {
                   "key": "category_id",
@@ -3215,14 +2970,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/crops/{{cropId}}/indicators?category_id=cat_001",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "crops",
-                    "{{cropId}}",
-                    "indicators"
-                  ],
+                  "host": ["{{baseUrl}}"],
+                  "path": ["crops", "{{cropId}}", "indicators"],
                   "query": [
                     {
                       "key": "category_id",

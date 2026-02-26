@@ -281,6 +281,7 @@ for (let i = 0; i < EXTRA_ZONE_COUNT; i += 1) {
   extraZones.push(zone);
   extraCalendars.push({
     id: calendarId,
+    source_calendar_id: null,
     title: `擴充示範栽培曆 ${i + 1}`,
     creator: { id: "user_001", name: "專家A" },
     is_shared: false,
@@ -288,7 +289,7 @@ for (let i = 0; i < EXTRA_ZONE_COUNT; i += 1) {
     file_type: "original",
     allow_center_use: true,
     published_at: "2025-06-11 12:00",
-    last_edited_at: "2025-08-11 12:00",
+    updated_at: "2025-08-11 12:00",
     zone,
   });
 }
@@ -323,7 +324,7 @@ const calendars = [
 
     // 時間
     published_at: "2025-06-11 12:00",
-    last_edited_at: "2025-08-11 12:00",
+    updated_at: "2025-08-11 12:00",
 
     zone: {
       id: "201",
@@ -443,7 +444,7 @@ const calendarDetails = [
       canDelete: false,
     },
     crop_name: "芭樂",
-    last_edited_at: "2025-08-11 12:00",
+    updated_at: "2025-08-11 12:00",
     is_published: false, // 民眾公開開關
     is_shared: false, // 專家共享開關
     // 區域資訊
@@ -1167,7 +1168,7 @@ const calendarDetails = [
 
 // 發布栽培曆	POST /api/crop-calendars/calendars/{calendar_id}/publish	產生公開栽培曆
 
-// 生長期詳細資料（包含作物資訊圖片+圖表資料）
+// 生長期詳細資料（包含作物資訊圖片）
 // GET /api/crop-calendars/crops/{crop_id}/calendars/{calendar_id}/stages/{stage_id}`
 const stages = [
   {

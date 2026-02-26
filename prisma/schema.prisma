@@ -129,6 +129,7 @@ model Calendar {
 
   creatorId      String
   creatorName    String
+  sourceCalendarId String?
 
   isShared       Boolean          @default(false)
   isPublished    Boolean          @default(false)
