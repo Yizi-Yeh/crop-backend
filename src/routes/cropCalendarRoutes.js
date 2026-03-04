@@ -38,7 +38,7 @@ const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
 // 權限備註：
-// - expert: 可看「自己 + 已發布 + 已共享」；只能操作自己；可分享，不可發布；可複製自己
+// - expert: 可看「自己 + 已發布 + 已共享」；只能操作自己；可分享，不可發布；不可複製
 // - center:
 //   - 原稿 allow_center_use=true: 可看、可複製
 //   - 原稿 allow_center_use=false: 只可看
@@ -66,9 +66,10 @@ const canEditCalendar = (user, calendar) => {
 const canCopyCalendar = (user, calendar) => {
   if (!user) return false;
   if (calendar.sourceCalendarId) return false;
-  if (user.role === "admin") return calendar.allowCenterUse === true;
-  if (user.role === "center") return calendar.allowCenterUse === true;
-  if (user.role === "expert") return calendar.creatorId === user.id;
+  if (user.role === "admin")
+    return calendar.allowCenterUse === true && calendar.isShared === true;
+  if (user.role === "center")
+    return calendar.allowCenterUse === true && calendar.isShared === true;
   return false;
 };
 
@@ -232,7 +233,7 @@ router.get(
     if (city_id) {
       const zone = result.zone;
       if (zone) {
-        const cities = zone.cities.filter((city) => city.id === Number(city_id));
+        const cities = zone.cities.filter((city) => city.id === String(city_id));
         result.zone = cities.length > 0 ? { ...zone, cities } : null;
       }
     }
@@ -393,7 +394,7 @@ router.post(
   asyncHandler(async (req, res) => {
     const { calendarId } = req.params;
     const role = req.user?.role;
-    if (role !== "expert" && role !== "admin" && role !== "center") {
+    if (role !== "admin" && role !== "center") {
       return res.status(403).json({ status: "error", message: "沒有權限複製栽培曆" });
     }
 

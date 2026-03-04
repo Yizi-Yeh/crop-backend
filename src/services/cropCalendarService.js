@@ -42,7 +42,9 @@ const extractStageBaseId = (id) => {
 
 const resolveStageId = (calendarId, stageId) => {
   if (!calendarId || !stageId) return stageId;
-  const stageIdStr = String(stageId);
+  const stageIdStr = String(stageId)
+    .replace(/^"+|"+$/g, "")
+    .replace(/^'+|'+$/g, "");
   if (stageIdStr.startsWith(`${calendarId}_`)) return stageIdStr;
   if (/^stage_\d+/.test(stageIdStr)) return `${calendarId}_${stageIdStr}`;
   return stageIdStr;
@@ -133,15 +135,298 @@ const buildAnalysisForStage = (calendar, stageId) => {
 
   if (!startRange || !endRange) return stage.analysis;
 
+  const decadeToStartDay = (decade) => {
+    switch (decade) {
+      case "upper":
+        return 1;
+      case "middle":
+        return 11;
+      case "lower":
+        return 21;
+      default:
+        return 1;
+    }
+  };
+
+  const decadeToEndDay = (decade) => {
+    switch (decade) {
+      case "upper":
+        return 10;
+      case "middle":
+        return 20;
+      case "lower":
+        return 31;
+      default:
+        return 31;
+    }
+  };
+
+  const toOrder = (month, day) => Number(month) * 100 + Number(day);
+
+  const parseDateParts = (value) => {
+    if (!value) return null;
+    const raw = String(value);
+    const parts = raw.split("-");
+    if (parts.length >= 3) {
+      return {
+        year: Number(parts[0]),
+        month: Number(parts[1]),
+        day: Number(parts[2]),
+      };
+    }
+    if (raw.includes("/")) {
+      const slashParts = raw.split("/");
+      if (slashParts.length >= 3) {
+        return {
+          year: Number(slashParts[0]),
+          month: Number(slashParts[1]),
+          day: Number(slashParts[2]),
+        };
+      }
+    }
+    const parsed = new Date(raw);
+    if (!Number.isNaN(parsed.getTime())) {
+      return {
+        year: parsed.getUTCFullYear(),
+        month: parsed.getUTCMonth() + 1,
+        day: parsed.getUTCDate(),
+      };
+    }
+    return null;
+  };
+
+  const formatDate = (month, day) =>
+    `${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+  const buildMonthlyExceedCount = (
+    dailyData,
+    threshold = {},
+    monthsFilter = null,
+  ) => {
+    if (!Array.isArray(dailyData)) return [];
+    const currentThreshold = Number(threshold.current);
+    const futureThreshold = Number(threshold.future);
+    const allowedMonths =
+      Array.isArray(monthsFilter) && monthsFilter.length > 0
+        ? new Set(monthsFilter.map(String))
+        : null;
+
+    const byMonth = new Map();
+    dailyData.forEach((item) => {
+      const parts = parseDateParts(item?.date);
+      if (!parts?.month) return;
+      const monthKey = String(parts.month);
+      if (allowedMonths && !allowedMonths.has(monthKey)) return;
+      if (!byMonth.has(monthKey)) {
+        byMonth.set(monthKey, { current: 0, future: 0 });
+      }
+      const counts = byMonth.get(monthKey);
+      const currentValue = Number(item?.value?.current);
+      const futureValue = Number(item?.value?.future);
+      if (!Number.isNaN(currentThreshold) && !Number.isNaN(currentValue)) {
+        if (currentValue > currentThreshold) counts.current += 1;
+      }
+      if (!Number.isNaN(futureThreshold) && !Number.isNaN(futureValue)) {
+        if (futureValue > futureThreshold) counts.future += 1;
+      }
+    });
+
+    return Array.from(byMonth.entries())
+      .sort((a, b) => Number(a[0]) - Number(b[0]))
+      .map(([month, exceedCount]) => ({
+        month,
+        exceed_count: {
+          current: String(exceedCount.current),
+          future: String(exceedCount.future),
+        },
+      }));
+  };
+
+  const lastDayOfMonth = (year, month) =>
+    new Date(Date.UTC(year, month, 0)).getUTCDate();
+
+  const monthsInRange = (rangeStart, rangeEnd) => {
+    const startMonth = Number(rangeStart?.month);
+    const endMonth = Number(rangeEnd?.month);
+    if (!startMonth || !endMonth) return [];
+    if (endMonth >= startMonth) {
+      return Array.from(
+        { length: endMonth - startMonth + 1 },
+        (_, i) => String(startMonth + i),
+      );
+    }
+    return [
+      ...Array.from({ length: 12 - startMonth + 1 }, (_, i) =>
+        String(startMonth + i),
+      ),
+      ...Array.from({ length: endMonth }, (_, i) => String(i + 1)),
+    ];
+  };
+
+  const expandDailyDataForMonths = (dailyData, months) => {
+    if (!Array.isArray(dailyData) || months.length === 0) return dailyData;
+
+    const firstDate = dailyData.find((d) => d?.date)?.date || null;
+    const firstParts = parseDateParts(firstDate);
+    const baseYear = firstParts?.year || new Date().getUTCFullYear();
+
+    const map = new Map();
+    dailyData.forEach((item) => {
+      const parts = parseDateParts(item?.date);
+      if (!parts) return;
+      const key = formatDate(parts.month, parts.day);
+      map.set(key, { ...item, date: key });
+    });
+
+    const expanded = [];
+    months.forEach((monthStr) => {
+      const month = Number(monthStr);
+      const days = lastDayOfMonth(baseYear, month);
+      for (let day = 1; day <= days; day += 1) {
+        const key = formatDate(month, day);
+        const existing = map.get(key);
+        if (existing) {
+          expanded.push(existing);
+          continue;
+        }
+        const current = (Math.random() * 40).toFixed(1);
+        const future = (Math.random() * 40).toFixed(1);
+        expanded.push({
+          date: key,
+          value: { current, future },
+        });
+      }
+    });
+
+    return expanded;
+  };
+
+  const expandDailyDataByRange = (dailyData, rangeStart, rangeEnd) => {
+    if (!Array.isArray(dailyData) || !rangeStart || !rangeEnd) return dailyData;
+
+    const firstDate = dailyData.find((d) => d?.date)?.date || null;
+    const firstParts = parseDateParts(firstDate);
+    const baseYear = firstParts?.year || new Date().getUTCFullYear();
+
+    const startDay = decadeToStartDay(rangeStart.decade);
+    const endDay = Math.min(
+      decadeToEndDay(rangeEnd.decade),
+      lastDayOfMonth(baseYear, Number(rangeEnd.month)),
+    );
+
+    const startMonth = Number(rangeStart.month);
+    const endMonth = Number(rangeEnd.month);
+    const spansYear = endMonth < startMonth;
+
+    const startDate = new Date(
+      Date.UTC(baseYear, startMonth - 1, startDay),
+    );
+    const endDate = new Date(
+      Date.UTC(baseYear + (spansYear ? 1 : 0), endMonth - 1, endDay),
+    );
+
+    const map = new Map();
+    dailyData.forEach((item) => {
+      const parts = parseDateParts(item?.date);
+      if (!parts) return;
+      const key = formatDate(parts.month, parts.day);
+      map.set(key, { ...item, date: key });
+    });
+
+    const expanded = [];
+    for (
+      let d = new Date(startDate);
+      d <= endDate;
+      d = new Date(d.getTime() + 24 * 60 * 60 * 1000)
+    ) {
+      const year = d.getUTCFullYear();
+      const month = d.getUTCMonth() + 1;
+      const day = d.getUTCDate();
+      const key = formatDate(month, day);
+      const existing = map.get(key);
+      if (existing) {
+        expanded.push(existing);
+        continue;
+      }
+      const current = (Math.random() * 40).toFixed(1);
+      const future = (Math.random() * 40).toFixed(1);
+      expanded.push({
+        date: key,
+        value: { current, future },
+      });
+    }
+
+    return expanded;
+  };
+
+  const filterDailyDataByRange = (dailyData, rangeStart, rangeEnd) => {
+    if (!Array.isArray(dailyData) || !rangeStart || !rangeEnd) return dailyData;
+    const startDay = decadeToStartDay(rangeStart.decade);
+    const endDay = decadeToEndDay(rangeEnd.decade);
+    const startOrder = toOrder(rangeStart.month, startDay);
+    const endOrder = toOrder(rangeEnd.month, endDay);
+
+    return dailyData
+      .filter((item) => {
+      if (!item?.date) return false;
+      const parts = parseDateParts(item.date);
+      if (!parts?.month || !parts?.day) return false;
+      const month = parts.month;
+      const day = parts.day;
+      const order = toOrder(month, day);
+      if (endOrder >= startOrder) {
+        return order >= startOrder && order <= endOrder;
+      }
+      // 跨年情境
+      return order >= startOrder || order <= endOrder;
+    })
+      .map((item) => {
+        const parts = parseDateParts(item?.date);
+        if (!parts?.month || !parts?.day) return item;
+        return { ...item, date: formatDate(parts.month, parts.day) };
+      });
+  };
+
   const indicators = Array.isArray(stage.analysis.indicators)
-    ? stage.analysis.indicators.map((indicator) => ({
-        ...indicator,
-        monthly_data: filterMonthlyDataByRange(
-          indicator.monthly_data,
-          startRange,
-          endRange,
-        ),
-      }))
+    ? stage.analysis.indicators.map((indicator) => {
+        if (Array.isArray(indicator.daily_data)) {
+          const filteredDaily = filterDailyDataByRange(
+            indicator.daily_data,
+            startRange,
+            endRange,
+          );
+          const months = monthsInRange(startRange, endRange);
+          const monthlyDaily = expandDailyDataForMonths(
+            indicator.daily_data,
+            months,
+          );
+          const { exceed_count, ...rest } = indicator;
+          return {
+            ...rest,
+            daily_data: expandDailyDataByRange(
+              filteredDaily,
+              startRange,
+              endRange,
+            ),
+            monthly_exceed_count: buildMonthlyExceedCount(
+              monthlyDaily,
+              indicator.threshold,
+              months,
+            ),
+          };
+        }
+        if (Array.isArray(indicator.monthly_data)) {
+          return {
+            ...indicator,
+            monthly_data: filterMonthlyDataByRange(
+              indicator.monthly_data,
+              startRange,
+              endRange,
+            ),
+          };
+        }
+        return indicator;
+      })
     : stage.analysis.indicators;
 
   return { ...stage.analysis, indicators };

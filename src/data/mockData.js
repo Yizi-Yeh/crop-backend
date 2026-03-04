@@ -996,549 +996,75 @@ const calendarDetails = [
       indicators: [
         {
           id: "tmax_28",
+          unit: "°C",
           label: "日高溫 > 28°C",
           source: "動力",
-          unit: "°C",
-          current_threshold: "38",
-          future_threshold: "38",
-          monthly_data: [
+          threshold: {
+            current: "38",
+            future: "38",
+          },
+          exceed_count: {
+            current: "2",
+            future: "4",
+          },
+          daily_data: [
             {
-              month: "1",
-              current_exceed_count: "2",
-              future_exceed_count: "4",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "26.4",
-                  future_average: "27.7",
-                },
-                {
-                  decade: "middle",
-                  current_average: "26.4",
-                  future_average: "27.7",
-                },
-                {
-                  decade: "lower",
-                  current_average: "26.4",
-                  future_average: "27.7",
-                },
-              ],
+              date: "01-15",
+              value: {
+                current: "26.4",
+                future: "27.7",
+              },
             },
             {
-              month: "2",
-              current_exceed_count: "3",
-              future_exceed_count: "5",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "27.1",
-                  future_average: "28.5",
-                },
-                {
-                  decade: "middle",
-                  current_average: "27.1",
-                  future_average: "28.5",
-                },
-                {
-                  decade: "lower",
-                  current_average: "27.1",
-                  future_average: "28.5",
-                },
-              ],
+              date: "02-15",
+              value: {
+                current: "27.1",
+                future: "28.5",
+              },
             },
             {
-              month: "3",
-              current_exceed_count: "4",
-              future_exceed_count: "6",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "28.4",
-                  future_average: "29.8",
-                },
-                {
-                  decade: "middle",
-                  current_average: "28.4",
-                  future_average: "29.8",
-                },
-                {
-                  decade: "lower",
-                  current_average: "28.4",
-                  future_average: "29.8",
-                },
-              ],
-            },
-            {
-              month: "4",
-              current_exceed_count: "4",
-              future_exceed_count: "6",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "29.2",
-                  future_average: "30.6",
-                },
-                {
-                  decade: "middle",
-                  current_average: "29.2",
-                  future_average: "30.6",
-                },
-                {
-                  decade: "lower",
-                  current_average: "29.2",
-                  future_average: "30.6",
-                },
-              ],
-            },
-            {
-              month: "5",
-              current_exceed_count: "5",
-              future_exceed_count: "7",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "30.1",
-                  future_average: "31.5",
-                },
-                {
-                  decade: "middle",
-                  current_average: "30.1",
-                  future_average: "31.5",
-                },
-                {
-                  decade: "lower",
-                  current_average: "30.1",
-                  future_average: "31.5",
-                },
-              ],
-            },
-            {
-              month: "6",
-              current_exceed_count: "6",
-              future_exceed_count: "8",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "31.0",
-                  future_average: "32.4",
-                },
-                {
-                  decade: "middle",
-                  current_average: "31.0",
-                  future_average: "32.4",
-                },
-                {
-                  decade: "lower",
-                  current_average: "31.0",
-                  future_average: "32.4",
-                },
-              ],
-            },
-            {
-              month: "7",
-              current_exceed_count: "7",
-              future_exceed_count: "9",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "31.6",
-                  future_average: "33.0",
-                },
-                {
-                  decade: "middle",
-                  current_average: "31.6",
-                  future_average: "33.0",
-                },
-                {
-                  decade: "lower",
-                  current_average: "31.6",
-                  future_average: "33.0",
-                },
-              ],
-            },
-            {
-              month: "8",
-              current_exceed_count: "7",
-              future_exceed_count: "9",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "31.4",
-                  future_average: "32.8",
-                },
-                {
-                  decade: "middle",
-                  current_average: "31.4",
-                  future_average: "32.8",
-                },
-                {
-                  decade: "lower",
-                  current_average: "31.4",
-                  future_average: "32.8",
-                },
-              ],
-            },
-            {
-              month: "9",
-              current_exceed_count: "6",
-              future_exceed_count: "8",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "30.6",
-                  future_average: "32.0",
-                },
-                {
-                  decade: "middle",
-                  current_average: "30.6",
-                  future_average: "32.0",
-                },
-                {
-                  decade: "lower",
-                  current_average: "30.6",
-                  future_average: "32.0",
-                },
-              ],
-            },
-            {
-              month: "10",
-              current_exceed_count: "5",
-              future_exceed_count: "7",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "29.8",
-                  future_average: "31.2",
-                },
-                {
-                  decade: "middle",
-                  current_average: "29.8",
-                  future_average: "31.2",
-                },
-                {
-                  decade: "lower",
-                  current_average: "29.8",
-                  future_average: "31.2",
-                },
-              ],
-            },
-            {
-              month: "11",
-              current_exceed_count: "4",
-              future_exceed_count: "6",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "29.0",
-                  future_average: "30.4",
-                },
-                {
-                  decade: "middle",
-                  current_average: "29.0",
-                  future_average: "30.4",
-                },
-                {
-                  decade: "lower",
-                  current_average: "29.0",
-                  future_average: "30.4",
-                },
-              ],
-            },
-            {
-              month: "12",
-              current_exceed_count: "3",
-              future_exceed_count: "5",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "27.9",
-                  future_average: "29.3",
-                },
-                {
-                  decade: "middle",
-                  current_average: "27.9",
-                  future_average: "29.3",
-                },
-                {
-                  decade: "lower",
-                  current_average: "27.9",
-                  future_average: "29.3",
-                },
-              ],
+              date: "03-15",
+              value: {
+                current: "28.4",
+                future: "29.8",
+              },
             },
           ],
         },
         {
           id: "pr_10",
+          unit: "mm",
           label: "日降雨量 > 10mm",
           source: "統計",
-          unit: "mm",
-          current_threshold: "20",
-          future_threshold: "20",
-          monthly_data: [
+          threshold: {
+            current: "20",
+            future: "20",
+          },
+          exceed_count: {
+            current: "4",
+            future: "6",
+          },
+          daily_data: [
             {
-              month: "1",
-              current_exceed_count: "4",
-              future_exceed_count: "6",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "12.3",
-                  future_average: "14.1",
-                },
-                {
-                  decade: "middle",
-                  current_average: "11.8",
-                  future_average: "13.6",
-                },
-                {
-                  decade: "lower",
-                  current_average: "10.9",
-                  future_average: "12.7",
-                },
-              ],
+              date: "01-15",
+              value: {
+                current: "12.3",
+                future: "14.1",
+              },
             },
             {
-              month: "2",
-              current_exceed_count: "5",
-              future_exceed_count: "7",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "14.6",
-                  future_average: "16.8",
-                },
-                {
-                  decade: "middle",
-                  current_average: "13.9",
-                  future_average: "16.1",
-                },
-                {
-                  decade: "lower",
-                  current_average: "13.1",
-                  future_average: "15.3",
-                },
-              ],
+              date: "02-15",
+              value: {
+                current: "14.6",
+                future: "16.8",
+              },
             },
             {
-              month: "3",
-              current_exceed_count: "7",
-              future_exceed_count: "9",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "18.2",
-                  future_average: "21.4",
-                },
-                {
-                  decade: "middle",
-                  current_average: "17.5",
-                  future_average: "20.6",
-                },
-                {
-                  decade: "lower",
-                  current_average: "16.8",
-                  future_average: "19.9",
-                },
-              ],
-            },
-            {
-              month: "4",
-              current_exceed_count: "6",
-              future_exceed_count: "8",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "17.0",
-                  future_average: "20.2",
-                },
-                {
-                  decade: "middle",
-                  current_average: "16.3",
-                  future_average: "19.5",
-                },
-                {
-                  decade: "lower",
-                  current_average: "15.6",
-                  future_average: "18.8",
-                },
-              ],
-            },
-            {
-              month: "5",
-              current_exceed_count: "7",
-              future_exceed_count: "9",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "19.0",
-                  future_average: "22.2",
-                },
-                {
-                  decade: "middle",
-                  current_average: "18.3",
-                  future_average: "21.5",
-                },
-                {
-                  decade: "lower",
-                  current_average: "17.6",
-                  future_average: "20.8",
-                },
-              ],
-            },
-            {
-              month: "6",
-              current_exceed_count: "8",
-              future_exceed_count: "10",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "21.0",
-                  future_average: "24.2",
-                },
-                {
-                  decade: "middle",
-                  current_average: "20.3",
-                  future_average: "23.5",
-                },
-                {
-                  decade: "lower",
-                  current_average: "19.6",
-                  future_average: "22.8",
-                },
-              ],
-            },
-            {
-              month: "7",
-              current_exceed_count: "9",
-              future_exceed_count: "11",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "22.8",
-                  future_average: "26.0",
-                },
-                {
-                  decade: "middle",
-                  current_average: "22.1",
-                  future_average: "25.3",
-                },
-                {
-                  decade: "lower",
-                  current_average: "21.4",
-                  future_average: "24.6",
-                },
-              ],
-            },
-            {
-              month: "8",
-              current_exceed_count: "9",
-              future_exceed_count: "11",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "22.4",
-                  future_average: "25.6",
-                },
-                {
-                  decade: "middle",
-                  current_average: "21.7",
-                  future_average: "24.9",
-                },
-                {
-                  decade: "lower",
-                  current_average: "21.0",
-                  future_average: "24.2",
-                },
-              ],
-            },
-            {
-              month: "9",
-              current_exceed_count: "8",
-              future_exceed_count: "10",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "21.2",
-                  future_average: "24.4",
-                },
-                {
-                  decade: "middle",
-                  current_average: "20.5",
-                  future_average: "23.7",
-                },
-                {
-                  decade: "lower",
-                  current_average: "19.8",
-                  future_average: "23.0",
-                },
-              ],
-            },
-            {
-              month: "10",
-              current_exceed_count: "7",
-              future_exceed_count: "9",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "19.6",
-                  future_average: "22.8",
-                },
-                {
-                  decade: "middle",
-                  current_average: "18.9",
-                  future_average: "22.1",
-                },
-                {
-                  decade: "lower",
-                  current_average: "18.2",
-                  future_average: "21.4",
-                },
-              ],
-            },
-            {
-              month: "11",
-              current_exceed_count: "6",
-              future_exceed_count: "8",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "17.8",
-                  future_average: "21.0",
-                },
-                {
-                  decade: "middle",
-                  current_average: "17.1",
-                  future_average: "20.3",
-                },
-                {
-                  decade: "lower",
-                  current_average: "16.4",
-                  future_average: "19.6",
-                },
-              ],
-            },
-            {
-              month: "12",
-              current_exceed_count: "5",
-              future_exceed_count: "7",
-              decade_data: [
-                {
-                  decade: "upper",
-                  current_average: "16.5",
-                  future_average: "19.7",
-                },
-                {
-                  decade: "middle",
-                  current_average: "15.8",
-                  future_average: "19.0",
-                },
-                {
-                  decade: "lower",
-                  current_average: "15.1",
-                  future_average: "18.3",
-                },
-              ],
+              date: "03-15",
+              value: {
+                current: "18.2",
+                future: "21.4",
+              },
             },
           ],
         },

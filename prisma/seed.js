@@ -23,14 +23,14 @@ const tenDayPayloadToEnum = (range) =>
 
 const seedCities = async () => {
   for (const city of cities) {
-    const cityId = Number(city.id);
+    const cityId = String(city.id);
     await prisma.city.upsert({
       where: { id: cityId },
       update: { name: city.name },
       create: { id: cityId, name: city.name },
     });
     for (const district of city.districts) {
-      const districtId = Number(district.id);
+      const districtId = String(district.id);
       await prisma.district.upsert({
         where: { id: districtId },
         update: { name: district.name, cityId: cityId },
@@ -82,7 +82,7 @@ const seedIndicators = async () => {
 
 const seedGwls = async () => {
   for (const gwl of gwls) {
-    const gwlId = Number(gwl.id);
+    const gwlId = String(gwl.id);
     await prisma.gwl.upsert({
       where: { id: gwlId },
       update: { name: gwl.name },
@@ -126,7 +126,7 @@ const seedZones = async () => {
       await prisma.zoneDistrict.createMany({
         data: districtIds.map((districtId) => ({
           zoneId,
-          districtId: Number(districtId),
+          districtId: String(districtId),
         })),
       });
     }
@@ -203,7 +203,7 @@ const seedCalendars = async () => {
         await prisma.calendarZoneDistrict.createMany({
           data: districtIds.map((districtId) => ({
             calendarZoneId: cz.id,
-            districtId: Number(districtId),
+            districtId: String(districtId),
           })),
         });
       }
