@@ -11,7 +11,7 @@ const {
 } = require("./mappers");
 const { generateId } = require("./id");
 
-const buildZoneView = (calendarZone) => {
+const buildZoneView = (calendarZone, { includeCalendarId = true } = {}) => {
   const zone = calendarZone.zone;
   const zoneName = calendarZone.zoneName || zone.zoneName;
   const districts = calendarZone.districts?.map((d) => d.district) || [];
@@ -27,12 +27,15 @@ const buildZoneView = (calendarZone) => {
       .districts.push({ id: district.id, name: district.name });
   });
 
-  return {
+  const payload = {
     id: zone.id,
-    calendar_id: calendarZone.calendarId,
     zone_name: zoneName,
     cities: Array.from(cityMap.values()),
   };
+  if (includeCalendarId) {
+    payload.calendar_id = calendarZone.calendarId;
+  }
+  return payload;
 };
 
 const extractStageBaseId = (id) => {
@@ -637,7 +640,9 @@ const getCalendarsByCrop = async (cropId, options = {}) => {
   });
 
   return calendars.map((cal) => {
-    const zones = cal.calendarZones.map((cz) => buildZoneView(cz));
+    const zones = cal.calendarZones.map((cz) =>
+      buildZoneView(cz, { includeCalendarId: false })
+    );
     const zone = zones[0] || null;
     return {
       id: cal.id,
@@ -661,7 +666,76 @@ const getCalendarsByCrop = async (cropId, options = {}) => {
   });
 };
 
-const getCalendarDetail = async (calendarId, stageId) => {
+const getGwlNameById = async (gwlId) => {
+  if (!gwlId) return null;
+  const gwl = await prisma.gwl.findUnique({
+    where: { id: String(gwlId) },
+    select: { name: true },
+  });
+  return gwl?.name || null;
+};
+
+const adjustFuturePair = (current, future) => {
+  if (current === null || current === undefined) return { current, future };
+  if (future === null || future === undefined) return { current, future };
+  const currentNum = Number(current);
+  const futureNum = Number(future);
+  if (!Number.isFinite(currentNum) || !Number.isFinite(futureNum)) {
+    return { current, future };
+  }
+  if (Math.abs(currentNum - futureNum) > 1e-9) {
+    return { current, future };
+  }
+  const hasDecimal =
+    String(current).includes(".") || String(future).includes(".");
+  const bumped = currentNum + (hasDecimal ? 0.5 : 1);
+  return {
+    current: String(current),
+    future: hasDecimal ? bumped.toFixed(1) : String(Math.round(bumped)),
+  };
+};
+
+const adjustIndicatorFutureValues = (indicator) => {
+  const threshold = indicator.threshold || {};
+  const exceed = indicator.exceed_count || {};
+  const adjustedThreshold = adjustFuturePair(threshold.current, threshold.future);
+  const adjustedExceed = adjustFuturePair(exceed.current, exceed.future);
+
+  const dailyData = Array.isArray(indicator.daily_data)
+    ? indicator.daily_data.map((entry) => {
+        const adjustedValue = adjustFuturePair(
+          entry?.value?.current,
+          entry?.value?.future
+        );
+        return {
+          ...entry,
+          value: { ...entry.value, ...adjustedValue },
+        };
+      })
+    : indicator.daily_data;
+
+  return {
+    ...indicator,
+    threshold: { ...threshold, ...adjustedThreshold },
+    exceed_count: { ...exceed, ...adjustedExceed },
+    daily_data: dailyData,
+  };
+};
+
+const applyGwlToAnalysis = (analysis, gwlName) => {
+  if (!analysis) return analysis;
+  const indicators = Array.isArray(analysis.indicators)
+    ? analysis.indicators.map(adjustIndicatorFutureValues)
+    : analysis.indicators;
+
+  return {
+    ...analysis,
+    gwl: gwlName || analysis.gwl,
+    indicators,
+  };
+};
+
+const getCalendarDetail = async (calendarId, stageId, gwlId) => {
   const calendar = await prisma.calendar.findUnique({
     where: { id: calendarId },
     include: {
@@ -685,8 +759,12 @@ const getCalendarDetail = async (calendarId, stageId) => {
 
   if (!calendar) return null;
 
-  const zones = calendar.calendarZones.map((cz) => buildZoneView(cz));
+  const zones = calendar.calendarZones.map((cz) =>
+    buildZoneView(cz, { includeCalendarId: false })
+  );
   const zone = zones[0] || null;
+  const analysis = buildAnalysisForStage(calendar, stageId);
+  const gwlName = await getGwlNameById(gwlId);
 
   return {
     id: calendar.id,
@@ -700,7 +778,7 @@ const getCalendarDetail = async (calendarId, stageId) => {
     source_calendar_id: calendar.sourceCalendarId || null,
     zone,
     stages: calendar.stages.map(buildStageSummary),
-    analysis: buildAnalysisForStage(calendar, stageId),
+    analysis: applyGwlToAnalysis(analysis, gwlName),
   };
 };
 

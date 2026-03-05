@@ -290,7 +290,11 @@ for (let i = 0; i < EXTRA_ZONE_COUNT; i += 1) {
     allow_center_use: true,
     published_at: "2025-06-11 12:00",
     updated_at: "2025-08-11 12:00",
-    zone,
+    zone: {
+      id: zone.id,
+      zone_name: zone.zone_name,
+      cities: zone.cities,
+    },
   });
 }
 
