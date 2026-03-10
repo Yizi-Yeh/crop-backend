@@ -8,6 +8,7 @@ const {
   getGwls,
   getCities,
   getZonesByCrop,
+  getStagesByCrop,
   getCalendarsByCrop,
   getCalendarDetail,
   getCalendarAccess,
@@ -23,6 +24,7 @@ const {
   createStage,
   updateStage,
   deleteStage,
+  updateStageOrder,
   addStageCover,
   updateStageCover,
   addStageAlbum,
@@ -163,6 +165,25 @@ router.get(
 
     const zones = await getZonesByCrop(cropId);
     res.json({ status: "ok", message: "success", data: zones });
+  }),
+);
+
+/**
+ * 生長期清單（select 使用）
+ * GET /api/crop-calendars/crops/:cropId/stages
+ */
+router.get(
+  "/crops/:cropId/stages",
+  asyncHandler(async (req, res) => {
+    const { cropId } = req.params;
+
+    const crop = (await getCrops()).find((c) => c.id === cropId);
+    if (!crop) {
+      return res.status(404).json({ status: "error", message: "找不到該作物" });
+    }
+
+    const stages = await getStagesByCrop(cropId);
+    res.json({ status: "ok", message: "success", data: stages });
   }),
 );
 
@@ -507,6 +528,57 @@ router.get(
 
     const stageList = await getStageList(calendarId);
     res.json({ status: "ok", message: "success", data: stageList });
+  }),
+);
+
+/**
+ * 編輯生長期排序
+ * PATCH /api/crop-calendars/crops/:cropId/calendars/:calendarId/stages/order
+ */
+router.patch(
+  "/crops/:cropId/calendars/:calendarId/stages/order",
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    const { calendarId } = req.params;
+    const orders = Array.isArray(req.body) ? req.body : req.body?.stages;
+
+    if (!Array.isArray(orders) || orders.length === 0) {
+      return res.status(400).json({
+        status: "error",
+        message: "請提供完整的生長期排序陣列",
+      });
+    }
+
+    try {
+      await updateStageOrder(calendarId, orders);
+      res.json({ status: "ok", message: "success" });
+    } catch (error) {
+      if (error.message === "STAGE_ORDER_INVALID") {
+        return res.status(400).json({
+          status: "error",
+          message: "排序資料格式錯誤，id 為必填且 sort_order 必須為整數",
+        });
+      }
+      if (error.message === "STAGE_ORDER_DUPLICATED") {
+        return res.status(400).json({
+          status: "error",
+          message: "生長期 id 或 sort_order 不可重複",
+        });
+      }
+      if (error.message === "STAGE_ORDER_INCOMPLETE") {
+        return res.status(400).json({
+          status: "error",
+          message: "請提供完整的生長期排序資料",
+        });
+      }
+      if (error.message === "STAGE_ORDER_OUT_OF_SCOPE") {
+        return res.status(400).json({
+          status: "error",
+          message: "排序資料包含不屬於此栽培曆的生長期",
+        });
+      }
+      throw error;
+    }
   }),
 );
 

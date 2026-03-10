@@ -11,6 +11,20 @@ const {
 } = require("./mappers");
 const { generateId } = require("./id");
 
+const formatDateTime = (value) => {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${year}/${month}/${day} ${hours}:${minutes}`;
+};
+
 const buildZoneView = (calendarZone, { includeCalendarId = true } = {}) => {
   const zone = calendarZone.zone;
   const zoneName = calendarZone.zoneName || zone.zoneName;
@@ -440,6 +454,7 @@ const buildStageListItem = (stage) => {
   return {
     id: baseId,
     name: stage.name,
+    sort_order: stage.order ?? 0,
     start_date_range: stage.startMonth
       ? {
           id: `start_${baseId}`,
@@ -463,6 +478,7 @@ const buildStageSummary = (stage) => {
   return {
     id: stage.id,
     name: stage.name,
+    sort_order: stage.order ?? 0,
     description: stage.description || "",
     cover_image: (() => {
       const cover = (stage.images || []).find((img) => img.type === "COVER");
@@ -516,6 +532,7 @@ const buildStageDetail = (stage) => {
   return {
     id: stage.id,
     name: stage.name,
+    sort_order: stage.order ?? 0,
     description: stage.description || "",
     start_date_range: stage.startMonth
       ? {
@@ -554,7 +571,6 @@ const buildStageDetail = (stage) => {
 };
 
 const defaultPermissions = () => ({
-  canCopy: true,
   canEdit: false,
   canDelete: false,
 });
@@ -592,6 +608,27 @@ const getZonesByCrop = async (cropId) => {
   });
 
   return Array.from(zoneMap.values());
+};
+
+const getStagesByCrop = async (cropId) => {
+  const stages = await prisma.stage.findMany({
+    where: { calendar: { cropId } },
+    select: { id: true, name: true, order: true },
+    orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+  });
+
+  const stageMap = new Map();
+  stages.forEach((stage) => {
+    const baseId = extractStageBaseId(stage.id);
+    if (stageMap.has(baseId)) return;
+    stageMap.set(baseId, {
+      id: baseId,
+      name: stage.name,
+      sort_order: stage.order ?? 0,
+    });
+  });
+
+  return Array.from(stageMap.values());
 };
 
 const getCalendarsByCrop = async (cropId, options = {}) => {
@@ -633,7 +670,9 @@ const getCalendarsByCrop = async (cropId, options = {}) => {
           districts: { include: { district: { include: { city: true } } } },
         },
       },
-      calendarIndicators: { include: { indicator: true } },
+      calendarIndicators: {
+        include: { indicator: { include: { category: true } } },
+      },
       stages: true,
     },
     orderBy: { createdAt: "desc" },
@@ -644,6 +683,15 @@ const getCalendarsByCrop = async (cropId, options = {}) => {
       buildZoneView(cz, { includeCalendarId: false })
     );
     const zone = zones[0] || null;
+    const indicatorCategories = Array.from(
+      new Map(
+        cal.calendarIndicators
+          .map((ci) => ci.indicator?.category)
+          .filter(Boolean)
+          .map((category) => [category.id, { id: category.id, name: category.name }]),
+      ).values(),
+    ).sort((a, b) => String(a.id).localeCompare(String(b.id)));
+
     return {
       id: cal.id,
       source_calendar_id: cal.sourceCalendarId || null,
@@ -654,14 +702,11 @@ const getCalendarsByCrop = async (cropId, options = {}) => {
       is_published: cal.isPublished,
       file_type: fileTypeToString(cal.fileType),
       allow_center_use: cal.allowCenterUse,
-      published_at: cal.publishedAt ? cal.publishedAt.toISOString() : null,
-      updated_at: cal.lastEditedAt.toISOString(),
+      published_at: formatDateTime(cal.publishedAt),
+      updated_at: formatDateTime(cal.lastEditedAt),
       zone,
       stages: cal.stages.map(buildStageListItem),
-      indicators: cal.calendarIndicators.map((ci) => ({
-        id: ci.indicatorId,
-        name: ci.indicator?.name || ci.nameSnapshot,
-      })),
+      indicator_categories: indicatorCategories,
     };
   });
 };
@@ -1047,10 +1092,14 @@ const copyCalendar = async (calendarId, creatorId, creatorName) => {
 const getStageList = async (calendarId) => {
   const stages = await prisma.stage.findMany({
     where: { calendarId },
-    select: { id: true, name: true },
+    select: { id: true, name: true, order: true },
     orderBy: { order: "asc" },
   });
-  return stages;
+  return stages.map((stage) => ({
+    id: stage.id,
+    name: stage.name,
+    sort_order: stage.order,
+  }));
 };
 
 const getStageDetail = async (calendarId, stageId) => {
@@ -1159,6 +1208,55 @@ const updateStage = async ({ calendarId, stageId, payload }) => {
 const deleteStage = async (calendarId, stageId) => {
   const resolvedStageId = resolveStageId(calendarId, stageId);
   await prisma.stage.delete({ where: { id: resolvedStageId } });
+};
+
+const updateStageOrder = async (calendarId, orders = []) => {
+  const stages = await prisma.stage.findMany({
+    where: { calendarId },
+    select: { id: true },
+    orderBy: { order: "asc" },
+  });
+
+  if (stages.length !== orders.length) {
+    throw new Error("STAGE_ORDER_INCOMPLETE");
+  }
+
+  const stageIds = new Set(stages.map((stage) => stage.id));
+  const payloadIds = new Set();
+  const sortOrders = new Set();
+
+  for (const item of orders) {
+    if (!item || !item.id || !Number.isInteger(item.sort_order)) {
+      throw new Error("STAGE_ORDER_INVALID");
+    }
+    if (!stageIds.has(item.id)) {
+      throw new Error("STAGE_ORDER_OUT_OF_SCOPE");
+    }
+    if (payloadIds.has(item.id) || sortOrders.has(item.sort_order)) {
+      throw new Error("STAGE_ORDER_DUPLICATED");
+    }
+
+    payloadIds.add(item.id);
+    sortOrders.add(item.sort_order);
+  }
+
+  if (payloadIds.size !== stageIds.size) {
+    throw new Error("STAGE_ORDER_INCOMPLETE");
+  }
+
+  await prisma.$transaction(async (tx) => {
+    for (const item of orders) {
+      await tx.stage.update({
+        where: { id: item.id },
+        data: { order: item.sort_order },
+      });
+    }
+
+    await tx.calendar.update({
+      where: { id: calendarId },
+      data: { lastEditedAt: new Date() },
+    });
+  });
 };
 
 const addStageCover = async ({ stageId, source, file }) => {
@@ -1379,6 +1477,7 @@ module.exports = {
   getGwls,
   getCities,
   getZonesByCrop,
+  getStagesByCrop,
   getCalendarsByCrop,
   getCalendarDetail,
   getCalendarAccess,
@@ -1395,6 +1494,7 @@ module.exports = {
   resolveStageId,
   updateStage,
   deleteStage,
+  updateStageOrder,
   addStageCover,
   updateStageCover,
   addStageAlbum,
