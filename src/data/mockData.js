@@ -194,6 +194,57 @@ const zones = [
     ],
   },
   {
+    id: "205",
+    calendar_id: "cal_005",
+    zone_name: "花東芭樂產區",
+    cities: [
+      {
+        id: "22",
+        name: "臺東縣",
+        districts: [
+          { id: "1076", name: "蘭嶼鄉" },
+          { id: "1119", name: "綠島鄉" },
+          { id: "1123", name: "卑南鄉" },
+        ],
+      },
+      {
+        id: "23",
+        name: "花蓮縣",
+        districts: [
+          { id: "1082", name: "秀林鄉" },
+          { id: "1083", name: "吉安鄉" },
+        ],
+      },
+      {
+        id: "1",
+        name: "臺北市",
+        districts: [
+          { id: "101", name: "中正區" },
+          { id: "104", name: "松山區" },
+          { id: "105", name: "大安區" },
+        ],
+      },
+      {
+        id: "2",
+        name: "新北市",
+        districts: [
+          { id: "201", name: "板橋區" },
+          { id: "203", name: "中和區" },
+          { id: "205", name: "新莊區" },
+        ],
+      },
+      {
+        id: "4",
+        name: "臺中市",
+        districts: [
+          { id: "401", name: "中區" },
+          { id: "403", name: "西區" },
+          { id: "405", name: "北區" },
+        ],
+      },
+    ],
+  },
+  {
     id: "203",
     calendar_id: "cal_003",
     zone_name: "甜椒中南部區",
@@ -285,7 +336,7 @@ for (let i = 0; i < EXTRA_ZONE_COUNT; i += 1) {
     title: `擴充示範栽培曆 ${i + 1}`,
     creator: { id: "user_001", name: "專家A" },
     is_shared: false,
-    is_published: false,
+    is_published: true,
     file_type: "original",
     allow_center_use: true,
     published_at: "2025-06-11 12:00",
@@ -354,13 +405,95 @@ const calendars = [
       ],
     },
 
-    // 生長期清單
+    // 指標（清單頁只需要名稱）
+    indicators: [
+      { id: "ind_001", name: "日均溫" },
+      { id: "ind_002", name: "降雨量" },
+    ],
+  },
+  {
+    id: "cal_005",
+    source_calendar_id: null,
+    title: "花東芭樂栽培曆",
+    creator: {
+      id: "user_001",
+      name: "專家A",
+    },
+    permissions: {
+      canCreate: true,
+      canCopy: true,
+      canEdit: false,
+      canDelete: false,
+    },
+    is_shared: false,
+    is_published: false,
+    file_type: "original",
+    allow_center_use: true,
+    published_at: null,
+    updated_at: "2025-08-11 12:00",
+    zone: {
+      id: "205",
+      zone_name: "花東芭樂產區",
+      cities: [
+        {
+          id: "22",
+          name: "臺東縣",
+          districts: [
+            { id: "1076", name: "蘭嶼鄉" },
+            { id: "1119", name: "綠島鄉" },
+            { id: "1123", name: "卑南鄉" },
+          ],
+        },
+        {
+          id: "23",
+          name: "花蓮縣",
+          districts: [
+            { id: "1082", name: "秀林鄉" },
+            { id: "1083", name: "吉安鄉" },
+          ],
+        },
+        {
+          id: "1",
+          name: "臺北市",
+          districts: [
+            { id: "101", name: "中正區" },
+            { id: "104", name: "松山區" },
+            { id: "105", name: "大安區" },
+          ],
+        },
+        {
+          id: "2",
+          name: "新北市",
+          districts: [
+            { id: "201", name: "板橋區" },
+            { id: "203", name: "中和區" },
+            { id: "205", name: "新莊區" },
+          ],
+        },
+        {
+          id: "4",
+          name: "臺中市",
+          districts: [
+            { id: "401", name: "中區" },
+            { id: "403", name: "西區" },
+            { id: "405", name: "北區" },
+          ],
+        },
+      ],
+    },
     stages: [
       {
         id: "stage_001",
         name: "接穗準備期",
         description:
           "接穗與砧木癒合完成後進入結果期，需維持穩定水分與通風，避免高溫造成落果。",
+        cover_image: {
+          id: "cover_stage_001",
+          url: "https://picsum.photos/seed/cover-1/800/500",
+          thumbnail: "https://picsum.photos/seed/cover-1/320/200",
+          name: "接穗準備期封面.jpg",
+          source: "農委會",
+        },
         start_date_range: {
           id: "start_stage_001",
           decade: "upper",
@@ -368,11 +501,20 @@ const calendars = [
         },
         end_date_range: { id: "end_stage_001", decade: "lower", month: "3" },
         status: "complete",
+        color: "#96C6EC",
+        album: [],
       },
       {
         id: "stage_002",
         name: "接穗成活期",
         description: "果實持續膨大，建議適度疏果並補充鉀肥以提升品質與糖度。",
+        cover_image: {
+          id: "cover_stage_002",
+          url: "https://picsum.photos/seed/cover-2/800/500",
+          thumbnail: "https://picsum.photos/seed/cover-2/320/200",
+          name: "果實膨大期封面.jpg",
+          source: "農委會",
+        },
         start_date_range: {
           id: "start_stage_002",
           decade: "middle",
@@ -380,11 +522,20 @@ const calendars = [
         },
         end_date_range: { id: "end_stage_002", decade: "middle", month: "4" },
         status: "complete",
+        color: "#81D0C1",
+        album: [],
       },
       {
         id: "stage_003",
         name: "果實發育期",
         description: "果實快速生長，注意水分均衡與病蟲害監測，避免裂果與日灼。",
+        cover_image: {
+          id: "cover_stage_003",
+          url: "https://picsum.photos/seed/cover-3/800/500",
+          thumbnail: "https://picsum.photos/seed/cover-3/320/200",
+          name: "果實成長期封面.jpg",
+          source: "農委會",
+        },
         start_date_range: {
           id: "start_stage_003",
           decade: "lower",
@@ -392,12 +543,21 @@ const calendars = [
         },
         end_date_range: { id: "end_stage_003", decade: "lower", month: "6" },
         status: "complete",
+        color: "#FFC28A",
+        album: [],
       },
       {
         id: "stage_004",
         name: "果實成熟期",
         description:
           "成熟期需降低氮肥、提高通風，掌握採收時機以確保外觀與風味。",
+        cover_image: {
+          id: "cover_stage_004",
+          url: "https://picsum.photos/seed/cover-4/800/500",
+          thumbnail: "https://picsum.photos/seed/cover-4/320/200",
+          name: "果實成熟期封面.jpg",
+          source: "農委會",
+        },
         start_date_range: {
           id: "start_stage_004",
           decade: "upper",
@@ -405,12 +565,21 @@ const calendars = [
         },
         end_date_range: { id: "end_stage_004", decade: "lower", month: "9" },
         status: "complete",
+        color: "#B1A3D4",
+        album: [],
       },
       {
         id: "stage_005",
         name: "砧木養護期",
         description:
           "砧木持續營養生長，重點在根系健全與枝條整齊，為後續嫁接做準備。",
+        cover_image: {
+          id: "cover_stage_005",
+          url: "https://picsum.photos/seed/cover-5/800/500",
+          thumbnail: "https://picsum.photos/seed/cover-5/320/200",
+          name: "砧木養護期封面.jpg",
+          source: "農委會",
+        },
         start_date_range: {
           id: "start_stage_005",
           decade: "middle",
@@ -418,14 +587,14 @@ const calendars = [
         },
         end_date_range: { id: "end_stage_005", decade: "lower", month: "12" },
         status: "complete",
+        color: "#F3B2B2",
+        album: [],
       },
     ],
-
-    // 指標（清單頁只需要名稱）
-    indicators: [
-      { id: "ind_001", name: "日均溫" },
-      { id: "ind_002", name: "降雨量" },
-    ],
+    indicators: [],
+    analysis: {
+      indicators: [],
+    },
   },
 ];
 

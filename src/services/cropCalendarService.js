@@ -25,7 +25,10 @@ const formatDateTime = (value) => {
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 };
 
-const buildZoneView = (calendarZone, { includeCalendarId = true } = {}) => {
+const buildZoneView = (
+  calendarZone,
+  { includeCalendarId = true, includeZoneId = true } = {},
+) => {
   const zone = calendarZone.zone;
   const zoneName = calendarZone.zoneName || zone.zoneName;
   const districts = calendarZone.districts?.map((d) => d.district) || [];
@@ -41,14 +44,15 @@ const buildZoneView = (calendarZone, { includeCalendarId = true } = {}) => {
       .districts.push({ id: district.id, name: district.name });
   });
 
-  const payload = {
-    id: zone.id,
-    zone_name: zoneName,
-    cities: Array.from(cityMap.values()),
-  };
+  const payload = {};
   if (includeCalendarId) {
     payload.calendar_id = calendarZone.calendarId;
   }
+  if (includeZoneId) {
+    payload.id = zone.id;
+  }
+  payload.zone_name = zoneName;
+  payload.cities = Array.from(cityMap.values());
   return payload;
 };
 
@@ -135,7 +139,9 @@ const buildAnalysisForStage = (calendar, stageId) => {
     stage = stages.find((s) => s.id === resolvedStageId) || stage;
   }
 
-  if (!stage || !stage.analysis) return undefined;
+  if (!stage || !stage.analysis) {
+    return { indicators: [] };
+  }
 
   const startRange = stage.startMonth
     ? {
@@ -603,7 +609,7 @@ const getZonesByCrop = async (cropId) => {
   const zoneMap = new Map();
   calendarZones.forEach((cz) => {
     if (!zoneMap.has(cz.zoneId)) {
-      zoneMap.set(cz.zoneId, buildZoneView(cz));
+      zoneMap.set(cz.zoneId, buildZoneView(cz, { includeZoneId: false }));
     }
   });
 
@@ -680,7 +686,7 @@ const getCalendarsByCrop = async (cropId, options = {}) => {
 
   return calendars.map((cal) => {
     const zones = cal.calendarZones.map((cz) =>
-      buildZoneView(cz, { includeCalendarId: false })
+      buildZoneView(cz, { includeCalendarId: true, includeZoneId: false })
     );
     const zone = zones[0] || null;
     const indicatorCategories = Array.from(
@@ -805,7 +811,7 @@ const getCalendarDetail = async (calendarId, stageId, gwlId) => {
   if (!calendar) return null;
 
   const zones = calendar.calendarZones.map((cz) =>
-    buildZoneView(cz, { includeCalendarId: false })
+    buildZoneView(cz, { includeCalendarId: true, includeZoneId: false })
   );
   const zone = zones[0] || null;
   const analysis = buildAnalysisForStage(calendar, stageId);

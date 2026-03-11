@@ -209,10 +209,9 @@ const seedCalendars = async () => {
       }
     }
 
-    const indicatorsToUse =
-      calendar.indicators && calendar.indicators.length > 0
-        ? calendar.indicators
-        : indicators.map((ind) => ({ id: ind.id, name: ind.name }));
+    const indicatorsToUse = Array.isArray(calendar.indicators)
+      ? calendar.indicators
+      : indicators.map((ind) => ({ id: ind.id, name: ind.name }));
 
     if (indicatorsToUse.length > 0) {
       await prisma.calendarIndicator.createMany({
@@ -232,7 +231,13 @@ const seedStages = async () => {
   for (const calendar of calendars) {
     await prisma.stage.deleteMany({ where: { calendarId: calendar.id } });
 
-    for (const [order, stage] of stages.entries()) {
+    const stagesToUse = Array.isArray(calendar.stages) ? calendar.stages : stages;
+    const stageAnalysis =
+      calendar.analysis !== undefined
+        ? calendar.analysis
+        : calendarDetails[0]?.analysis || null;
+
+    for (const [order, stage] of stagesToUse.entries()) {
       const startMonthRaw = stage.start_date_range?.month;
       const endMonthRaw = stage.end_date_range?.month;
       const startMonth =
@@ -259,7 +264,7 @@ const seedStages = async () => {
           startMonth,
           endTenDay: tenDayPayloadToEnum(stage.end_date_range),
           endMonth,
-          analysis: calendarDetails[0]?.analysis || null,
+          analysis: stageAnalysis,
         },
       });
 
