@@ -2,16 +2,15 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# 複製套件定義檔與 Prisma schema
+# 第一層：npm 依賴（變動最少，快取命中率最高）
 COPY package*.json ./
+RUN apk add --no-cache openssl && npm install
+
+# 第二層：Prisma schema 變了才重新 generate
 COPY prisma ./prisma
+RUN npx prisma generate
 
-# 安裝系統依賴 + Node 依賴 + 產生 Prisma Client
-RUN apk add --no-cache openssl \
-  && npm install \
-  && npx prisma generate
-
-# 複製應用程式原始碼
+# 第三層：src 改最頻繁，放最後
 COPY src ./src
 
 EXPOSE 3000

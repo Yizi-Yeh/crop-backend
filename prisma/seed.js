@@ -134,13 +134,20 @@ const seedZones = async () => {
 };
 
 const seedCalendars = async () => {
-  const cropId = crops[0]?.id;
-  if (!cropId) return;
+  if (crops.length === 0) return;
 
-  for (const calendar of calendars) {
+  const resolveCalendarCropId = (calendar, index) => {
+    if (calendar.crop_id) return calendar.crop_id;
+    return crops[index % crops.length]?.id || crops[0]?.id;
+  };
+
+  for (const [index, calendar] of calendars.entries()) {
+    const cropId = resolveCalendarCropId(calendar, index);
+
     await prisma.calendar.upsert({
       where: { id: calendar.id },
       update: {
+        cropId,
         title: calendar.title,
         creatorId: calendar.creator?.id || "user_001",
         creatorName: calendar.creator?.name || "專家A",

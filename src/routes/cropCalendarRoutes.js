@@ -10,6 +10,7 @@ const {
   getZonesByCrop,
   getStagesByCrop,
   getCalendarsByCrop,
+  getUserCalendars,
   getCalendarDetail,
   getCalendarAccess,
   getStageCalendarId,
@@ -192,6 +193,30 @@ router.get(
 // ============================================
 
 /**
+ * 取得指定專家的栽培曆清單
+ * GET /api/crop-calendars/users/:userId/calendars
+ */
+router.get(
+  "/users/:userId/calendars",
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+    const requester = req.user;
+
+    if (!requester) {
+      return res.status(401).json({ status: "error", message: "缺少登入資訊" });
+    }
+
+    if (requester.role !== "admin" && requester.id !== userId) {
+      return res.status(403).json({ status: "error", message: "沒有權限查看該使用者的栽培曆" });
+    }
+
+    const calendars = await getUserCalendars(userId);
+    res.json({ status: "ok", message: "success", data: calendars });
+  }),
+);
+
+/**
  * 栽培曆清單
  * GET /api/crop-calendars/crops/:cropId/calendars
  * Query: is_shared → 'true' | 'false' | 不帶（回傳所有）
@@ -221,20 +246,15 @@ router.get(
 
 /**
  * 栽培曆詳細
- * GET /api/crop-calendars/crops/:cropId/calendars/:calendarId
+ * GET /api/crop-calendars/calendars/:calendarId
  * Query: city_id, gwl_id, source_id
  */
 router.get(
-  "/crops/:cropId/calendars/:calendarId",
+  "/calendars/:calendarId",
   optionalAuth,
   asyncHandler(async (req, res) => {
-    const { cropId, calendarId } = req.params;
+    const { calendarId } = req.params;
     const { city_id, stage_id, gwl_id } = req.query;
-
-    const crop = (await getCrops()).find((c) => c.id === cropId);
-    if (!crop) {
-      return res.status(404).json({ status: "error", message: "找不到該作物" });
-    }
 
     const calendarDetail = await getCalendarDetail(calendarId, stage_id, gwl_id);
     if (!calendarDetail) {
@@ -324,7 +344,7 @@ router.patch(
     const { title, zone_name, districts } = req.body;
 
     try {
-      const calendar = await requireCalendarEditPermission(req, res, calendarId);
+      const calendar = await requireCalendarPermission(req, res, calendarId, "edit");
       if (!calendar) return;
       const updated = await updateCalendar(calendarId, {
         title,
@@ -359,7 +379,7 @@ router.delete(
     const { calendarId } = req.params;
 
     try {
-      const calendar = await requireCalendarEditPermission(req, res, calendarId);
+      const calendar = await requireCalendarPermission(req, res, calendarId, "delete");
       if (!calendar) return;
       await deleteCalendar(calendarId);
     } catch (error) {

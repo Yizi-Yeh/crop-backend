@@ -637,6 +637,55 @@ const getStagesByCrop = async (cropId) => {
   return Array.from(stageMap.values());
 };
 
+const calendarSummaryInclude = {
+  crop: {
+    select: { id: true, name: true },
+  },
+  calendarZones: {
+    include: {
+      zone: true,
+      districts: { include: { district: { include: { city: true } } } },
+    },
+  },
+  calendarIndicators: {
+    include: { indicator: { include: { category: true } } },
+  },
+  stages: true,
+};
+
+const buildCalendarSummary = (cal) => {
+  const zones = cal.calendarZones.map((cz) =>
+    buildZoneView(cz, { includeCalendarId: true, includeZoneId: false })
+  );
+  const zone = zones[0] || null;
+  const indicatorCategories = Array.from(
+    new Map(
+      cal.calendarIndicators
+        .map((ci) => ci.indicator?.category)
+        .filter(Boolean)
+        .map((category) => [category.id, { id: category.id, name: category.name }]),
+    ).values(),
+  ).sort((a, b) => String(a.id).localeCompare(String(b.id)));
+
+  return {
+    id: cal.id,
+    source_calendar_id: cal.sourceCalendarId || null,
+    title: cal.title,
+    crop: cal.crop ? { id: cal.crop.id, name: cal.crop.name } : null,
+    creator: { id: cal.creatorId, name: cal.creatorName },
+    permissions: defaultPermissions(),
+    is_shared: cal.isShared,
+    is_published: cal.isPublished,
+    file_type: fileTypeToString(cal.fileType),
+    allow_center_use: cal.allowCenterUse,
+    published_at: formatDateTime(cal.publishedAt),
+    updated_at: formatDateTime(cal.lastEditedAt),
+    zone,
+    stages: cal.stages.map(buildStageListItem),
+    indicator_categories: indicatorCategories,
+  };
+};
+
 const getCalendarsByCrop = async (cropId, options = {}) => {
   const {
     userId = null,
@@ -669,52 +718,21 @@ const getCalendarsByCrop = async (cropId, options = {}) => {
 
   const calendars = await prisma.calendar.findMany({
     where,
-    include: {
-      calendarZones: {
-        include: {
-          zone: true,
-          districts: { include: { district: { include: { city: true } } } },
-        },
-      },
-      calendarIndicators: {
-        include: { indicator: { include: { category: true } } },
-      },
-      stages: true,
-    },
+    include: calendarSummaryInclude,
     orderBy: { createdAt: "desc" },
   });
 
-  return calendars.map((cal) => {
-    const zones = cal.calendarZones.map((cz) =>
-      buildZoneView(cz, { includeCalendarId: true, includeZoneId: false })
-    );
-    const zone = zones[0] || null;
-    const indicatorCategories = Array.from(
-      new Map(
-        cal.calendarIndicators
-          .map((ci) => ci.indicator?.category)
-          .filter(Boolean)
-          .map((category) => [category.id, { id: category.id, name: category.name }]),
-      ).values(),
-    ).sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  return calendars.map(buildCalendarSummary);
+};
 
-    return {
-      id: cal.id,
-      source_calendar_id: cal.sourceCalendarId || null,
-      title: cal.title,
-      creator: { id: cal.creatorId, name: cal.creatorName },
-      permissions: defaultPermissions(),
-      is_shared: cal.isShared,
-      is_published: cal.isPublished,
-      file_type: fileTypeToString(cal.fileType),
-      allow_center_use: cal.allowCenterUse,
-      published_at: formatDateTime(cal.publishedAt),
-      updated_at: formatDateTime(cal.lastEditedAt),
-      zone,
-      stages: cal.stages.map(buildStageListItem),
-      indicator_categories: indicatorCategories,
-    };
+const getUserCalendars = async (userId) => {
+  const calendars = await prisma.calendar.findMany({
+    where: { creatorId: userId },
+    include: calendarSummaryInclude,
+    orderBy: { createdAt: "desc" },
   });
+
+  return calendars.map(buildCalendarSummary);
 };
 
 const getGwlNameById = async (gwlId) => {
@@ -1485,6 +1503,7 @@ module.exports = {
   getZonesByCrop,
   getStagesByCrop,
   getCalendarsByCrop,
+  getUserCalendars,
   getCalendarDetail,
   getCalendarAccess,
   getStageCalendarId,

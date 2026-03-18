@@ -332,6 +332,7 @@ for (let i = 0; i < EXTRA_ZONE_COUNT; i += 1) {
   extraZones.push(zone);
   extraCalendars.push({
     id: calendarId,
+    crop_id: crops[i % crops.length].id,
     source_calendar_id: null,
     title: `擴充示範栽培曆 ${i + 1}`,
     creator: { id: "user_001", name: "專家A" },
@@ -355,6 +356,7 @@ const calendars = [
   {
     // 基本資訊
     id: "cal_001",
+    crop_id: "crop_001",
     source_calendar_id: "cal_001",
     title: "一期紅色芭樂培曆",
 
@@ -413,6 +415,7 @@ const calendars = [
   },
   {
     id: "cal_005",
+    crop_id: "crop_001",
     source_calendar_id: null,
     title: "花東芭樂栽培曆",
     creator: {
